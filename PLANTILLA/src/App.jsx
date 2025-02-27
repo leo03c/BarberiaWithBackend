@@ -4,6 +4,7 @@ import Main from "./components/main"; // Asegúrate de que el nombre del archivo
 import Footer from "./components/Footer"; // Componente del pie de página
 import Compra from "./components/Compra";
 import ReservationPage from "./components/ReservationPage"; // Componente de 
+import ClienteForm from "./components/ClienteForm";
 
 function App() {
   return (
@@ -11,9 +12,10 @@ function App() {
       <Header /> {/* Componente del encabezado */}
       
       <Routes> {/* Define las rutas aquí */}
-        <Route path="archivo/" element={<Main />} /> {/* Ruta principal que renderiza el componente Main */}
-        <Route path="archivo/reserva" element={< ReservationPage/>} /> {/* Ruta para los servicios */}
-        <Route path="archivo/compra" element={< Compra/>} /> {/* Ruta para los servicios */}
+        <Route path="/" element={<Main />} /> {/* Ruta principal que renderiza el componente Main */}
+        <Route path="/reserva" element={< ReservationPage/>} /> {/* Ruta para los servicios */}
+        <Route path="/clienteform" element={< ClienteForm/>} /> {/* Ruta para los servicios */}
+        <Route path="/compra" element={< Compra/>} /> {/* Ruta para los servicios */}
         {/* Agrega más rutas según sea necesario */}
       </Routes>
 

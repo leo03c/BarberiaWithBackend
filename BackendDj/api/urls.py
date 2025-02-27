@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from . import views
+from .views import LoginView
 
 router = routers.DefaultRouter()
 router.register(r'productos', views.ProductoViewSet, basename='productos')
@@ -15,4 +16,5 @@ router.register(r'citas', views.CitaViewSet, basename='citas')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('login/', LoginView.as_view(), name='login'),
 ]

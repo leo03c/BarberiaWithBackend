@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [scrolling, setScrolling] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -10,6 +12,10 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleLogout = () => {
+    setUser(null);
+  };
 
   return (
     <header
@@ -38,17 +44,35 @@ const Header = () => {
                 </a>
               </li>
             ))}
-            {/* Botones de autenticación */}
-            <li>
-              <button className="text-lightGray border border-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-mustard hover:text-jetBlack transition-all duration-300">
-                Iniciar sesión
-              </button>
-            </li>
-            <li>
-              <button className="text-lightGray bg-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-bronze transition-all duration-300">
-                Registrarse
-              </button>
-            </li>
+            {/* Condición para mostrar autenticación o usuario */}
+            {user ? (
+              <>
+                <li className="text-lightGray text-sm md:text-base font-semibold">
+                  {user.name}
+                </li>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="text-lightGray border border-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-mustard hover:text-jetBlack transition-all duration-300"
+                  >
+                    Cerrar sesión
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                 <Link to="" className="text-lightGray border border-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-mustard hover:text-jetBlack transition-all duration-300">
+                    Iniciar sesión
+                  </Link>
+                </li>
+                <li>
+                  <Link to="./clienteform" className="text-lightGray bg-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-bronze transition-all duration-300">
+                    Registrarse
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </div>

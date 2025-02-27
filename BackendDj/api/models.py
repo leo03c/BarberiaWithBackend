@@ -60,7 +60,7 @@ class Cita(models.Model):
     
     clienteid  =models.ForeignKey(Cliente, on_delete=models.CASCADE)
     servicioid  =models.ForeignKey(Servicio, on_delete=models.CASCADE)
-    fecha = models.DateTimeField(auto_now_add=True)
+    fecha = models.DateTimeField(null=False)
     
         
     def __str__(self):
