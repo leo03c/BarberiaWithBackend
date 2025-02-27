@@ -12,7 +12,7 @@ const CTA = () => {
           Descubre la experiencia exclusiva de nuestros servicios y lleva tu look al siguiente nivel. 
           ¡Reserva ahora y disfruta de un trato VIP!
         </p>
-        <Link to="./reserva/"
+        <Link to="./reserva/#reserv"
           href="#contacto"
           className="inline-flex items-center bg-mustard text-jetBlack px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:bg-bronze hover:text-lightGray"
         >

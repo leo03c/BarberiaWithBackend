@@ -41,10 +41,10 @@ const Galeria = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <section id='productos' className='py-16 bg-jetBlack text-lightGray'>
+    <section id='trabajos' className='py-16 bg-jetBlack text-lightGray'>
       <div className='max-w-screen-xl mx-auto text-center'>
         <h2 className='text-4xl md:text-5xl font-serif font-bold text-mustard mb-12 animate-fade-in-up'>
-          Galeria de Trabajos Destacados
+          Trabajos Destacados
         </h2>
         <Swiper
           modules={[Navigation, Pagination, A11y]}

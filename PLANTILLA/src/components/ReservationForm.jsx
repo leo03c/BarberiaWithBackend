@@ -1,14 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 function ReservationForm() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    date: "",
     service: "",
+    date: "",
     message: "",
   });
+  const [services, setServices] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+  const [selectedAppointments, setSelectedAppointments] = useState([]);
+  const [allSelected, setAllSelected] = useState(false);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/servicios/")
+      .then((res) => res.json())
+      .then((data) => setServices(data))
+      .catch((err) => console.error("Error fetching services:", err));
+  }, []);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/citas/")
+      .then((res) => res.json())
+      .then((data) => setAppointments(data))
+      .catch((err) => console.error("Error fetching appointments:", err));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,129 +33,121 @@ function ReservationForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Datos enviados:", formData);
-    alert("Tu cita ha sido reservada con éxito. ¡Te esperamos!");
+    setFormData({ service: "", date: "", message: "" });
+  };
+
+  const handleSelectAppointment = (id) => {
+    setSelectedAppointments((prev) =>
+      prev.includes(id) ? prev.filter((apptId) => apptId !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedAppointments([]);
+    } else {
+      setSelectedAppointments(appointments.map((appt) => appt.id));
+    }
+    setAllSelected(!allSelected);
+  };
+
+  const handleDeleteAppointments = () => {
+    selectedAppointments.forEach((id) => {
+      fetch(`http://127.0.0.1:8000/citas/${id}/`, {
+        method: "DELETE",
+      })
+        .then(() => setAppointments((prev) => prev.filter((appt) => appt.id !== id)))
+        .catch((err) => console.error("Error deleting appointment:", err));
+    });
+    setSelectedAppointments([]);
+    setAllSelected(false);
   };
 
   return (
-    <div className="min-h-screen bg-jetBlack py-16 px-6 flex items-center justify-center">
-      <motion.div
-        className="max-w-4xl w-full bg-white bg-opacity-10 backdrop-blur-md rounded-3xl shadow-2xl p-8"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <h2 className="text-4xl text-mustard font-serif font-bold text-center mb-10">
-          Reserva tu Cita
-        </h2>
-
+    <div className="min-h-screen bg-jetBlack py-16 px-6 flex items-start justify-center">
+      <div className="max-w-6xl w-full flex gap-8">
         {/* FORMULARIO */}
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Campo Nombre */}
-          <div>
-            <label className="block text-lightGray font-medium mb-2" htmlFor="name">
-              Nombre Completo
-            </label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              value={formData.name}
+        <motion.div
+          className="w-1/2 bg-white bg-opacity-10 backdrop-blur-md rounded-3xl shadow-2xl p-8"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="text-4xl text-mustard font-serif font-bold text-center mb-6">
+            Reserva tu Cita
+          </h2>
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
+            <select
+              name="service"
+              value={formData.service}
               onChange={handleChange}
-              className="w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-mustard transition-all"
-              placeholder="Tu Nombre"
+              className="w-full p-3 rounded-lg bg-transparent border border-bronze text-lightGray"
               required
-            />
-          </div>
-
-          {/* Campo Email */}
-          <div>
-            <label className="block text-lightGray font-medium mb-2" htmlFor="email">
-              Correo Electrónico
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-mustard transition-all"
-              placeholder="tuemail@example.com"
-              required
-            />
-          </div>
-
-          {/* Campo Fecha y Hora */}
-          <div>
-            <label className="block text-lightGray font-medium mb-2" htmlFor="date">
-              Fecha y Hora
-            </label>
+            >
+              <option value="">Selecciona un servicio</option>
+              {services.map((service) => (
+                <option key={service.id} value={service.id}>{service.nombre} - ${service.precio}</option>
+              ))}
+            </select>
             <input
               type="datetime-local"
               name="date"
-              id="date"
               value={formData.date}
               onChange={handleChange}
-              className="w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray focus:outline-none focus:ring-2 focus:ring-mustard transition-all"
+              className="w-full p-3 rounded-lg bg-transparent border border-bronze text-lightGray"
               required
             />
-          </div>
-
-          {/* Selección de Servicio */}
-          <div>
-            <label className="block text-lightGray font-medium mb-2" htmlFor="service">
-              Servicio
-            </label>
-            <select
-  name="service"
-  id="service"
-  value={formData.service}
-  onChange={handleChange}
-  className="w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray appearance-none focus:outline-none focus:ring-2 focus:ring-mustard transition-all"
-  style={{
-    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E")`, // Flecha personalizada
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "right 1rem center",
-    backgroundSize: "1rem",
-  }}
-  required
->
-  <option value="">Selecciona un servicio</option>
-  <option value="Peluquería">Peluquería</option>
-  <option value="Barbería">Barbería</option>
-  <option value="Manicura">Manicura</option>
-  <option value="Pedicura">Pedicura</option>
-</select>
-
-          </div>
-
-          {/* Mensaje */}
-          <div className="md:col-span-2">
-            <label className="block text-lightGray font-medium mb-2" htmlFor="message">
-              Comentarios Adicionales
-            </label>
             <textarea
               name="message"
-              id="message"
               value={formData.message}
               onChange={handleChange}
-              className="w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-mustard transition-all"
-              rows="5"
-              placeholder="Escribe tus solicitudes especiales"
+              placeholder="Comentarios Adicionales"
+              className="w-full p-3 rounded-lg bg-transparent border border-bronze text-lightGray"
+              rows="2"
             ></textarea>
-          </div>
-
-          {/* Botón de Enviar */}
-          <div className="md:col-span-2 flex justify-center">
-            <button
-              type="submit"
-              className="bg-mustard text-jetBlack font-bold py-4 px-8 rounded-lg shadow-md hover:bg-bronze hover:text-lightGray transition-all duration-300"
-            >
+            <button type="submit" className="bg-mustard text-black font-bold py-3 rounded-lg shadow-md">
               Reservar Cita
             </button>
-          </div>
-        </form>
-      </motion.div>
+          </form>
+        </motion.div>
+
+        {/* LISTA DE CITAS */}
+        <div className="w-1/2 bg-white bg-opacity-10 backdrop-blur-md rounded-3xl shadow-2xl p-8">
+          <h3 className="text-3xl text-mustard font-serif font-bold mb-4">Tus Citas</h3>
+          {appointments.length === 0 ? (
+            <p className="text-lightGray">No hay citas reservadas.</p>
+          ) : (
+            <>
+              <ul className="space-y-4">
+                {appointments.map((appt) => {
+                  const service = services.find((s) => s.id === appt.servicioid);
+                  return (
+                    <li
+                      key={appt.id}
+                      className={`p-3 rounded-lg border cursor-pointer transition-all duration-300 ${
+                        selectedAppointments.includes(appt.id)
+                          ? "border-mustard bg-mustard text-jetBlack"
+                          : "border-bronze bg-jetBlack text-lightGray"
+                      }`}
+                      onClick={() => handleSelectAppointment(appt.id)}
+                    >
+                      <strong>{service ? service.nombre : "Servicio desconocido"}</strong> - {new Date(appt.fecha).toLocaleString()}
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="mt-4 flex gap-4">
+                <button onClick={toggleSelectAll} className="bg-mustard text-black font-bold py-3 px-4 rounded-lg shadow-md">
+                  {allSelected ? "Deseleccionar Todas" : "Seleccionar Todas"}
+                </button>
+                <button onClick={handleDeleteAppointments} className="border border-mustard bg-white bg-opacity-10 text-lightGray font-bold py-3 px-4 rounded-lg shadow-md" disabled={selectedAppointments.length === 0}>
+                  Eliminar Seleccionadas
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
