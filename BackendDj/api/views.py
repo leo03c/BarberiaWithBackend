@@ -19,6 +19,15 @@ from .serializers import ReseñaSerializer
 from .serializers import TrabajadorSerializer
 from .serializers import ServicioSerializer
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 # Create your views here.
 class ProductoFilter(filters.FilterSet):
     class Meta:
@@ -119,3 +128,27 @@ class PagoViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.DjangoFilterBackend]  # Requiere django-filter
     filterset_class = PagoFilter
 
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+
+        if user:
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                }
+            })
+        return Response({'error': 'Credenciales inválidas'}, status=400)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def protected_view(request):
+    return Response({'message': 'Acceso permitido'})

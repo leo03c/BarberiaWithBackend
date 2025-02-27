@@ -1,23 +1,27 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; // Importa Router, Route y Routes
-import Header from "./components/Header"; // Componente del encabezado
-import Main from "./components/main"; // Asegúrate de que el nombre del archivo y del componente sea correcto
-import Footer from "./components/Footer"; // Componente del pie de página
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useState } from "react";
+import Header from "./components/Header";
+import Main from "./components/main";
+import Footer from "./components/Footer";
 import Compra from "./components/Compra";
-import ReservationPage from "./components/ReservationPage"; // Componente de 
+import ReservationPage from "./components/ReservationPage";
+import ClienteForm from "./components/ClienteForm";
 
 function App() {
+  const [user, setUser] = useState(null); // Estado para manejar el usuario autenticado
+
   return (
-    <Router> {/* Configura el Router para navegación */}
-      <Header /> {/* Componente del encabezado */}
+    <Router>
+      <Header user={user} setUser={setUser} /> {/* Pasamos user y setUser */}
       
-      <Routes> {/* Define las rutas aquí */}
-        <Route path="archivo/" element={<Main />} /> {/* Ruta principal que renderiza el componente Main */}
-        <Route path="archivo/reserva" element={< ReservationPage/>} /> {/* Ruta para los servicios */}
-        <Route path="archivo/compra" element={< Compra/>} /> {/* Ruta para los servicios */}
-        {/* Agrega más rutas según sea necesario */}
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/reserva" element={<ReservationPage />} />
+        <Route path="/clienteform" element={<ClienteForm setUser={setUser} />} />
+        <Route path="/compra" element={<Compra />} />
       </Routes>
 
-      <Footer /> {/* Componente del pie de página */}
+      <Footer />
     </Router>
   );
 }
