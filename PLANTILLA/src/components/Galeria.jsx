@@ -4,27 +4,39 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-import imgProducto1 from '../assets/Galeria1.webp';
-import imgProducto2 from '../assets/Galeria2.webp';
-import imgProducto3 from '../assets/Galeria3.webp';
-import imgProducto4 from '../assets/Galeria4.webp';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const Galeria = () => {
-  const products = [
-    {
-      image: imgProducto1,
-    },
-    {
-      image: imgProducto2,
-    },
-    {
-      image: imgProducto3,
-    },
-    {
-      image: imgProducto4,
-    },
-  ];
+  const [data, setData] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const url = '';
+
+  const fetchData = async () => {
+    setLoading(true);
+
+    try {
+      const response = await fetch(url);
+      const jsonData = await response.json();
+
+      if (!response.ok) {
+        throw new Error('Error al obtener los datos');
+      }
+
+      setData(jsonData);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (isLoading) return <div>Cargando...</div>;
 
   return (
     <section id='productos' className='py-16 bg-jetBlack text-lightGray'>
@@ -50,12 +62,12 @@ const Galeria = () => {
             },
           }}
         >
-          {products.map((product, index) => (
+          {products.map((product) => (
             <SwiperSlide key={index}>
               <div className='relative bg-jetBlack rounded-lg overflow-hidden shadow-xl transform transition-all duration-300 hover:scale-105'>
                 <img
                   src={product.image}
-                  alt={`Producto ${index + 1}`}
+                  alt={` Imagen ${index + 1}`}
                   className='w-full h-64 object-cover'
                 />
               </div>
