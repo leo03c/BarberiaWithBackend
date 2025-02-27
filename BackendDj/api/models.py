@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 
 class Trabajador(models.Model):
@@ -7,7 +7,7 @@ class Trabajador(models.Model):
     nombre = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=150)
     ci = models.IntegerField(primary_key=True)
-    salario = models.DecimalField( decimal_places=2,max_digits=6)
+    salario = models.IntegerField()
     puesto = models.CharField(max_length=100)
     
     def __str__(self):
@@ -64,7 +64,7 @@ class Cita(models.Model):
     
         
     def __str__(self):
-        return self.fecha
+        return self.fecha.strftime("%Y-%m-%d %H:%M")  
         
 class Promocion(models.Model):
           
@@ -75,14 +75,12 @@ class Promocion(models.Model):
         return self.nombre
     
 class Reseña(models.Model):
-
-    clienteid = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    clasificacion = models.IntegerField()
+    clienteid = models.ForeignKey("Cliente", on_delete=models.CASCADE)
+    clasificacion = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comentario = models.TextField()
-    
-    def __str__(self):
-        return self.clasificacion
 
+    def __str__(self):
+        return f"Reseña de {self.clienteid.nombre} - {self.clasificacion}★"
    
 class Pago(models.Model):
 
@@ -91,6 +89,6 @@ class Pago(models.Model):
     clienteid = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.tarjeta       
+        return str(self.tarjeta)      
 
         

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom"; // Para redirigir
 
-function ClienteForm() {
+function ClienteForm({setUser}) {
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
