@@ -81,3 +81,4 @@ const Header = ({ user, setUser }) => {
 };
 
 export default Header;
+// falta lo de pasar el prop
