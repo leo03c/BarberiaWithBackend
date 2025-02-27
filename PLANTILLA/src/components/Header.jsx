@@ -32,7 +32,7 @@ const Header = ({ user, setUser }) => {
             {["Inicio", "Servicios", "Productos", "Contacto"].map((item) => (
               <li key={item}>
                 <a
-                  href={`#${item.toLowerCase()}`}
+                  href={`/#${item.toLowerCase()}`}
                   className="text-lightGray uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300"
                 >
                   {item}
