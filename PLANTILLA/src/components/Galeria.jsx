@@ -11,7 +11,7 @@ const Galeria = () => {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const url = '';
+  const url = 'http://127.0.0.1:8000/fotos/';
 
   const fetchData = async () => {
     setLoading(true);
@@ -38,6 +38,8 @@ const Galeria = () => {
 
   if (isLoading) return <div>Cargando...</div>;
 
+  if (error) return <div>{error}</div>;
+
   return (
     <section id='productos' className='py-16 bg-jetBlack text-lightGray'>
       <div className='max-w-screen-xl mx-auto text-center'>
@@ -62,12 +64,12 @@ const Galeria = () => {
             },
           }}
         >
-          {products.map((product) => (
-            <SwiperSlide key={index}>
+          {data.map((data) => (
+            <SwiperSlide key={data.id}>
               <div className='relative bg-jetBlack rounded-lg overflow-hidden shadow-xl transform transition-all duration-300 hover:scale-105'>
                 <img
-                  src={product.image}
-                  alt={` Imagen ${index + 1}`}
+                  src={data.imag}
+                  alt={` Imagen ${data.id + 1}`}
                   className='w-full h-64 object-cover'
                 />
               </div>
