@@ -1,37 +1,38 @@
-import imgProducto1 from '../assets/Galeria1.webp';
-import imgProducto2 from '../assets/Galeria2.webp';
-import imgProducto3 from '../assets/Galeria3.webp';
-import imgProducto4 from '../assets/Galeria4.webp';
-import imgProducto5 from '../assets/Galeria5.webp';
-
-const products = [
-  {
-    id: 1,
-    image: imgProducto1,
-  },
-  {
-    id: 2,
-    image: imgProducto2,
-  },
-  {
-    id: 3,
-    image: imgProducto3,
-  },
-  {
-    id: 4,
-    image: imgProducto4,
-  },
-  {
-    id: 5,
-    image: imgProducto5,
-  },
-  {
-    id: 6,
-    image: 'https://via.placeholder.com/150',
-  },
-];
+import { useEffect, useState } from 'react';
 
 const Gallery = () => {
+  const [data, setData] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const url = 'http://127.0.0.1:8000/fotos/';
+
+  const fetchData = async () => {
+    setLoading(true);
+
+    try {
+      const response = await fetch(url);
+      const jsonData = await response.json();
+
+      if (!response.ok) {
+        throw new Error('Error al obtener los datos');
+      }
+
+      setData(jsonData);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (isLoading) return <div>Cargando...</div>;
+
+  if (error) return <div>{error}</div>;
+
   return (
     <div className='bg-jetBlack text-lightGray min-h-screen py-12 pt-24'>
       <div className='max-w-7xl mx-auto px-6'>
@@ -41,14 +42,14 @@ const Gallery = () => {
 
         {/* Lista de Productos en Grid */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8'>
-          {products.map((product) => (
+          {data.map((data) => (
             <div
-              key={product.id}
+              key={data.id}
               className='bg-lightGray rounded-lg shadow-lg hover:shadow-xl transition-all'
             >
               <img
-                src={product.image}
-                alt={product.name}
+                src={data.imag}
+                alt={data.name}
                 className='w-full h-52 object-cover'
               />
             </div>
