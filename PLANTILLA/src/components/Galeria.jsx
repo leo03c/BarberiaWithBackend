@@ -4,33 +4,15 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import { Link } from 'react-router-dom';
-import { useEffect, useState, useRef } from 'react';
+import { useRef } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useFetch } from '../hook/useFetch';
 
 const Galeria = () => {
-  const [data, setData] = useState([]);
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const swiperRef = useRef(null);
   const url = 'http://127.0.0.1:8000/fotos/';
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(url);
-      const jsonData = await response.json();
-      if (!response.ok) throw new Error('Error al obtener los datos');
-      setData(jsonData);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const { data, isLoading, error } = useFetch(url);
 
   if (isLoading) return <div>Cargando...</div>;
   if (error) return <div>{error.message}</div>;
@@ -76,7 +58,6 @@ const Galeria = () => {
             ))}
           </Swiper>
 
-          {/* Botón Siguiente */}
           <button
             onClick={() => swiperRef.current?.slideNext()}
             className='absolute top-1/2 right-0 transform -translate-y-1/2 px-4 bg-mustard text-jetBlack p-2 rounded-full shadow-lg hover:bg-bronze transition-all duration-300 z-10'
