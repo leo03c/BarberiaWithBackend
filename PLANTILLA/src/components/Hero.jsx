@@ -29,10 +29,10 @@ const Hero = () => {
             Reserva una Cita
           </Link>
           <a
-            href="#productos"
+            href="#trabajos"
             className="border-2 border-mustard text-mustard px-8 py-3 rounded-full font-semibold hover:bg-mustard hover:text-jetBlack transition-all duration-300"
           >
-            Explora Productos
+            Nuestros Trabajos
           </a>
         </div>
       </div>

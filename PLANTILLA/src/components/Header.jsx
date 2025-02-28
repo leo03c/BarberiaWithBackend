@@ -24,14 +24,14 @@ const Header = ({ user, setUser }) => {
           : 'bg-white bg-opacity-10 backdrop-blur-md'
       }`}
     >
-      <div className='flex justify-between items-center px-6 md:px-12 py-4'>
-        <h1 className='text-2xl md:text-4xl font-serif font-bold text-mustard tracking-wider'>
+      <div className="flex justify-between items-center px-6 md:px-12 py-4">
+        <h1 className="text-2xl md:text-4xl font-serif font-bold text-mustard tracking-wider">
           RYAL
         </h1>
 
         <nav>
-          <ul className='flex space-x-4 md:space-x-8 items-center'>
-            {['Inicio', 'Servicios', 'Productos', 'Contacto'].map((item) => (
+          <ul className="flex space-x-4 md:space-x-8 items-center">
+            {["Inicio", "Servicios", "Contacto"].map((item) => (
               <li key={item}>
                 <a
                   href={`/#${item.toLowerCase()}`}

@@ -3,9 +3,9 @@ import { useState } from 'react';
 import Header from './components/Header';
 import Main from './components/main';
 import Footer from './components/Footer';
-import Gallery from './components/Gallery';
 import ReservationPage from './components/ReservationPage';
 import ClienteForm from './components/ClienteForm';
+import Galeria from './components/Galeria';
 
 function App() {
   const [user, setUser] = useState(null); // Estado para manejar el usuario autenticado
@@ -16,11 +16,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Main />} />
         <Route path='/reserva' element={<ReservationPage />} />
-        <Route
-          path='/clienteform'
-          element={<ClienteForm setUser={setUser} />}
-        />
-        <Route path='/galeria/' element={<Gallery />} />
+        <Route path='/clienteform' element={<ClienteForm setUser={setUser} />}/>
+        <Route path='/galeria/' element={<Galeria />} />
       </Routes>
       <Footer />
     </Router>
