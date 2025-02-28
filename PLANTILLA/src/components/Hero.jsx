@@ -11,7 +11,7 @@ const Hero = () => {
       }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-jetBlack to-forestGreen opacity-70"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-jetBlack to-gray-800 opacity-70"></div>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col justify-center items-center h-full text-center px-6">
