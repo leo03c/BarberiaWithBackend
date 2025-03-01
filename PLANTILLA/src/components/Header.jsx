@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 
-const Header = ({ user, setUser }) => {
+const Header = () => {
   const [scrolling, setScrolling] = useState(false);
+  const { user, logout } = useAuth(); // Obtiene el usuario y la función de logout
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,7 +16,8 @@ const Header = ({ user, setUser }) => {
   }, []);
 
   const handleLogout = () => {
-    setUser(null); // Cierra sesión sin recargar la página
+    logout(); // Cierra sesión utilizando el contexto
+    navigate('/'); // Redirige a la página de inicio
   };
 
   return (
@@ -24,14 +28,14 @@ const Header = ({ user, setUser }) => {
           : 'bg-white bg-opacity-10 backdrop-blur-md'
       }`}
     >
-      <div className="flex justify-between items-center px-6 md:px-12 py-4">
-        <h1 className="text-2xl md:text-4xl font-serif font-bold text-mustard tracking-wider">
+      <div className='flex justify-between items-center px-6 md:px-12 py-4'>
+        <h1 className='text-2xl md:text-4xl font-serif font-bold text-mustard tracking-wider'>
           RYAL
         </h1>
 
         <nav>
-          <ul className="flex space-x-4 md:space-x-8 items-center">
-            {["Inicio", "Servicios", "Contacto"].map((item) => (
+          <ul className='flex space-x-4 md:space-x-8 items-center'>
+            {['Inicio', 'Servicios', 'Contacto'].map((item) => (
               <li key={item}>
                 <a
                   href={`/#${item.toLowerCase()}`}
@@ -41,10 +45,11 @@ const Header = ({ user, setUser }) => {
                 </a>
               </li>
             ))}
+
             {user ? (
               <>
                 <li className='text-lightGray text-sm md:text-base font-semibold'>
-                  {user.name}
+                  {user} {/* Muestra el nombre del usuario */}
                 </li>
                 <li>
                   <button
@@ -59,7 +64,7 @@ const Header = ({ user, setUser }) => {
               <>
                 <li>
                   <Link
-                    to='/login'
+                    to='/LoginForm'
                     className='text-lightGray border border-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-mustard hover:text-jetBlack transition-all duration-300'
                   >
                     Iniciar sesión
@@ -83,4 +88,3 @@ const Header = ({ user, setUser }) => {
 };
 
 export default Header;
-// falta lo de pasar el prop
