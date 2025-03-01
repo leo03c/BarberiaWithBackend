@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import ReservationPage from './components/ReservationPage';
 import ClienteForm from './components/ClienteForm';
 import Gallery from './components/Gallery';
+import LoginForm from './components/Login';
 
 function App() {
   const [user, setUser] = useState(null); // Estado para manejar el usuario autenticado
@@ -20,6 +21,8 @@ function App() {
           path='/clienteform'
           element={<ClienteForm setUser={setUser} />}
         />
+        <Route path='/LoginForm' element={<LoginForm />} />
+
         <Route path='/galeria/' element={<Gallery />} />
       </Routes>
       <Footer />
