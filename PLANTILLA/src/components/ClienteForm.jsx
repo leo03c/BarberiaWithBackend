@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import * as z from 'zod';
 
-// ✅ Esquema de validación con Zod
 const schema = z.object({
   nombre: z.string().min(2, 'El nombre debe tener al menos 2 caracteres.'),
   apellidos: z
@@ -49,7 +48,6 @@ const ClienteForm = () => {
       const enlaceGenerado = generarEnlace(formData.usuario);
       const dataToSend = {
         ...formData,
-        telefono: formData.telefono || null,
         enlace: enlaceGenerado,
       };
 
