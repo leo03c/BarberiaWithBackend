@@ -8,6 +8,46 @@ from .models import Reseña
 from .models import Servicio
 from .models import Trabajador
 from .models import Pago
+from rest_framework import serializers
+from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.hashers import make_password, check_password
+
+
+class CustomTokenObtainPairSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    access = serializers.CharField(read_only=True)
+    refresh = serializers.CharField(read_only=True)
+
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
+
+        # Usa .filter() en lugar de .get() para evitar errores si hay duplicados
+        users = Cliente.objects.filter(usuario=username)
+        if not users.exists():
+            raise serializers.ValidationError('Usuario o contraseña incorrectos.')
+
+        user = users.first()  # Obtén el primer usuario encontrado
+
+        # Verifica la contraseña encriptada
+        if not check_password(password, user.password):
+            raise serializers.ValidationError('Usuario o contraseña incorrectos.')
+
+        # Genera los tokens JWT
+        refresh = RefreshToken.for_user(user)
+        data['access'] = str(refresh.access_token)
+        data['refresh'] = str(refresh)
+
+        # Incluye información adicional del usuario
+        data['user'] = {
+            'id': user.id,
+            'username': user.usuario,
+            'email': user.correo,
+        }
+
+        return data
 
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
