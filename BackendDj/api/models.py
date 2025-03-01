@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.hashers import make_password
 # Create your models here.
 
 class Trabajador(models.Model):
@@ -33,6 +34,13 @@ class Cliente(models.Model):
     telefono = models.IntegerField(null=False)
     password = models.TextField(null=False)
     enlace = models.CharField(max_length=100)
+    
+    def save(self, *args, **kwargs):
+        # Verifica si la contraseña NO está encriptada
+        if not self.password.startswith('pbkdf2_sha256$'):
+            # Encripta la contraseña
+            self.password = make_password(self.password)
+        super(Cliente, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.nombre
