@@ -1,84 +1,73 @@
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom'; // Para redirigir
+import { useNavigate } from 'react-router-dom';
+import * as z from 'zod';
 
-function ClienteForm({ setUser }) {
-  const [formData, setFormData] = useState({
-    nombre: '',
-    apellidos: '',
-    usuario: '',
-    correo: '',
-    telefono: '',
-    password: '',
+// ✅ Esquema de validación con Zod
+const schema = z.object({
+  nombre: z.string().min(2, 'El nombre debe tener al menos 2 caracteres.'),
+  apellidos: z
+    .string()
+    .min(2, 'Los apellidos deben tener al menos 2 caracteres.'),
+  usuario: z.string().min(3, 'El usuario debe tener al menos 3 caracteres.'),
+  correo: z.string().email('Ingrese un correo válido.'),
+  telefono: z
+    .string()
+    .regex(/^\d{8,10}$/, 'El teléfono debe tener entre 8 y 10  dígitos.')
+    .optional(),
+  password: z
+    .string()
+    .min(6, 'La contraseña debe tener al menos 6 caracteres.'),
+});
+
+const ClienteForm = () => {
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm({
+    resolver: zodResolver(schema),
   });
-
-  const [mensaje, setMensaje] = useState(''); // Estado para mostrar mensaje en pantalla
-  const navigate = useNavigate(); // Hook para redirigir
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
 
   const generarEnlace = (usuario) => {
     const caracteres =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let randomString = '';
-    for (let i = 0; i < 7; i++) {
-      randomString += caracteres.charAt(
-        Math.floor(Math.random() * caracteres.length)
-      );
-    }
-    return usuario + randomString;
+    return (
+      usuario +
+      Array.from({ length: 7 }, () =>
+        caracteres.charAt(Math.floor(Math.random() * caracteres.length))
+      ).join('')
+    );
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (formData) => {
     try {
       const enlaceGenerado = generarEnlace(formData.usuario);
-
       const dataToSend = {
         ...formData,
-        telefono:
-          formData.telefono.trim() === ''
-            ? null
-            : parseInt(formData.telefono, 10),
+        telefono: formData.telefono || null,
         enlace: enlaceGenerado,
       };
 
-      const response = await fetch('http://127.0.0.1:8000/clientes/', {
+      const response = await fetch('http://127.0.0.1:8000/api/registro/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dataToSend),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          `Error al registrar cliente: ${
-            errorData.message || 'Detalles no disponibles'
-          }`
-        );
+        throw new Error(errorData.message || 'Error al registrar cliente.');
       }
 
-      setMensaje('Registro exitoso. Redirigiendo...'); // Mostrar mensaje
-
-      setTimeout(() => {
-        navigate('/'); // Redirigir después de 3 segundos
-      }, 1);
-
-      setFormData({
-        nombre: '',
-        apellidos: '',
-        usuario: '',
-        correo: '',
-        telefono: '',
-        password: '',
-      });
+      setTimeout(() => navigate('/'), 1000);
+      reset();
     } catch (error) {
-      setMensaje(`Hubo un problema: ${error.message}`);
+      console.log(`Hubo un problema: ${error.message}`);
     }
   };
 
@@ -94,135 +83,108 @@ function ClienteForm({ setUser }) {
           Registro de Cliente
         </h2>
 
-        {mensaje && (
-          <p className='text-center text-green-400 font-semibold mb-4'>
-            {mensaje}
-          </p>
-        )}
-
         <form
-          onSubmit={handleSubmit}
-          className='grid grid-cols-1 md:grid-cols-2 gap-8'
+          onSubmit={handleSubmit(onSubmit)}
+          className='grid grid-cols-1 md:grid-cols-2 gap-6'
         >
           <div>
-            <label
-              className='block text-lightGray font-medium mb-2'
-              htmlFor='nombre'
-            >
+            <label className='block text-lightGray font-medium mb-2'>
               Nombre
             </label>
             <input
-              type='text'
-              name='nombre'
-              id='nombre'
-              value={formData.nombre}
-              onChange={handleChange}
+              {...register('nombre')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
-              required
+              placeholder='Ej: Juan'
             />
+            {errors.nombre && (
+              <p className='text-red-400 text-sm'>{errors.nombre.message}</p>
+            )}
           </div>
 
           <div>
-            <label
-              className='block text-lightGray font-medium mb-2'
-              htmlFor='apellidos'
-            >
+            <label className='block text-lightGray font-medium mb-2'>
               Apellidos
             </label>
             <input
-              type='text'
-              name='apellidos'
-              id='apellidos'
-              value={formData.apellidos}
-              onChange={handleChange}
+              {...register('apellidos')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
-              required
+              placeholder='Ej: Pérez'
             />
+            {errors.apellidos && (
+              <p className='text-red-400 text-sm'>{errors.apellidos.message}</p>
+            )}
           </div>
 
           <div>
-            <label
-              className='block text-lightGray font-medium mb-2'
-              htmlFor='usuario'
-            >
+            <label className='block text-lightGray font-medium mb-2'>
               Usuario
             </label>
             <input
-              type='text'
-              name='usuario'
-              id='usuario'
-              value={formData.usuario}
-              onChange={handleChange}
+              {...register('usuario')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
-              required
+              placeholder='Ej: juan123'
             />
+            {errors.usuario && (
+              <p className='text-red-400 text-sm'>{errors.usuario.message}</p>
+            )}
           </div>
 
           <div>
-            <label
-              className='block text-lightGray font-medium mb-2'
-              htmlFor='correo'
-            >
+            <label className='block text-lightGray font-medium mb-2'>
               Correo Electrónico
             </label>
             <input
-              type='email'
-              name='correo'
-              id='correo'
-              value={formData.correo}
-              onChange={handleChange}
+              {...register('correo')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
-              required
+              placeholder='Ej: correo@ejemplo.com'
             />
+            {errors.correo && (
+              <p className='text-red-400 text-sm'>{errors.correo.message}</p>
+            )}
           </div>
 
           <div>
-            <label
-              className='block text-lightGray font-medium mb-2'
-              htmlFor='telefono'
-            >
+            <label className='block text-lightGray font-medium mb-2'>
               Teléfono
             </label>
             <input
-              type='text'
-              name='telefono'
-              id='telefono'
-              value={formData.telefono}
-              onChange={handleChange}
+              {...register('telefono')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
+              placeholder='Ej: 56870848'
             />
+            {errors.telefono && (
+              <p className='text-red-400 text-sm'>{errors.telefono.message}</p>
+            )}
           </div>
 
           <div>
-            <label
-              className='block text-lightGray font-medium mb-2'
-              htmlFor='password'
-            >
+            <label className='block text-lightGray font-medium mb-2'>
               Contraseña
             </label>
             <input
               type='password'
-              name='password'
-              id='password'
-              value={formData.password}
-              onChange={handleChange}
+              {...register('password')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
-              required
+              placeholder='Mínimo 6 caracteres'
             />
+            {errors.password && (
+              <p className='text-red-400 text-sm'>{errors.password.message}</p>
+            )}
           </div>
 
           <div className='md:col-span-2 flex justify-center'>
             <button
               type='submit'
               className='bg-mustard text-jetBlack font-bold py-4 px-8 rounded-lg shadow-md hover:bg-bronze hover:text-lightGray transition-all duration-300'
+              disabled={isSubmitting}
             >
-              Registrarse
+              {isSubmitting ? 'Registrando...' : 'Registrarse'}
             </button>
           </div>
         </form>
       </motion.div>
     </div>
   );
-}
+};
 
 export default ClienteForm;
