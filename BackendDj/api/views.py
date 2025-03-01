@@ -34,11 +34,41 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from .serializers import CustomTokenObtainPairSerializer
 
+
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+
+class RegistroClienteView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        data = request.data
+        
+        if Cliente.objects.filter(usuario=data.get('usuario')).exists():
+            return Response({"error": "El usuario ya está registrado"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            cliente = Cliente.objects.create(
+                nombre=data.get('nombre'),
+                apellidos=data.get('apellidos'),
+                usuario=data.get('usuario'),  
+                correo=data.get('correo'),
+                telefono=data.get('telefono', None),
+                password=make_password(data.get('password')) 
+            )
+
+            cliente.save()
+            return Response({"message": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
 class CustomTokenObtainPairView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
-        print("Datos recibidos en Django:", request.data)
         serializer = CustomTokenObtainPairSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
