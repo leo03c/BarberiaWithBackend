@@ -90,9 +90,9 @@ function ReservationForm() {
               className='w-full p-3 rounded-lg bg-transparent border border-bronze text-lightGray'
               required
             >
-              <option value=''>Selecciona un servicio</option>
+              <option value='' className='text-black'>Selecciona un servicio</option>
               {services.map((service) => (
-                <option key={service.id} value={service.id}>
+                <option key={service.id} value={service.id} className='text-black'>
                   {service.nombre} - ${service.precio}
                 </option>
               ))}
