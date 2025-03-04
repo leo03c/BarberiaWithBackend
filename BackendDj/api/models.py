@@ -116,13 +116,14 @@ class CustomUser(AbstractUser):
 def add_user_to_group(sender, instance, created, **kwargs):
     if created:  # Solo cuando el usuario es creado
         print(f"Usuario creado: {instance.username} con rol: {instance.role}")
+        
+        # Obtén o crea el grupo dependiendo del rol
         if instance.role == 'admin':
             group, created = Group.objects.get_or_create(name='Administración')
-            instance.groups.add(group)
-            instance.save()  # Asegúrate de guardar los cambios después de agregar al grupo
-            print(f"Usuario {instance.username} agregado al grupo 'Administración'.")
+            instance.groups.add(group)  # Añadir al grupo
         elif instance.role == 'recepcionista':
             group, created = Group.objects.get_or_create(name='Recepcion')
-            instance.groups.add(group)
-            instance.save()  # Asegúrate de guardar los cambios después de agregar al grupo
-            print(f"Usuario {instance.username} agregado al grupo 'Recepcion'.")
+            instance.groups.add(group)  # Añadir al grupo
+        
+        instance.save()  # Guardar el usuario con el grupo asignado
+        print(f"Grupos actuales del usuario {instance.username}: {instance.groups.all()}")
