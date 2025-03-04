@@ -110,20 +110,32 @@ class CustomUser(AbstractUser):
        ('admin', 'Admin'),
        ('recepcionista', 'Recepcionista'),
     )
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES,)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='recepcionista')
 
 @receiver(post_save, sender=CustomUser)
 def add_user_to_group(sender, instance, created, **kwargs):
     if created:  # Solo cuando el usuario es creado
         print(f"Usuario creado: {instance.username} con rol: {instance.role}")
         
-        # Obtén o crea el grupo dependiendo del rol
+        # Verificar el rol y asignar el grupo
+        group_name = ''
         if instance.role == 'admin':
-            group, created = Group.objects.get_or_create(name='Administración')
-            instance.groups.add(group)  # Añadir al grupo
+            group_name = 'Administración'
         elif instance.role == 'recepcionista':
-            group, created = Group.objects.get_or_create(name='Recepcion')
+            group_name = 'Recepcion'
+        
+        if group_name:
+            # Obtén o crea el grupo
+            group, created = Group.objects.get_or_create(name=group_name)
+            if created:
+                print(f"Grupo '{group_name}' creado.")
+            else:
+                print(f"Grupo '{group_name}' ya existía.")
+            
+            # Añadir al grupo
             instance.groups.add(group)  # Añadir al grupo
+
+            print(f"Grupo asignado a {instance.username}: {group_name}")
         
         instance.save()  # Guardar el usuario con el grupo asignado
         print(f"Grupos actuales del usuario {instance.username}: {instance.groups.all()}")
