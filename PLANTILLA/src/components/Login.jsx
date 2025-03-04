@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function LoginForm() {
   const [formData, setFormData] = useState({
@@ -11,7 +11,7 @@ function LoginForm() {
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth(); // Obtiene la función de login del contexto
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,6 +32,7 @@ function LoginForm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          
         },
         body: JSON.stringify(formData),
       });
@@ -53,6 +54,10 @@ function LoginForm() {
       setError('Hubo un problema. Inténtelo de nuevo.');
     }
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   return (
     <div className='min-h-screen bg-jetBlack py-16 px-6 flex items-center justify-center'>
@@ -106,9 +111,16 @@ function LoginForm() {
               required
             />
           </div>
-          <button className='bg-mustard text-jetBlack font-bold py-4 px-8 rounded-lg'>
-            Iniciar Sesión
-          </button>
+          <div className='flex justify-center'>
+            <button className='bg-mustard  text-jetBlack font-bold py-4 px-8 rounded-lg'>
+              Iniciar Sesión
+            </button>
+          </div>
+          <div className='flex justify-center'>
+            <Link to={'/clienteform'} className='text-blue-400  py-6  '>
+              No tengo una cuenta
+            </Link>
+          </div>
         </form>
       </motion.div>
     </div>
@@ -116,4 +128,3 @@ function LoginForm() {
 }
 
 export default LoginForm;
-    
