@@ -78,6 +78,9 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+AUTH_USER_MODEL = 'api.CustomUser'
+
+
 ROOT_URLCONF = 'BackendDj.urls'
 
 TEMPLATES = [
@@ -108,7 +111,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'SalonDeBelleza',
+#         'USER': 'postgres',
+#         'PASSWORD': '1210',
+#         'HOST': 'localhost',  # o la IP de tu servidor
+#         'PORT': '5432',  # Puerto por defecto de PostgreSQL
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
