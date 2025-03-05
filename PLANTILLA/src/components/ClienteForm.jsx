@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import * as z from 'zod';
 
 const schema = z.object({
@@ -180,6 +180,11 @@ const ClienteForm = () => {
             </button>
           </div>
         </form>
+        <div className='flex justify-center'>
+          <Link to={'/LoginForm'} className='text-blue-400  py-6  '>
+            Tienes una cuenta?
+          </Link>
+        </div>
       </motion.div>
     </div>
   );
