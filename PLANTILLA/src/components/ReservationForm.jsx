@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext'; 
 
 function ReservationForm() {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     service: '',
     date: '',
@@ -11,6 +13,23 @@ function ReservationForm() {
   const [appointments, setAppointments] = useState([]);
   const [selectedAppointments, setSelectedAppointments] = useState([]);
   const [allSelected, setAllSelected] = useState(false);
+  const [clientId, setClientId] = useState(null);
+
+  // Obtener el ID del cliente basado en el nombre del usuario
+  useEffect(() => {
+    if (user?.username) {
+      fetch(`http://127.0.0.1:8000/clientes/?usuario=${user.username}`) // <- Cambié 'nombre' por 'username'
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.length > 0) {
+            setClientId(data[0].id);
+          } else {
+            console.error('Cliente no encontrado.');
+          }
+        })
+        .catch((err) => console.error('Error fetching client ID:', err));
+    }
+  }, [user]);
 
   useEffect(() => {
     fetch('http://127.0.0.1:8000/servicios/')
@@ -33,7 +52,31 @@ function ReservationForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormData({ service: '', date: '', message: '' });
+    
+    if (!clientId) {
+      console.error('No se pudo obtener el ID del cliente.');
+      return;
+    }
+
+    const newAppointment = {
+      clienteid: clientId,
+      servicioid: formData.service,
+      fecha: formData.date,
+    };
+
+    fetch('http://127.0.0.1:8000/citas/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newAppointment),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setAppointments((prev) => [...prev, data]); // Agregar nueva cita a la lista
+        setFormData({ service: '', date: '', message: '' });
+      })
+      .catch((err) => console.error('Error creating appointment:', err));
   };
 
   const handleSelectAppointment = (id) => {
@@ -64,10 +107,6 @@ function ReservationForm() {
     setSelectedAppointments([]);
     setAllSelected(false);
   };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  });
 
   return (
     <div className='min-h-screen bg-jetBlack py-16 px-6 flex items-start justify-center'>
@@ -116,8 +155,9 @@ function ReservationForm() {
             <button
               type='submit'
               className='bg-mustard text-black font-bold py-3 rounded-lg shadow-md'
+              disabled={!clientId}
             >
-              Reservar Cita
+              {clientId ? 'Reservar Cita' : 'Cargando Cliente...'}
             </button>
           </form>
         </motion.div>
@@ -155,17 +195,10 @@ function ReservationForm() {
                 })}
               </ul>
               <div className='mt-4 flex gap-4'>
-                <button
-                  onClick={toggleSelectAll}
-                  className='bg-mustard text-black font-bold py-3 px-4 rounded-lg shadow-md'
-                >
+                <button onClick={toggleSelectAll} className='bg-mustard text-black font-bold py-3 px-4 rounded-lg shadow-md'>
                   {allSelected ? 'Deseleccionar Todas' : 'Seleccionar Todas'}
                 </button>
-                <button
-                  onClick={handleDeleteAppointments}
-                  className='border border-mustard bg-white bg-opacity-10 text-lightGray font-bold py-3 px-4 rounded-lg shadow-md'
-                  disabled={selectedAppointments.length === 0}
-                >
+                <button onClick={handleDeleteAppointments} className='border border-mustard bg-white bg-opacity-10 text-lightGray font-bold py-3 px-4 rounded-lg shadow-md' disabled={selectedAppointments.length === 0}>
                   Eliminar Seleccionadas
                 </button>
               </div>
