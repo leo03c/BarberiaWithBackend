@@ -197,3 +197,4 @@ class LoginView(APIView):
 @permission_classes([IsAuthenticated])
 def protected_view(request):
     return Response({'message': 'Acceso permitido'})
+
