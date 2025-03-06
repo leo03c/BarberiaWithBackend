@@ -74,6 +74,7 @@ class Cita(models.Model):
     
     clienteid  =models.ForeignKey(Cliente, on_delete=models.CASCADE)
     servicioid  =models.ForeignKey(Servicio, on_delete=models.CASCADE)
+    comentario =models.TextField(default='')
     fecha = models.DateTimeField(null=False)
     
         
