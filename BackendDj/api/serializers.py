@@ -11,7 +11,7 @@ from .models import Pago
 from rest_framework import serializers
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import check_password
 
 
 class CustomTokenObtainPairSerializer(serializers.Serializer):

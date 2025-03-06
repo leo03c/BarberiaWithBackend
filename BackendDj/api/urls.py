@@ -17,5 +17,5 @@ router.register(r'citas', views.CitaViewSet, basename='citas')
 urlpatterns = [
     path('', include(router.urls)),
     path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-     path('registro/', RegistroClienteView.as_view(), name='registro_cliente'),
+    path('registro/', RegistroClienteView.as_view(), name='registro_cliente'),
 ]

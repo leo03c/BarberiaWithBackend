@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useAuth } from '../context/AuthContext'; 
+import { useAuth } from '../context/AuthContext';
 
 function ReservationForm() {
   const { user } = useAuth();
@@ -15,10 +15,9 @@ function ReservationForm() {
   const [allSelected, setAllSelected] = useState(false);
   const [clientId, setClientId] = useState(null);
 
-  // Obtener el ID del cliente basado en el nombre del usuario
   useEffect(() => {
     if (user?.username) {
-      fetch(`http://127.0.0.1:8000/clientes/?usuario=${user.username}`) // <- Cambié 'nombre' por 'username'
+      fetch(`http://127.0.0.1:8000/clientes/?usuario=${user.username}`) 
         .then((res) => res.json())
         .then((data) => {
           if (data.length > 0) {
@@ -52,7 +51,7 @@ function ReservationForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!clientId) {
       console.error('No se pudo obtener el ID del cliente.');
       return;
@@ -108,6 +107,10 @@ function ReservationForm() {
     setAllSelected(false);
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className='min-h-screen bg-jetBlack py-16 px-6 flex items-start justify-center'>
       <div className='max-w-6xl w-full flex gap-8'>
@@ -129,9 +132,15 @@ function ReservationForm() {
               className='w-full p-3 rounded-lg bg-transparent border border-bronze text-lightGray'
               required
             >
-              <option value='' className='text-black'>Selecciona un servicio</option>
+              <option value='' className='text-black'>
+                Selecciona un servicio
+              </option>
               {services.map((service) => (
-                <option key={service.id} value={service.id} className='text-black'>
+                <option
+                  key={service.id}
+                  value={service.id}
+                  className='text-black'
+                >
                   {service.nombre} - ${service.precio}
                 </option>
               ))}
@@ -195,10 +204,17 @@ function ReservationForm() {
                 })}
               </ul>
               <div className='mt-4 flex gap-4'>
-                <button onClick={toggleSelectAll} className='bg-mustard text-black font-bold py-3 px-4 rounded-lg shadow-md'>
+                <button
+                  onClick={toggleSelectAll}
+                  className='bg-mustard text-black font-bold py-3 px-4 rounded-lg shadow-md'
+                >
                   {allSelected ? 'Deseleccionar Todas' : 'Seleccionar Todas'}
                 </button>
-                <button onClick={handleDeleteAppointments} className='border border-mustard bg-white bg-opacity-10 text-lightGray font-bold py-3 px-4 rounded-lg shadow-md' disabled={selectedAppointments.length === 0}>
+                <button
+                  onClick={handleDeleteAppointments}
+                  className='border border-mustard bg-white bg-opacity-10 text-lightGray font-bold py-3 px-4 rounded-lg shadow-md'
+                  disabled={selectedAppointments.length === 0}
+                >
                   Eliminar Seleccionadas
                 </button>
               </div>

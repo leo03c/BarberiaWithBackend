@@ -8,7 +8,6 @@ from .models import Reseña
 from .models import Servicio
 from .models import Trabajador
 from .models import Pago
-from .models import CustomUser
 
 # Register your models here.
 
@@ -21,4 +20,4 @@ admin.site.register(Reseña)
 admin.site.register(Servicio)
 admin.site.register(Trabajador)
 admin.site.register(Pago)
-admin.site.register(CustomUser)
+
