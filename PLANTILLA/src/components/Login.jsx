@@ -32,7 +32,6 @@ function LoginForm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          
         },
         body: JSON.stringify(formData),
       });
@@ -47,7 +46,9 @@ function LoginForm() {
       localStorage.setItem('accessToken', data.access);
       localStorage.setItem('refreshToken', data.refresh);
 
-      login(formData.username); // Inicia sesión en el contexto
+      const dataLogin = localStorage.setItem(JSON.stringify(data));
+
+      login(dataLogin.username); // Inicia sesión en el contexto
 
       navigate('/'); // Redirige al usuario a la página de inicio
     } catch (err) {
