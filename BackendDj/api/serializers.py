@@ -1,18 +1,7 @@
 from rest_framework import serializers
-from .models import Producto
-from .models import Cita
-from .models import Cliente
-from .models import Foto
-from .models import Promocion
-from .models import Reseña
-from .models import Servicio
-from .models import Trabajador
-from .models import Pago
-from rest_framework import serializers
-from rest_framework import serializers
+from .models import Producto, Cita, Cliente, Foto, Promocion, Reseña, Servicio, Trabajador, Pago
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
-
 
 class CustomTokenObtainPairSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -24,22 +13,17 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
         username = data.get('username')
         password = data.get('password')
 
-        
-        users = Cliente.objects.filter(usuario=username)
-        if not users.exists():
+        try:
+            user = Cliente.objects.get(usuario=username)
+        except Cliente.DoesNotExist:
             raise serializers.ValidationError('Usuario o contraseña incorrectos.')
 
-        user = users.first()  
-
-      
         if not check_password(password, user.password):
             raise serializers.ValidationError('Usuario o contraseña incorrectos.')
 
-  
         refresh = RefreshToken.for_user(user)
         data['access'] = str(refresh.access_token)
         data['refresh'] = str(refresh)
-
         data['user'] = {
             'id': user.id,
             'username': user.usuario,
