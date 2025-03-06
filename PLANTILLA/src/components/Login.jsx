@@ -46,9 +46,7 @@ function LoginForm() {
       localStorage.setItem('accessToken', data.access);
       localStorage.setItem('refreshToken', data.refresh);
 
-      const dataLogin = localStorage.setItem(JSON.stringify(data));
-
-      login(dataLogin.username); // Inicia sesión en el contexto
+      login(formData.username); // Inicia sesión en el contexto
 
       navigate('/'); // Redirige al usuario a la página de inicio
     } catch (err) {
