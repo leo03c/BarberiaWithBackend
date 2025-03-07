@@ -24,7 +24,6 @@ const Galeria = () => {
           Trabajos Destacados
         </h2>
         <div className='relative'>
-          {/* Botón Anterior */}
           <button
             onClick={() => swiperRef.current?.slidePrev()}
             className='absolute top-1/2 left-0 transform -translate-y-1/2 px-4 bg-mustard text-jetBlack p-2 rounded-full shadow-lg hover:bg-bronze transition-all duration-300 z-10'
