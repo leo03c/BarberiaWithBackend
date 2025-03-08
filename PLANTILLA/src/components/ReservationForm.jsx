@@ -18,11 +18,11 @@ function ReservationForm() {
   }, []);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/citas/')
+    fetch(`http://127.0.0.1:8000/citas/?clienteid=${iduser}`)
       .then((res) => res.json())
       .then(setAppointments)
       .catch((err) => console.error('Error fetching appointments:', err));
-  }, []);
+  }, [iduser]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
