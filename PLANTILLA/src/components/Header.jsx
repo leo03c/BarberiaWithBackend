@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; 
+import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react'; 
+import { Menu, X } from 'lucide-react';
 
 const Header = () => {
   const [scrolling, setScrolling] = useState(false);
-  const [isOpen, setIsOpen] = useState(false); 
-  const { user, logout } = useAuth(); 
+  const [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,13 +19,15 @@ const Header = () => {
   }, []);
 
   const handleLogout = () => {
-    logout(); 
-    navigate('/'); 
+    logout();
+    navigate('/');
   };
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen); 
+    setIsOpen(!isOpen);
   };
+
+  const username = localStorage.getItem('username');
 
   return (
     <header
@@ -40,7 +42,6 @@ const Header = () => {
           <Link to='/'>RYAL</Link>
         </h1>
 
-        
         <button
           className='md:hidden text-mustard focus:outline-none'
           onClick={toggleMenu}
@@ -48,7 +49,6 @@ const Header = () => {
           {isOpen ? <X size={30} /> : <Menu size={30} />}
         </button>
 
-       
         <nav className='hidden md:block'>
           <ul className='flex space-x-4 md:space-x-8 items-center'>
             {['Inicio', 'Servicios', 'Contacto'].map((item) => (
@@ -64,8 +64,9 @@ const Header = () => {
 
             {user ? (
               <>
+                {/* Mostramos el nombre de usuario */}
                 <li className='text-lightGray text-sm md:text-base font-semibold'>
-                  {user} 
+                  {user.usuario}
                 </li>
                 <li>
                   <button
@@ -100,7 +101,6 @@ const Header = () => {
         </nav>
       </div>
 
-    
       <AnimatePresence>
         {isOpen && (
           <motion.nav
@@ -126,7 +126,7 @@ const Header = () => {
               {user ? (
                 <>
                   <li className='text-lightGray text-lg font-semibold'>
-                    {user}
+                    {username}
                   </li>
                   <li>
                     <button
