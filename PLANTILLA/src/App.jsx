@@ -1,31 +1,35 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { useState } from 'react';
-import Header from './components/Header';
-import Main from './components/main';
-import Footer from './components/Footer';
 import ReservationPage from './components/ReservationPage';
 import ClienteForm from './components/ClienteForm';
 import Gallery from './components/Gallery';
 import LoginForm from './components/Login';
+import Dashboard from './components/Dasboard'; // Componente del dashboard
+import ProtectedRoute from './routes/Protecred';
+import { Layout } from './Layout/MainLayout';
+import Main from './components/main';
 
 function App() {
-  const [user, setUser] = useState(null); // Estado para manejar el usuario autenticado
-
   return (
     <Router>
-      <Header user={user} setUser={setUser} /> {/* Pasamos user y setUser */}
       <Routes>
-        <Route path='/' element={<Main />} />
-        <Route path='/reserva' element={<ReservationPage />} />
-        <Route
-          path='/clienteform'
-          element={<ClienteForm setUser={setUser} />}
-        />
-        <Route path='/LoginForm' element={<LoginForm />} />
-
-        <Route path='/galeria/' element={<Gallery />} />
+        <Route path='/' element={<Layout />}>
+          {/* Página de inicio */}
+          <Route index element={<Main />} />
+          {/* Rutas hijas usando rutas relativas */}
+          <Route path='reserva' element={<ReservationPage />} />
+          <Route path='clienteform' element={<ClienteForm />} />
+          <Route path='LoginForm' element={<LoginForm />} />
+          <Route path='galeria' element={<Gallery />} />
+          <Route
+            path='dashboard'
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
       </Routes>
-      <Footer />
     </Router>
   );
 }
