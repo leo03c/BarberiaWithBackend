@@ -1,7 +1,13 @@
 from rest_framework import serializers
-from .models import Producto, Cita, Cliente, Foto, Promocion, Reseña, Servicio, Trabajador, Pago
+from .models import Producto, Cita, Usuario, Foto, Promocion, Reseña, Servicio, Trabajador, Pago
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+
+
 
 class CustomTokenObtainPairSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -14,8 +20,8 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
         password = data.get('password')
 
         try:
-            user = Cliente.objects.get(usuario=username)
-        except Cliente.DoesNotExist:
+            user = Usuario.objects.get(usuario=username)
+        except Usuario.DoesNotExist:
             raise serializers.ValidationError('Usuario o contraseña incorrectos.')
 
         if not check_password(password, user.password):
@@ -28,18 +34,20 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
             'id': user.id,
             'username': user.usuario,
             'email': user.correo,
+            'rol': user.rol,  # Se incluye el rol para la lógica en el frontend
         }
 
         return data
+
 
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = '__all__'
 
-class ClienteSerializer(serializers.ModelSerializer):
+class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cliente
+        model = Usuario
         fields = '__all__'
 
 class PagoSerializer(serializers.ModelSerializer):
