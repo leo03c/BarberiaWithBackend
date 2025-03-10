@@ -47,8 +47,12 @@ function LoginForm() {
       localStorage.setItem('refreshToken', data.refresh);
 
       login(formData.username); // Inicia sesión en el contexto
-
-      navigate('/'); // Redirige al usuario a la página de inicio
+      const role = localStorage.getItem('rol');
+      if (role === 'admin') {
+        navigate('/dashboard');
+      } else {
+        navigate('/'); // Ruta del home para clientes
+      }
     } catch (err) {
       setError('Hubo un problema. Inténtelo de nuevo.');
     }
