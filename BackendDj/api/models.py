@@ -1,10 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import Group
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+
 
 # Create your models here.
     
@@ -31,25 +28,29 @@ class Producto(models.Model):
         return self.producto
     
     
-class Cliente(models.Model):
-
+class Usuario(models.Model):
     nombre = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=150)
     usuario = models.CharField(max_length=100)
     correo = models.EmailField(null=False)
     telefono = models.IntegerField(null=False)
     password = models.TextField(null=False)
-    enlace = models.CharField(max_length=100)
+    rol = models.CharField(
+        max_length=100,
+        default='cliente',  # Valor por defecto
+        choices=[('cliente', 'Cliente'), ('admin', 'Admin')]  
+    )
     
     def save(self, *args, **kwargs):
         # Verifica si la contraseña NO está encriptada
         if not self.password.startswith('pbkdf2_sha256$'):
             # Encripta la contraseña
             self.password = make_password(self.password)
-        super(Cliente, self).save(*args, **kwargs)
+        super(Usuario, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.nombre
+
 
 class Foto(models.Model):
 
@@ -71,60 +72,39 @@ class Servicio(models.Model):
         return self.nombre
 
 class Cita(models.Model):
+    usuarioid = models.ForeignKey(Usuario, on_delete=models.CASCADE, default=1)
+    servicioid = models.ForeignKey(Servicio, on_delete=models.CASCADE)
+    comentario = models.TextField(default='')
+    fecha = models.DateTimeField()
     
-    clienteid  =models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    servicioid  =models.ForeignKey(Servicio, on_delete=models.CASCADE)
-    comentario =models.TextField(default='')
-    fecha = models.DateTimeField(null=False)
-    
-        
     def __str__(self):
-        return self.fecha.strftime("%Y-%m-%d %H:%M")  
+        return self.fecha.strftime("%Y-%m-%d %H:%M")
+
         
 class Promocion(models.Model):
           
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
+    producto = models.ForeignKey(Servicio, on_delete=models.CASCADE)
+    porcientoDesc = models.IntegerField()
 
     def __str__(self):
         return self.nombre
     
 class Reseña(models.Model):
-    clienteid = models.ForeignKey("Cliente", on_delete=models.CASCADE)
+    usuarioid = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     clasificacion = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comentario = models.TextField()
 
     def __str__(self):
-        return f"Reseña de {self.clienteid.nombre} - {self.clasificacion}★"
+        return f"Reseña de {self.usuarioid.nombre} - {self.clasificacion}★"
    
 class Pago(models.Model):
 
     tarjeta = models.IntegerField()
     monto = models.DecimalField(max_digits=5, decimal_places=2)
-    clienteid = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    usuarioid = models.ForeignKey(Usuario, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.tarjeta)      
 
-# class CustomUser(AbstractUser):
-#     ROLE_CHOICES = (
-#        ('admin', 'Admin'),
-#        ('recepcionista', 'Recepcionista'),
-#     )
-#     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='recepcionista')
-
-# @receiver(post_save, sender=CustomUser)
-# def add_user_to_group(sender, instance, created, **kwargs):
-#     if created:  # Solo cuando el usuario es creado
-#         print(f"Usuario creado: {instance.username} con rol: {instance.role}")
-        
-#         # Obtén o crea el grupo dependiendo del rol
-#         if instance.role == 'admin':
-#             group, created = Group.objects.get_or_create(name='Administración')
-#             instance.groups.add(group)  # Añadir al grupo
-#         elif instance.role == 'recepcionista':
-#             group, created = Group.objects.get_or_create(name='Recepcion')
-#             instance.groups.add(group)  # Añadir al grupo
-        
-#         instance.save()  # Guardar el usuario con el grupo asignado
-#         print(f"Grupos actuales del usuario {instance.username}: {instance.groups.all()}")
