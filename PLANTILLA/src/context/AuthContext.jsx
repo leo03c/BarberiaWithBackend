@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [iduser, setIduser] = useState(null);
@@ -9,12 +10,12 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const username = localStorage.getItem('username');
     if (username) {
-      // Realizar fetch para obtener los detalles del usuario desde la API
-      fetch(`http://127.0.0.1:8000/clientes/?usuario=${username}`) 
+      fetch(`http://127.0.0.1:8000/clientes/?usuario=${username}`)
         .then((response) => response.json())
         .then((data) => {
           if (data && data.length > 0) {
-            setUser(data[0].usuario); 
+            setUser(data[0]); // Guarda el objeto completo
+            setIduser(data[0].id); // Solo el ID
           }
         })
         .catch((error) => {
@@ -25,14 +26,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = (username) => {
     localStorage.setItem('username', username);
-    // Realizar fetch para obtener los detalles del usuario
     fetch(`http://127.0.0.1:8000/clientes/?usuario=${username}`)
       .then((response) => response.json())
       .then((data) => {
         if (data && data.length > 0) {
-          setUser(data[0].usuario); 
-          setIduser(data[0].id); 
+          setUser(data[0]); // Objeto completo
+          setIduser(data[0].id); // Solo el ID
           localStorage.setItem('id', data[0].id);
+          localStorage.setItem('rol', data[0].rol);
         }
       })
       .catch((error) => {
@@ -43,9 +44,11 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('username');
     localStorage.removeItem('id');
+    localStorage.removeItem('rol');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setUser(null);
+    localStorage.removeItem('user');
   };
 
   return (
