@@ -2,7 +2,7 @@ from django_filters import rest_framework as filters
 from rest_framework import viewsets
 from .models import Producto
 from .models import Cita
-from .models import Cliente
+from .models import Usuario
 from .models import Foto
 from .models import Pago
 from .models import Reseña
@@ -11,7 +11,7 @@ from .models import Servicio
 from .models import Trabajador
 from .serializers import ProductoSerializer
 from .serializers import CitaSerializer
-from .serializers import ClienteSerializer
+from .serializers import UsuarioSerializer
 from .serializers import FotoSerializer
 from .serializers import PagoSerializer
 from .serializers import PromocionSerializer
@@ -38,17 +38,27 @@ from .serializers import CustomTokenObtainPairSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
-class RegistroClienteView(APIView):
+class AdminDashboardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Verifica que el usuario autenticado tenga rol 'admin'
+        if request.user.rol != 'admin':
+            return Response({'detail': 'No autorizado'}, status=403)
+        # Aquí colocar la lógica para el dashboard de administración
+        return Response({'detail': 'Bienvenido al dashboard de administración'}, status=200)
+
+class RegistroUsuarioView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
         data = request.data
         
-        if Cliente.objects.filter(usuario=data.get('usuario')).exists():
+        if Usuario.objects.filter(usuario=data.get('usuario')).exists():
             return Response({"error": "El usuario ya está registrado"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            cliente = Cliente.objects.create(
+            Usuarios = Usuario.objects.create(
                 nombre=data.get('nombre'),
                 apellidos=data.get('apellidos'),
                 usuario=data.get('usuario'),  
@@ -57,7 +67,7 @@ class RegistroClienteView(APIView):
                 password=make_password(data.get('password')) 
             )
 
-            cliente.save()
+            Usuarios.save()
             return Response({"message": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -84,10 +94,10 @@ class TrabajadorFilter(filters.FilterSet):
         model = Trabajador  
         fields = ['nombre', 'apellidos', 'ci','salario', 'puesto']
 
-class ClienteFilter(filters.FilterSet):
+class UsuarioFilter(filters.FilterSet):
     class Meta:
-        model = Cliente  
-        fields = ['nombre', 'apellidos', 'usuario','correo', 'telefono', 'password', 'enlace']
+        model = Usuario  
+        fields = ['nombre', 'apellidos', 'usuario','correo', 'telefono', 'password']
 
 class FotoFilter(filters.FilterSet):
     class Meta:
@@ -102,7 +112,7 @@ class ServicioFilter(filters.FilterSet):
 class CitaFilter(filters.FilterSet):
     class Meta:
         model = Cita  
-        fields = ['clienteid', 'servicioid', 'fecha']
+        fields = ['usuarioid', 'servicioid', 'fecha']
 
 class PromocionFilter(filters.FilterSet):
     class Meta:
@@ -112,12 +122,12 @@ class PromocionFilter(filters.FilterSet):
 class ReseñaFilter(filters.FilterSet):
     class Meta:
         model = Reseña  
-        fields = ['clienteid', 'clasificacion', 'comentario']
+        fields = ['usuarioid', 'clasificacion', 'comentario']
 
 class PagoFilter(filters.FilterSet):
     class Meta:
         model = Pago  
-        fields = ['tarjeta', 'monto', 'clienteid']
+        fields = ['tarjeta', 'monto', 'usuarioid']
 
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
@@ -131,11 +141,11 @@ class TrabajadorViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.DjangoFilterBackend]  # Requiere django-filter
     filterset_class = TrabajadorFilter
 
-class ClienteViewSet(viewsets.ModelViewSet):
-    queryset = Cliente.objects.all()
-    serializer_class = ClienteSerializer
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
     filter_backends = [filters.DjangoFilterBackend]  # Requiere django-filter
-    filterset_class = ClienteFilter
+    filterset_class = UsuarioFilter
 
 class FotoViewSet(viewsets.ModelViewSet):
     queryset = Foto.objects.all()
