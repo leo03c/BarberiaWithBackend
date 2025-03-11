@@ -51,10 +51,10 @@ const Footer = () => {
               <span className="font-bold">Dirección:</span> Calle Falsa 123, Ciudad de Belleza
             </li>
             <li className="mb-2 text-lightGray">
-              <span className="font-bold">Teléfono:</span> +34 555-555-555
+              <span className="font-bold">Teléfono:</span> +53 5555555
             </li>
             <li className="text-lightGray">
-              <span className="font-bold">Email:</span> contacto@beautyluxe.com
+              <span className="font-bold">Email:</span> contacto@ryal.com
             </li>
           </ul>
         </div>
@@ -62,7 +62,7 @@ const Footer = () => {
 
       <div className="border-t border-gray-700 mt-8 pt-4">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-center sm:text-start">
-          <p className="text-lightGray">© 2024 Beauty Luxe. Todos los derechos reservados.</p>
+          <p className="text-lightGray">© 2024 RYAL. Todos los derechos reservados.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#privacy" className="hover:text-mustard text-lightGray">Política de Privacidad</a>
             <a href="#terms" className="hover:text-mustard text-lightGray">Términos y Condiciones</a>
