@@ -13,6 +13,7 @@ const testimonialSchema = z.object({
 });
 
 const userid = localStorage.getItem('id');
+const username = localStorage.getItem('username');
 
 const Testimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
@@ -59,7 +60,6 @@ const Testimonials = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Validación con Zod
       testimonialSchema.parse({
         comentario: formData.comentario,
         clasificacion: formData.clasificacion,
@@ -97,7 +97,7 @@ const Testimonials = () => {
     <section id='testimonios' className='py-16 bg-jetBlack text-lightGray'>
       <div className='max-w-screen-xl mx-auto'>
         <h2 className='text-4xl md:text-5xl font-serif font-bold text-mustard mb-12 text-center animate-fade-in-up'>
-          Testimonios de Nuestros Clientes
+          Reseña de Nuestros Clientes
         </h2>
         <div className='flex flex-col md:flex-row gap-8'>
           {/* Columna Izquierda: Slider de Testimonios */}
@@ -115,6 +115,7 @@ const Testimonials = () => {
                       key={testimonial.id}
                       className='w-full flex-shrink-0 flex flex-col items-center text-center px-6'
                     >
+                      <p>Usuario : {username}</p>
                       <p className='text-lg text-lightGray italic mb-4'>
                         {testimonial.comentario}
                       </p>
@@ -135,7 +136,7 @@ const Testimonials = () => {
                 </div>
               </div>
             ) : (
-              <p className='text-lightGray'>Cargando testimonios...</p>
+              <p className='text-lightGray'>Cargando Reseña...</p>
             )}
             {/* Botones de Navegación */}
             {testimonials.length > 0 && (
@@ -163,7 +164,7 @@ const Testimonials = () => {
           {/* Columna Derecha: Formulario para Enviar Testimonios */}
           <div className='md:w-1/2 bg-jetBlack p-8 rounded-xl shadow-2xl'>
             <h3 className='text-2xl font-serif font-bold text-mustard mb-6 text-center'>
-              Enviar Testimonio
+              Enviar Reseña
             </h3>
             <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
               <div>
@@ -213,7 +214,7 @@ const Testimonials = () => {
                 className='bg-mustard text-jetBlack p-3 rounded shadow-lg hover:bg-bronze transition-all duration-300'
                 onClick={handleSubmit}
               >
-                Enviar Testimonio
+                Enviar Reseña
               </button>
             </form>
           </div>
