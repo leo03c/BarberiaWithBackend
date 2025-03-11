@@ -99,12 +99,4 @@ class Reseña(models.Model):
     def __str__(self):
         return f"Reseña de {self.usuarioid.nombre} - {self.clasificacion}★"
    
-class Pago(models.Model):
-
-    tarjeta = models.IntegerField()
-    monto = models.DecimalField(max_digits=5, decimal_places=2)
-    usuarioid = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.tarjeta)      
 

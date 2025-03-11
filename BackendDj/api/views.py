@@ -4,7 +4,6 @@ from .models import Producto
 from .models import Cita
 from .models import Usuario
 from .models import Foto
-from .models import Pago
 from .models import Reseña
 from .models import Promocion
 from .models import Servicio
@@ -13,7 +12,6 @@ from .serializers import ProductoSerializer
 from .serializers import CitaSerializer
 from .serializers import UsuarioSerializer
 from .serializers import FotoSerializer
-from .serializers import PagoSerializer
 from .serializers import PromocionSerializer
 from .serializers import ReseñaSerializer
 from .serializers import TrabajadorSerializer
@@ -124,10 +122,7 @@ class ReseñaFilter(filters.FilterSet):
         model = Reseña  
         fields = ['usuarioid', 'clasificacion', 'comentario']
 
-class PagoFilter(filters.FilterSet):
-    class Meta:
-        model = Pago  
-        fields = ['tarjeta', 'monto', 'usuarioid']
+
 
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
@@ -177,11 +172,6 @@ class ReseñaViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.DjangoFilterBackend]  # Requiere django-filter
     filterset_class = ReseñaFilter
 
-class PagoViewSet(viewsets.ModelViewSet):
-    queryset = Pago.objects.all()
-    serializer_class = PagoSerializer
-    filter_backends = [filters.DjangoFilterBackend]  # Requiere django-filter
-    filterset_class = PagoFilter
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
