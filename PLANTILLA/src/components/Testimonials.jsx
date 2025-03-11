@@ -60,27 +60,35 @@ const Testimonials = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const safeUsername = username || "Usuario"; // Evitar valores nulos
+      const comentarioConUsuario = `${safeUsername}: ${formData.comentario}`;
+  
+      // Validar con Zod
       testimonialSchema.parse({
-        comentario: formData.comentario,
+        comentario: comentarioConUsuario,
         clasificacion: formData.clasificacion,
       });
+  
       setFormErrors({});
-
-      // Enviar el testimonio al backend (método POST) a "reseñas"
+  
+      // Enviar el testimonio con el comentario modificado
       const response = await fetch('http://localhost:8000/api/rese%C3%B1as/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          comentario: comentarioConUsuario, // Aquí se envía el comentario con el usuario incluido
+        }),
       });
+  
       if (response.ok) {
         const newTestimonial = await response.json();
         setTestimonials((prev) => [...prev, newTestimonial]);
-        setFormData({ comentario: '', clasificacion: 5 });
+        setFormData({ comentario: '', clasificacion: 5 }); // Limpiar formulario
       } else {
         console.error('Error submitting testimonial');
       }
     } catch (error) {
-      // Manejo de errores de validación de Zod
       if (error.errors) {
         const errors = error.errors.reduce((acc, curr) => {
           acc[curr.path[0]] = curr.message;
@@ -92,6 +100,7 @@ const Testimonials = () => {
       }
     }
   };
+  
 
   return (
     <section id='testimonios' className='py-16 bg-jetBlack text-lightGray'>
@@ -115,7 +124,7 @@ const Testimonials = () => {
                       key={testimonial.id}
                       className='w-full flex-shrink-0 flex flex-col items-center text-center px-6'
                     >
-                      <p>Usuario : {username}</p>
+                      
                       <p className='text-lg text-lightGray italic mb-4'>
                         {testimonial.comentario}
                       </p>
