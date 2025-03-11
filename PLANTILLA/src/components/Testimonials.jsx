@@ -25,19 +25,20 @@ const Testimonials = () => {
   });
   const [formErrors, setFormErrors] = useState({});
 
+  const fetchTestimonials = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/reseñas/');
+      const data = await response.json();
+      setTestimonials(data);
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+    }
+  };
+  
   useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/api/rese%C3%B1as/');
-        const data = await response.json();
-        setTestimonials(data);
-      } catch (error) {
-        console.error('Error fetching testimonials:', error);
-      }
-    };
-
     fetchTestimonials();
   }, []);
+  
 
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
@@ -59,6 +60,7 @@ const Testimonials = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     try {
       const safeUsername = username || "Usuario"; // Evitar valores nulos
       const comentarioConUsuario = `${safeUsername}: ${formData.comentario}`;
@@ -69,24 +71,25 @@ const Testimonials = () => {
         clasificacion: formData.clasificacion,
       });
   
-      setFormErrors({});
+      setFormErrors({}); // Limpiar errores
   
       // Enviar el testimonio con el comentario modificado
-      const response = await fetch('http://localhost:8000/api/rese%C3%B1as/', {
+      const response = await fetch('http://localhost:8000/api/reseñas/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          comentario: comentarioConUsuario, // Aquí se envía el comentario con el usuario incluido
+          comentario: comentarioConUsuario, // Enviar el comentario con el usuario incluido
         }),
       });
   
       if (response.ok) {
-        const newTestimonial = await response.json();
-        setTestimonials((prev) => [...prev, newTestimonial]);
-        setFormData({ comentario: '', clasificacion: 5 }); // Limpiar formulario
+        setFormData({ usuarioid: userid,comentario: '', clasificacion: 5 }); // Limpiar formulario
+        fetchTestimonials(); // Recargar la lista de testimonios
       } else {
-        console.error('Error submitting testimonial');
+        // Verificar si el servidor responde con un error (como 400)
+        const errorData = await response.json();
+        console.error('Error al enviar el testimonio:', errorData);
       }
     } catch (error) {
       if (error.errors) {
@@ -96,10 +99,12 @@ const Testimonials = () => {
         }, {});
         setFormErrors(errors);
       } else {
-        console.error('Error:', error);
+        console.error('Error inesperado:', error);
       }
     }
   };
+  
+  
   
 
   return (
@@ -173,7 +178,7 @@ const Testimonials = () => {
           {/* Columna Derecha: Formulario para Enviar Testimonios */}
           <div className='md:w-1/2 bg-jetBlack p-8 rounded-xl shadow-2xl'>
             <h3 className='text-2xl font-serif font-bold text-mustard mb-6 text-center'>
-              Enviar Reseña
+              Deja tu Reseña
             </h3>
             <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
               <div>
