@@ -7,6 +7,7 @@ import Dashboard from './components/Dasboard'; // Componente del dashboard
 import ProtectedRoute from './routes/Protecred';
 import { Layout } from './Layout/MainLayout';
 import Main from './components/main';
+import { NotFound } from './components/NotFound';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             }
           />
         </Route>
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </Router>
   );
