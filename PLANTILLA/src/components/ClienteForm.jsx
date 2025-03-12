@@ -2,6 +2,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
+import { ModalNotification } from './Modal';
+import { useState } from 'react';
 import * as z from 'zod';
 
 const schema = z.object({
@@ -21,6 +23,7 @@ const schema = z.object({
 });
 
 const ClienteForm = () => {
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -32,23 +35,10 @@ const ClienteForm = () => {
     resolver: zodResolver(schema),
   });
 
-  const generarEnlace = (usuario) => {
-    const caracteres =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    return (
-      usuario +
-      Array.from({ length: 7 }, () =>
-        caracteres.charAt(Math.floor(Math.random() * caracteres.length))
-      ).join('')
-    );
-  };
-
   const onSubmit = async (formData) => {
     try {
-      const enlaceGenerado = generarEnlace(formData.usuario);
       const dataToSend = {
         ...formData,
-        enlace: enlaceGenerado,
       };
 
       const response = await fetch('http://127.0.0.1:8000/api/registro/', {
@@ -61,8 +51,12 @@ const ClienteForm = () => {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Error al registrar cliente.');
       }
+      setShowModal(true);
 
-      setTimeout(() => navigate('/'), 1000);
+      setTimeout(() => navigate('/LoginForm'), 1500);
+      setTimeout(() => {
+        setShowModal(true);
+      }, 6000);
       reset();
     } catch (error) {
       console.log(`Hubo un problema: ${error.message}`);
@@ -80,6 +74,13 @@ const ClienteForm = () => {
         <h2 className='text-4xl text-mustard font-serif font-bold text-center mb-10'>
           Registro de Cliente
         </h2>
+
+        <ModalNotification
+          color='#4CAF50'
+          message='Registrado exitosamente'
+          isVisible={showModal}
+          onClose={() => setShowModal(false)}
+        />
 
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -181,7 +182,7 @@ const ClienteForm = () => {
           </div>
         </form>
         <div className='flex justify-center'>
-          <Link to={'/LoginForm'} className='text-blue-400  py-6  '>
+          <Link to={'/LoginForm'} className='text-lightGray  py-6  '>
             Tienes una cuenta?
           </Link>
         </div>
