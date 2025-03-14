@@ -10,6 +10,28 @@ const Header = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const [username, setUsername] = useState(localStorage.getItem('username'));
+  const [role, setRole] = useState(localStorage.getItem('rol'));
+
+  // Detectar cambios en localStorage o sesión iniciada
+  useEffect(() => {
+    const updateAuth = () => {
+      setUsername(localStorage.getItem('username'));
+      setRole(localStorage.getItem('rol'));
+    };
+
+    // Escuchar cambios en localStorage
+    window.addEventListener('storage', updateAuth);
+
+    // Escuchar evento personalizado cuando el usuario inicia sesión
+    window.addEventListener('authChanged', updateAuth);
+
+    return () => {
+      window.removeEventListener('storage', updateAuth);
+      window.removeEventListener('authChanged', updateAuth);
+    };
+  }, []);
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolling(window.scrollY > 50);
@@ -20,14 +42,16 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
+    localStorage.removeItem('username');
+    localStorage.removeItem('rol');
+    setUsername(null);
+    setRole(null);
     navigate('/');
   };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
-  const username = localStorage.getItem('username');
 
   return (
     <header
@@ -62,9 +86,17 @@ const Header = () => {
               </li>
             ))}
 
+            {/* MOSTRAR ADMIN SOLO SI CUMPLE LAS CONDICIONES */}
+            {username && role === 'admin' && (
+              <li>
+                <a href="#dashboard" className="text-lightGray uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300">
+                  Admin
+                </a>
+              </li>
+            )}
+
             {user ? (
               <>
-                {/* Mostramos el nombre de usuario */}
                 <li className='text-lightGray text-sm md:text-base font-semibold'>
                   {user.usuario}
                 </li>
@@ -122,6 +154,15 @@ const Header = () => {
                   </a>
                 </li>
               ))}
+
+              {/* MOSTRAR ADMIN SOLO SI CUMPLE LAS CONDICIONES */}
+              {username && role === 'admin' && (
+                <li>
+                  <a href="#dashboard" className="text-lightGray uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300">
+                    Admin
+                  </a>
+                </li>
+              )}
 
               {user ? (
                 <>

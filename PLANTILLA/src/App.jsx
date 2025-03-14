@@ -3,7 +3,7 @@ import ReservationPage from './components/ReservationPage';
 import ClienteForm from './components/ClienteForm';
 import Gallery from './components/Gallery';
 import LoginForm from './components/Login';
-import Dashboard from './components/Dasboard'; // Componente del dashboard
+import Dashboard from './components/dashboard/Dasboard'; // Componente del dashboard
 import ProtectedRoute from './routes/Protecred';
 import { Layout } from './Layout/MainLayout';
 import Main from './components/main';
