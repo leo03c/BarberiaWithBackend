@@ -48,11 +48,12 @@ function LoginForm() {
 
       login(formData.username); // Inicia sesión en el contexto
       const role = localStorage.getItem('rol');
-      if (role === 'admin') {
-        navigate('/dashboard');
-      } else {
-        navigate('/'); // Ruta del home para clientes
-      }
+      // if (role === 'admin') {
+      //   navigate('/dashboard');
+      // } else {
+        // navigate('/'); // Ruta del home para clientes
+      // }
+          navigate('/')
     } catch (err) {
       setError('Hubo un problema. Inténtelo de nuevo.');
     }
