@@ -10,42 +10,17 @@ const Header = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState(localStorage.getItem('username'));
-  const [role, setRole] = useState(localStorage.getItem('rol'));
-
-  // Detectar cambios en localStorage o sesión iniciada
-  useEffect(() => {
-    const updateAuth = () => {
-      setUsername(localStorage.getItem('username'));
-      setRole(localStorage.getItem('rol'));
-    };
-
-    // Escuchar cambios en localStorage
-    window.addEventListener('storage', updateAuth);
-
-    // Escuchar evento personalizado cuando el usuario inicia sesión
-    window.addEventListener('authChanged', updateAuth);
-
-    return () => {
-      window.removeEventListener('storage', updateAuth);
-      window.removeEventListener('authChanged', updateAuth);
-    };
-  }, []);
-
   useEffect(() => {
     const handleScroll = () => {
       setScrolling(window.scrollY > 50);
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleLogout = () => {
     logout();
-    localStorage.removeItem('username');
-    localStorage.removeItem('rol');
-    setUsername(null);
-    setRole(null);
     navigate('/');
   };
 
@@ -86,12 +61,15 @@ const Header = () => {
               </li>
             ))}
 
-            {/* MOSTRAR ADMIN SOLO SI CUMPLE LAS CONDICIONES */}
-            {username && role === 'admin' && (
+            {/* Muestra el enlace "Admin" si el usuario está logueado y tiene rol de admin */}
+            {user && user.rol === 'admin' && (
               <li>
-                <a href="#dashboard" className="text-lightGray uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300">
+                <Link
+                  to='/dashboard'
+                  className='text-lightGray uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300'
+                >
                   Admin
-                </a>
+                </Link>
               </li>
             )}
 
@@ -155,23 +133,29 @@ const Header = () => {
                 </li>
               ))}
 
-              {/* MOSTRAR ADMIN SOLO SI CUMPLE LAS CONDICIONES */}
-              {username && role === 'admin' && (
+              {user && user.rol === 'admin' && (
                 <li>
-                  <a href="#dashboard" className="text-lightGray uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300">
+                  <Link
+                    to='/dashboard'
+                    onClick={() => setIsOpen(false)}
+                    className='text-lightGray uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300'
+                  >
                     Admin
-                  </a>
+                  </Link>
                 </li>
               )}
 
               {user ? (
                 <>
                   <li className='text-lightGray text-lg font-semibold'>
-                    {username}
+                    {user.usuario}
                   </li>
                   <li>
                     <button
-                      onClick={handleLogout}
+                      onClick={() => {
+                        handleLogout();
+                        setIsOpen(false);
+                      }}
                       className='text-lightGray border border-mustard px-4 py-2 rounded-lg text-lg hover:bg-mustard hover:text-jetBlack transition-all duration-300'
                     >
                       Cerrar sesión
