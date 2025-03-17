@@ -101,6 +101,7 @@ const TServicios = () => {
                         <tr className="text-mustard">
                             <th className="py-2 px-4 text-left">Imagen</th>
                             <th className="py-2 px-4 text-left">Servicio</th>
+                            <th className="py-2 px-4 text-left">ID</th>
                             <th className="py-2 px-4 text-left">Precio</th>
                             <th className="py-2 px-4 text-left">Descripción</th>
                             <th className="py-2 px-4 text-center">Acciones</th>
@@ -113,6 +114,7 @@ const TServicios = () => {
                                     {servicio.imag && <img src={servicio.imag} alt={servicio.nombre} className="h-12 w-12 object-cover rounded-md" />}
                                 </td>
                                 <td className="py-2 px-4">{servicio.nombre}</td>
+                                <td className="py-2 px-4">{servicio.id}</td>
                                 <td className="py-2 px-4">${servicio.precio}</td>
                                 <td className="py-2 px-4">{servicio.descripcion}</td>
                                 <td className="py-2 px-4 flex justify-center gap-3">

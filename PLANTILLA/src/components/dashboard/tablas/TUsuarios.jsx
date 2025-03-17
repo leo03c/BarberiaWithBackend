@@ -93,6 +93,7 @@ const TUsuarios = () => {
                 <table className="w-full bg-gray-800 rounded-lg">
                     <thead>
                         <tr className="text-mustard">
+                            <th className="py-2 px-4 text-left">ID</th>
                             <th className="py-2 px-4 text-left">Nombre</th>
                             <th className="py-2 px-4 text-left">Usuario</th>
                             <th className="py-2 px-4 text-left">Correo</th>
@@ -104,6 +105,7 @@ const TUsuarios = () => {
                     <tbody>
                         {usuarios.map(user => (
                             <tr key={user.id} className="border-t border-gray-700 hover:bg-gray-700 transition">
+                                <td className="py-2 px-4">{user.id}</td>
                                 <td className="py-2 px-4">{user.nombre} {user.apellidos}</td>
                                 <td className="py-2 px-4">{user.usuario}</td>
                                 <td className="py-2 px-4">{user.correo}</td>
