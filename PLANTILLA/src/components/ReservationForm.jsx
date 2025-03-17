@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-// Importamos el custom hook useFetch para obtener datos
 import { useFetch } from '../hook/useFetch';
 
 function ReservationForm() {

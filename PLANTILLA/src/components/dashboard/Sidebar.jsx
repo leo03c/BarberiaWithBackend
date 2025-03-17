@@ -34,6 +34,11 @@ const Sidebar = () => {
                         </Link>
                     </li>
                     <li>
+                        <Link to="/dashboard/tfotos" className="flex items-center gap-2 p-3 rounded-md hover:bg-mustard/20 transition">
+                            <Calendar size={20} className="text-mustard" /> Fotos
+                        </Link>
+                    </li>
+                    <li>
                         <Link to="/dashboard/tpromociones" className="flex items-center gap-2 p-3 rounded-md hover:bg-mustard/20 transition">
                             <Percent size={20} className="text-mustard" /> Promociones
                         </Link>

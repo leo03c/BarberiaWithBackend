@@ -86,7 +86,7 @@ class Promocion(models.Model):
           
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
-    producto = models.ForeignKey(Servicio, on_delete=models.CASCADE)
+    servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE)
     porcientoDesc = models.IntegerField()
 
     def __str__(self):

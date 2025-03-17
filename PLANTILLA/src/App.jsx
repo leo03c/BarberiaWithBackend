@@ -3,7 +3,7 @@ import ReservationPage from './components/ReservationPage';
 import ClienteForm from './components/ClienteForm';
 import Gallery from './components/Gallery';
 import LoginForm from './components/Login';
-import Dashboard from './components/dashboard/Dasboard'; // Componente del dashboard
+import Dashboard from './components/dashboard/Dasboard';
 import ProtectedRoute from './routes/Protecred';
 import { Layout } from './Layout/MainLayout';
 import Main from './components/main';
@@ -15,6 +15,7 @@ import TServicios from './components/dashboard/tablas/TServicios';
 import TCitas from './components/dashboard/tablas/TCitas';
 import TPromociones from './components/dashboard/tablas/Tpromociones';
 import TReseñas from './components/dashboard/tablas/TReseñas';
+import TFotos from './components/dashboard/tablas/TFotos';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
               <Route path="tcitas" element={<TCitas />} />
               <Route path="tpromociones" element={<TPromociones />} />
               <Route path="treseñas" element={<TReseñas />} />
+              <Route path="tfotos" element={<TFotos />} />
             </Route>
           
         </Route>

@@ -8,7 +8,7 @@ const TPromociones = () => {
     const [formData, setFormData] = useState({
         nombre: "",
         descripcion: "",
-        producto: "",
+        servicio: "",
         porcientoDesc: ""
     });
     const [editingId, setEditingId] = useState(null);
@@ -46,7 +46,7 @@ const TPromociones = () => {
             });
 
             setEditingId(null);
-            setFormData({ nombre: "", descripcion: "", producto: "", porcientoDesc: "" });
+            setFormData({ nombre: "", descripcion: "", servicio: "", porcientoDesc: "" });
             fetchPromociones();
         } catch (error) {
             console.error("Error al guardar la promoción:", error);
@@ -75,7 +75,7 @@ const TPromociones = () => {
             <form onSubmit={handleSubmit} className="bg-gray-800 p-4 rounded-lg shadow mb-6">
                 <div className="grid grid-cols-2 gap-4">
                     <input type="text" name="nombre" placeholder="Nombre de la promoción" value={formData.nombre} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
-                    <input type="text" name="producto" placeholder="ID Producto" value={formData.producto} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
+                    <input type="text" name="servicio" placeholder="ID Servicio" value={formData.servicio} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
                     <textarea name="descripcion" placeholder="Descripción" value={formData.descripcion} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
                     <input type="number" name="porcientoDesc" placeholder="Porcentaje de descuento" value={formData.porcientoDesc} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
                 </div>
@@ -90,7 +90,7 @@ const TPromociones = () => {
                     <thead>
                         <tr className="text-mustard">
                             <th className="py-2 px-4 text-left">Nombre</th>
-                            <th className="py-2 px-4 text-left">Producto</th>
+                            <th className="py-2 px-4 text-left">Servicio</th>
                             <th className="py-2 px-4 text-left">Descripción</th>
                             <th className="py-2 px-4 text-left">Descuento (%)</th>
                             <th className="py-2 px-4 text-center">Acciones</th>
@@ -100,7 +100,7 @@ const TPromociones = () => {
                         {promociones.map((promocion) => (
                             <tr key={promocion.id} className="border-t border-gray-700 hover:bg-gray-700 transition">
                                 <td className="py-2 px-4">{promocion.nombre}</td>
-                                <td className="py-2 px-4">{promocion.producto}</td>
+                                <td className="py-2 px-4">{promocion.servicio}</td>
                                 <td className="py-2 px-4">{promocion.descripcion}</td>
                                 <td className="py-2 px-4">{promocion.porcientoDesc}%</td>
                                 <td className="py-2 px-4 flex justify-center gap-3">
