@@ -22,7 +22,7 @@ function ReservationForm() {
   // Usamos useFetch para obtener las citas (appointments) del cliente,
   // solamente si iduser está definido.
   const { data: appointmentsData } = useFetch(
-    iduser ? `http://127.0.0.1:8000/citas/?clienteid=${iduser}` : ''
+    iduser ? `http://127.0.0.1:8000/citas/?usuarioid=${iduser}` : ''
   );
   const [appointments, setAppointments] = useState([]);
 
@@ -61,7 +61,7 @@ function ReservationForm() {
     }
 
     const newAppointment = {
-      clienteid: iduser,
+      usuarioid: iduser,
       servicioid: formData.service,
       fecha: formData.date,
       comentario: formData.message || '',
@@ -116,9 +116,7 @@ function ReservationForm() {
   };
 
   // Al montar el componente, se asegura de que la página se posicione al inicio
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
   return (
     <div className='min-h-screen bg-jetBlack py-16 px-6 flex justify-center'>
