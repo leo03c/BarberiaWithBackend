@@ -10,7 +10,7 @@ const Hero = () => {
     if (user) {
       navigate('/reserva');
     } else {
-      navigate('/clienteform');
+      navigate('/LoginForm');
     }
   };
 
