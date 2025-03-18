@@ -3,7 +3,7 @@ import ReservationPage from './components/ReservationPage';
 import ClienteForm from './components/ClienteForm';
 import Gallery from './components/Gallery';
 import LoginForm from './components/Login';
-import Dashboard from './components/dashboard/Dasboard'; // Componente del dashboard
+import Dashboard from './components/dashboard/Dasboard'; 
 import ProtectedRoute from './routes/Protecred';
 import { Layout } from './Layout/MainLayout';
 import Main from './components/main';
@@ -16,7 +16,6 @@ function App() {
         <Route path='/' element={<Layout />}>
           {/* Página de inicio */}
           <Route index element={<Main />} />
-          {/* Rutas hijas usando rutas relativas */}
           <Route path='reserva' element={<ReservationPage />} />
           <Route path='clienteform' element={<ClienteForm />} />
           <Route path='LoginForm' element={<LoginForm />} />

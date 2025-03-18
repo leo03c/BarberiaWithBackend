@@ -47,7 +47,7 @@ function LoginForm() {
       localStorage.setItem('refreshToken', data.refresh);
 
       login(formData.username); // Inicia sesión en el contexto
-      const role = localStorage.getItem('rol');
+      // const role = localStorage.getItem('rol');
       // if (role === 'admin') {
       //   navigate('/dashboard');
       // } else {
@@ -121,7 +121,7 @@ function LoginForm() {
             </button>
           </div>
           <div className='flex justify-center'>
-            <Link to={'/clienteform'} className='text-blue-400  py-6  '>
+            <Link to={'/clienteform'} className='text-lightGray py-6  '>
               No tengo una cuenta
             </Link>
           </div>

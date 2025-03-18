@@ -20,7 +20,6 @@ function ReservationForm() {
   const [services, setServices] = useState([]);
 
   // Usamos useFetch para obtener las citas (appointments) del cliente,
-  // solamente si iduser está definido.
   const { data: appointmentsData } = useFetch(
     iduser ? `http://127.0.0.1:8000/citas/?clienteid=${iduser}` : ''
   );
