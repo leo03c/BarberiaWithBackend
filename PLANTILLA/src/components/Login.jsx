@@ -121,7 +121,7 @@ function LoginForm() {
             </button>
           </div>
           <div className='flex justify-center'>
-            <Link to={'/clienteform'} className='text-lightGray py-6  '>
+            <Link to={'/clienteform'} className='text-lightGray  py-6  '>
               No tengo una cuenta
             </Link>
           </div>

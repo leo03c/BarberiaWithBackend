@@ -145,6 +145,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 class FotoViewSet(viewsets.ModelViewSet):
     queryset = Foto.objects.all()
     serializer_class = FotoSerializer
+    # permission_classes = [IsAuthenticated]
     filter_backends = [filters.DjangoFilterBackend]  # Requiere django-filter
     filterset_class = FotoFilter
 

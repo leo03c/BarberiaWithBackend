@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { ModalNotification } from './Modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as z from 'zod';
 
 const schema = z.object({
@@ -62,7 +62,9 @@ const ClienteForm = () => {
       console.log(`Hubo un problema: ${error.message}`);
     }
   };
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className='min-h-screen bg-jetBlack py-16 px-6 flex items-center justify-center'>
       <motion.div

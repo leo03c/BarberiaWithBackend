@@ -65,7 +65,7 @@ const Header = () => {
             {user && user.rol === 'admin' && (
               <li>
                 <Link
-                  to='/dashboard'
+                  to='/dashboard/tusuario'
                   className='text-lightGray uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300'
                 >
                   Admin
