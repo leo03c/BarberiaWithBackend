@@ -85,7 +85,7 @@ class CustomTokenObtainPairView(APIView):
 class ProductoFilter(filters.FilterSet):
     class Meta:
         model = Producto  
-        fields = ['producto', 'precio', 'calidad']
+        fields = ['nombre', 'precio', 'calidad']
 
 class TrabajadorFilter(filters.FilterSet):
     class Meta:

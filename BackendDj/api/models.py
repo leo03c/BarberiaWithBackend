@@ -9,7 +9,7 @@ class Trabajador(models.Model):
 
     nombre = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=150)
-    ci = models.IntegerField(primary_key=True)
+    ci = models.IntegerField(primary_key=True)                                   #unico
     salario = models.IntegerField()
     puesto = models.CharField(max_length=100)
     
@@ -18,7 +18,7 @@ class Trabajador(models.Model):
     
 class Producto(models.Model):
 
-    producto = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100)                #unico
     precio = models.DecimalField(decimal_places=2,max_digits=7)
     calidad = models.CharField(max_length=60)
     cantidad = models.IntegerField(default=0)
@@ -26,13 +26,13 @@ class Producto(models.Model):
 
     
     def __str__(self):
-        return self.producto
+        return self.nombre
     
     
 class Usuario(models.Model):
     nombre = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=150)
-    usuario = models.CharField(max_length=100)
+    usuario = models.CharField(max_length=100)                                  #unico
     correo = models.EmailField(null=False)
     telefono = models.IntegerField(null=False)
     password = models.TextField(null=False)
@@ -64,7 +64,7 @@ class Foto(models.Model):
     
 class Servicio(models.Model):
 
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100)                                     #unico
     precio = models.DecimalField(decimal_places=2,max_digits=7)
     descripcion = models.TextField()
     imag = models.ImageField(upload_to='servicio/', blank=True, null=True)

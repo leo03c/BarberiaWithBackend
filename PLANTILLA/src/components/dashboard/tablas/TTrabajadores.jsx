@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Pencil, Trash2, PlusCircle } from "lucide-react";
+import { Pencil, Trash2, PlusCircle, ChevronLeft, ChevronRight } from "lucide-react";
 
 const API_URL = "http://localhost:8000/api/trabajadores/";
+const ITEMS_PER_PAGE = 5;
 
 const TTrabajadores = () => {
     const [trabajadores, setTrabajadores] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
     const [formData, setFormData] = useState({
         ci: "",
         nombre: "",
@@ -67,6 +69,16 @@ const TTrabajadores = () => {
         }
     };
 
+    // Calcular trabajadores para la página actual
+    const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+    const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+    const currentItems = trabajadores.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(trabajadores.length / ITEMS_PER_PAGE);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     return (
         <div className="bg-jetBlack text-lightGray p-6 rounded-lg shadow-lg mt-20">
             <h2 className="text-3xl font-serif font-bold text-mustard mb-6">Gestión de Trabajadores</h2>
@@ -100,7 +112,7 @@ const TTrabajadores = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {trabajadores.map(trabajador => (
+                        {currentItems.map(trabajador => (
                             <tr key={trabajador.ci} className="border-t border-gray-700 hover:bg-gray-700 transition">
                                 <td className="py-2 px-4">{trabajador.ci}</td>
                                 <td className="py-2 px-4">{trabajador.nombre}</td>
@@ -119,6 +131,37 @@ const TTrabajadores = () => {
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Controles de Paginación */}
+            <div className="flex justify-center items-center gap-4 mt-4">
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`p-2 rounded-md ${
+                        currentPage === 1
+                            ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                            : "bg-mustard text-jetBlack hover:bg-yellow-500"
+                    }`}
+                >
+                    <ChevronLeft size={20} />
+                </button>
+                
+                <span className="text-lightGray">
+                    Página {currentPage} de {totalPages}
+                </span>
+
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`p-2 rounded-md ${
+                        currentPage === totalPages
+                            ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                            : "bg-mustard text-jetBlack hover:bg-yellow-500"
+                    }`}
+                >
+                    <ChevronRight size={20} />
+                </button>
             </div>
         </div>
     );

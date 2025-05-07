@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 
 const API_URL = "http://localhost:8000/api/promociones/";
+const SERVICES_API_URL = "http://localhost:8000/api/servicios/";
+const ITEMS_PER_PAGE = 5;
 
 const TPromociones = () => {
     const [promociones, setPromociones] = useState([]);
+    const [servicios, setServicios] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
     const [formData, setFormData] = useState({
         nombre: "",
         descripcion: "",
@@ -15,6 +19,7 @@ const TPromociones = () => {
 
     useEffect(() => {
         fetchPromociones();
+        fetchServicios();
     }, []);
 
     const fetchPromociones = async () => {
@@ -24,6 +29,16 @@ const TPromociones = () => {
             setPromociones(data);
         } catch (error) {
             console.error("Error al obtener las promociones:", error);
+        }
+    };
+
+    const fetchServicios = async () => {
+        try {
+            const response = await fetch(SERVICES_API_URL);
+            const data = await response.json();
+            setServicios(data);
+        } catch (error) {
+            console.error("Error al obtener los servicios:", error);
         }
     };
 
@@ -67,6 +82,16 @@ const TPromociones = () => {
         }
     };
 
+    // Calcular promociones para la página actual
+    const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+    const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+    const currentItems = promociones.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(promociones.length / ITEMS_PER_PAGE);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     return (
         <div className="bg-jetBlack text-lightGray p-6 rounded-lg shadow-lg mt-20">
             <h2 className="text-3xl font-serif font-bold text-mustard mb-6">Gestión de Promociones</h2>
@@ -75,7 +100,20 @@ const TPromociones = () => {
             <form onSubmit={handleSubmit} className="bg-gray-800 p-4 rounded-lg shadow mb-6">
                 <div className="grid grid-cols-2 gap-4">
                     <input type="text" name="nombre" placeholder="Nombre de la promoción" value={formData.nombre} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
-                    <input type="text" name="servicio" placeholder="ID Servicio" value={formData.servicio} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
+                    <select 
+                        name="servicio" 
+                        value={formData.servicio} 
+                        onChange={handleInputChange} 
+                        className="p-2 bg-gray-700 text-lightGray rounded-md" 
+                        required
+                    >
+                        <option value="">Seleccione un servicio</option>
+                        {servicios.map(servicio => (
+                            <option key={servicio.id} value={servicio.id}>
+                                {servicio.nombre} - ${servicio.precio}
+                            </option>
+                        ))}
+                    </select>
                     <textarea name="descripcion" placeholder="Descripción" value={formData.descripcion} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
                     <input type="number" name="porcientoDesc" placeholder="Porcentaje de descuento" value={formData.porcientoDesc} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
                 </div>
@@ -85,7 +123,7 @@ const TPromociones = () => {
             </form>
 
             {/* Tabla de promociones */}
-            <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
+            <div className="overflow-x-auto">
                 <table className="w-full bg-gray-800 rounded-lg">
                     <thead>
                         <tr className="text-mustard">
@@ -97,24 +135,60 @@ const TPromociones = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {promociones.map((promocion) => (
-                            <tr key={promocion.id} className="border-t border-gray-700 hover:bg-gray-700 transition">
-                                <td className="py-2 px-4">{promocion.nombre}</td>
-                                <td className="py-2 px-4">{promocion.servicio}</td>
-                                <td className="py-2 px-4">{promocion.descripcion}</td>
-                                <td className="py-2 px-4">{promocion.porcientoDesc}%</td>
-                                <td className="py-2 px-4 flex justify-center gap-3">
-                                    <button onClick={() => handleEdit(promocion)} className="text-mustard hover:text-yellow-500 transition">
-                                        <Pencil size={18} />
-                                    </button>
-                                    <button onClick={() => handleDelete(promocion.id)} className="text-red-500 hover:text-red-400 transition">
-                                        <Trash2 size={18} />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                        {currentItems.map((promocion) => {
+                            const servicio = servicios.find(s => s.id === promocion.servicio);
+                            return (
+                                <tr key={promocion.id} className="border-t border-gray-700 hover:bg-gray-700 transition">
+                                    <td className="py-2 px-4">{promocion.nombre}</td>
+                                    <td className="py-2 px-4">
+                                        {servicio ? servicio.nombre : promocion.servicio}
+                                    </td>
+                                    <td className="py-2 px-4">{promocion.descripcion}</td>
+                                    <td className="py-2 px-4">{promocion.porcientoDesc}%</td>
+                                    <td className="py-2 px-4 flex justify-center gap-3">
+                                        <button onClick={() => handleEdit(promocion)} className="text-mustard hover:text-yellow-500 transition">
+                                            <Pencil size={18} />
+                                        </button>
+                                        <button onClick={() => handleDelete(promocion.id)} className="text-red-500 hover:text-red-400 transition">
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Controles de Paginación */}
+            <div className="flex justify-center items-center gap-4 mt-4">
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`p-2 rounded-md ${
+                        currentPage === 1
+                            ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                            : "bg-mustard text-jetBlack hover:bg-yellow-500"
+                    }`}
+                >
+                    <ChevronLeft size={20} />
+                </button>
+                
+                <span className="text-lightGray">
+                    Página {currentPage} de {totalPages}
+                </span>
+
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`p-2 rounded-md ${
+                        currentPage === totalPages
+                            ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                            : "bg-mustard text-jetBlack hover:bg-yellow-500"
+                    }`}
+                >
+                    <ChevronRight size={20} />
+                </button>
             </div>
         </div>
     );

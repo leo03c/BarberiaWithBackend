@@ -38,7 +38,7 @@ const Header = () => {
     >
       <div className='flex justify-between items-center px-6 md:px-12 py-4'>
         <h1 className='text-2xl md:text-4xl font-serif font-bold text-mustard tracking-wider'>
-          <Link to='/'>RYAL</Link>
+          <Link to='/'>RYAL<span className='text-sm ml-1 font-light'>Salon de Belleza</span></Link>
         </h1>
 
         <button
