@@ -1,4 +1,5 @@
 import { FaArrowRight } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; 
 
@@ -15,14 +16,14 @@ const CTA = () => {
   };
 
   return (
-    <section className="py-20 bg-jetBlack text-center text-lightGray">
-      <div className="max-w-screen-xl mx-auto px-6">
-        <h2 className="text-4xl font-serif font-bold text-mustard mb-6 animate-fade-in-up">
+    <section className='py-20 bg-jetBlack text-center text-lightGray'>
+      <div className='max-w-screen-xl mx-auto px-6'>
+        <h2 className='text-4xl font-serif font-bold text-mustard mb-6 animate-fade-in-up'>
           ¡Transforma tu estilo hoy mismo!
         </h2>
-        <p className="text-lg md:text-xl mb-8">
-          Descubre la experiencia exclusiva de nuestros servicios y lleva tu look al siguiente nivel. 
-          ¡Reserva ahora y disfruta de un trato VIP!
+        <p className='text-lg md:text-xl mb-8'>
+          Descubre la experiencia exclusiva de nuestros servicios y lleva tu
+          look al siguiente nivel. ¡Reserva ahora y disfruta de un trato VIP!
         </p>
         <button
             onClick={handleReservationClick}
