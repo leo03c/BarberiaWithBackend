@@ -4,15 +4,19 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import { Link } from 'react-router-dom';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useFetch } from '../hook/useFetch';
 
 const Galeria = () => {
   const swiperRef = useRef(null);
-  const url = 'http://127.0.0.1:8000/fotos/';
+  const url = 'http://127.0.0.1:8000/api/fotos/';
 
   const { data, isLoading, error } = useFetch(url);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (isLoading) return <div>Cargando...</div>;
   if (error) return <div>{error.message}</div>;

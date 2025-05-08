@@ -15,12 +15,12 @@ function ReservationForm() {
   });
 
   // Usamos useFetch para obtener la lista de servicios
-  const { data: servicesData } = useFetch('http://127.0.0.1:8000/servicios/');
+  const { data: servicesData } = useFetch('http://127.0.0.1:8000/api/servicios/');
   const [services, setServices] = useState([]);
 
   // Usamos useFetch para obtener las citas (appointments) del cliente,
   const { data: appointmentsData } = useFetch(
-    iduser ? `http://127.0.0.1:8000/citas/?usuarioid=${iduser}` : ''
+    iduser ? `http://127.0.0.1:8000/api/citas/?usuarioid=${iduser}` : ''
   );
   const [appointments, setAppointments] = useState([]);
 
@@ -45,44 +45,102 @@ function ReservationForm() {
   // Maneja los cambios en el formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    if (name === 'date') {
+      const selectedDate = new Date(value);
+      if (selectedDate < new Date()) {
+        alert('No se pueden seleccionar fechas en el pasado');
+        return;
+      }
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // Envía la nueva cita al backend
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Verifica que iduser esté definido
     if (!iduser) {
-      console.error('iduser es undefined. No se puede crear la cita.');
+      alert('Por favor, inicia sesión para realizar una reserva.');
       return;
     }
 
-    const newAppointment = {
-      usuarioid: iduser,
-      servicioid: formData.service,
-      fecha: formData.date,
-      comentario: formData.message || '',
-    };
+    // Validación básica
+    if (!formData.service || !formData.date) {
+      alert('Por favor, completa todos los campos requeridos.');
+      return;
+    }
 
-    fetch('http://127.0.0.1:8000/citas/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newAppointment),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Error al crear la cita');
+    // Validar que la fecha no sea en el pasado
+    const selectedDate = new Date(formData.date);
+    if (selectedDate < new Date()) {
+      alert('No se pueden crear citas en el pasado.');
+      return;
+    }
+
+    try {
+      // Formatear la fecha al formato que espera Django (YYYY-MM-DD HH:mm:ss)
+      const formattedDate = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
+
+      const newAppointment = {
+        usuario_id: parseInt(iduser),
+        servicio_id: parseInt(formData.service),
+        fecha: formattedDate,
+        comentario: formData.message || '',
+      };
+
+      console.log('Datos a enviar:', newAppointment); // Para debugging
+
+      const response = await fetch('http://127.0.0.1:8000/api/citas/', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(newAppointment),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error del servidor:', errorData); // Para debugging
+        
+        // Manejar errores específicos
+        if (errorData.fecha) {
+          throw new Error(`Error en la fecha: ${errorData.fecha[0]}`);
         }
-        return res.json();
-      })
-      .then((data) => {
-        // Agrega la nueva cita al estado
-        setAppointments((prev) => [...prev, data]);
-        // Reinicia el formulario
-        setFormData({ service: '', date: '', message: '' });
-      })
-      .catch((err) => console.error('Error creating appointment:', err));
+        if (errorData.servicio_id) {
+          throw new Error(`Error en el servicio: ${errorData.servicio_id[0]}`);
+        }
+        if (errorData.usuario_id) {
+          throw new Error(`Error en el usuario: ${errorData.usuario_id[0]}`);
+        }
+        throw new Error(errorData.detail || 'Error al crear la cita');
+      }
+
+      const data = await response.json();
+      console.log('Respuesta exitosa:', data); // Para debugging
+      
+      // Agrega la nueva cita al estado
+      setAppointments((prev) => [...prev, data]);
+      // Reinicia el formulario
+      setFormData({ service: '', date: '', message: '' });
+      
+      alert('Cita creada exitosamente');
+    } catch (error) {
+      console.error('Error completo:', error);
+      alert(`Error al crear la cita: ${error.message}`);
+    }
+  };
+
+  // Función para verificar si una fecha está disponible
+  const isDateAvailable = (date, serviceId) => {
+    return !appointments.some(
+      (appt) => 
+        appt.servicio_id === serviceId && 
+        new Date(appt.fecha).getTime() === new Date(date).getTime()
+    );
   };
 
   // Alterna la selección de una cita individual
@@ -103,7 +161,7 @@ function ReservationForm() {
   // Elimina las citas seleccionadas del backend y actualiza el estado
   const handleDeleteAppointments = () => {
     selectedAppointments.forEach((id) => {
-      fetch(`http://127.0.0.1:8000/citas/${id}/`, { method: 'DELETE' })
+      fetch(`http://127.0.0.1:8000/api/citas/${id}/`, { method: 'DELETE' })
         .then(() =>
           setAppointments((prev) => prev.filter((appt) => appt.id !== id))
         )
@@ -187,7 +245,7 @@ function ReservationForm() {
                 {appointments.map((appt, index) => {
                   // Buscamos el servicio correspondiente a la cita
                   const service = services.find(
-                    (s) => s.id === appt.servicioid
+                    (s) => s.id === appt.servicio_id
                   );
                   return (
                     <li

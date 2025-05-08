@@ -7,7 +7,7 @@ const Services = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/servicios/") // Ajusta la URL si es necesario
+    fetch("http://127.0.0.1:8000/api/servicios/") // Ajusta la URL si es necesario
       .then((response) => response.json())
       .then((data) => setServices(data))
       .catch((error) => console.error("Error al cargar servicios:", error));

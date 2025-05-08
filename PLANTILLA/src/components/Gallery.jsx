@@ -1,7 +1,7 @@
 import { useFetch } from '../hook/useFetch';
 
 const Gallery = () => {
-  const url = 'http://127.0.0.1:8000/fotos/';
+  const url = 'http://127.0.0.1:8000/api/fotos/';
 
   const { data, isLoading, error } = useFetch(url);
 

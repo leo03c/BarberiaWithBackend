@@ -27,7 +27,7 @@ urlpatterns = [
     
     # Todas las demás URLs bajo el prefijo 'api/'
     path('api/', include([
-        path('trabajadores/', include('trabajadores.urls')),
+        path('', include('trabajadores.urls')),
         path('', include('productos.urls')),
         path('', include('usuarios.urls')),
         path('', include('galeria.urls')),
