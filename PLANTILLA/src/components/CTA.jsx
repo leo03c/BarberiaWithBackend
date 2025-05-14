@@ -29,7 +29,7 @@ const CTA = () => {
             onClick={handleReservationClick}
             className='inline-flex items-center bg-mustard text-jetBlack px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:bg-bronze hover:text-lightGray'
           >
-            Reservar Ahora
+            Reservar Ahora 
             <FaArrowRight className="ml-2" />
           </button>
       </div>
