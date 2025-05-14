@@ -1,37 +1,64 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+
 from usuarios.models import Usuario
 from servicios.models import Servicio
 
 class Cita(models.Model):
-    usuarioid = models.ForeignKey(Usuario, on_delete=models.CASCADE, default=1)
-    servicioid = models.ForeignKey(Servicio, on_delete=models.CASCADE)
-    comentario = models.TextField(default='')
-    fecha = models.DateTimeField()
-    
-    def clean(self):
-        # Validar que la fecha no sea en el pasado
-        if self.fecha and self.fecha < timezone.now():
-            raise ValidationError('No se pueden crear citas en el pasado')
+    """
+    Representa una cita para un servicio.
+
+    Una cita debe ser única por combinación de servicio y hora de inicio.
+    El campo "end" se calcula automáticamente a partir de "start" + duración del servicio.
+    """
+    service = models.ForeignKey(
+        Servicio,
+        on_delete=models.CASCADE,
+        help_text="Servicio reservado"
+    )
+    customer = models.ForeignKey(
+        Usuario,
+        on_delete=models.CASCADE,
+        help_text="Usuario que reservó la cita"
+    )
+    start = models.DateTimeField(
+        help_text="Fecha y hora de inicio de la cita",
+        null=True,
         
-        # Validar que no haya citas duplicadas para el mismo servicio en la misma fecha
-        citas_existentes = Cita.objects.filter(
-            servicioid=self.servicioid,
-            fecha=self.fecha
-        ).exclude(id=self.id)
-        
-        if citas_existentes.exists():
-            raise ValidationError('Ya existe una cita para este servicio en esta fecha y hora')
-    
-    def save(self, *args, **kwargs):
-        self.clean()
-        super().save(*args, **kwargs)
-    
-    def __str__(self):
-        return f"{self.usuarioid.nombre} - {self.servicioid.nombre} - {self.fecha.strftime('%Y-%m-%d %H:%M')}"
-    
+    )
+    end = models.DateTimeField(
+        editable=False,
+        help_text="Fecha y hora de fin calculada automáticamente",
+        null=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text="Marca de tiempo cuando se creó la cita",
+        null=True,
+    )
+
     class Meta:
-        ordering = ['-fecha']
-        verbose_name = 'Cita'
-        verbose_name_plural = 'Citas' 
+        unique_together = ('service', 'start')
+        ordering = ['-start']
+
+    def clean(self):
+        # Validaciones antes de guardar
+        if not self.start:
+            raise ValidationError('La fecha/hora de inicio es requerida.')
+        if self.start < timezone.now():
+            raise ValidationError('No se puede reservar en fechas/horas pasadas.')
+
+    def save(self, *args, **kwargs):
+        # Ejecuta validaciones
+        self.full_clean()
+        # Calcula 'end' automáticamente (Servicio.duration es un timedelta)
+        self.end = self.start + self.service.duration
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        nombre_cliente = getattr(self.customer, 'nombre', None) or str(self.customer)
+        return (
+            f"{nombre_cliente} - {self.service.nombre} "
+            f"@ {self.start.strftime('%Y-%m-%d %H:%M')}"
+        )

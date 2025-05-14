@@ -8,7 +8,7 @@ from .serializers import ProductoSerializer
 class ProductoFilter(filters.FilterSet):
     class Meta:
         model = Producto  
-        fields = ['nombre', 'precio', 'calidad']
+        fields = ['nombre', 'precio', 'cantidad']
 
 
 class ProductoViewSet(viewsets.ModelViewSet):

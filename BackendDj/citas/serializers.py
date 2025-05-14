@@ -1,25 +1,36 @@
+# apps/booking/serializers.py
+from django.utils import timezone
 from rest_framework import serializers
 from .models import Cita
-from usuarios.models import Usuario
 from servicios.models import Servicio
-from usuarios.serializers import UsuarioSerializer
-from servicios.serializers import ServicioSerializer
 
-class CitaSerializer(serializers.ModelSerializer):
-    usuarioid = UsuarioSerializer(read_only=True)
-    servicioid = ServicioSerializer(read_only=True)
-    usuario_id = serializers.PrimaryKeyRelatedField(
-        queryset=Usuario.objects.all(),
-        source='usuarioid',
-        write_only=True
-    )
-    servicio_id = serializers.PrimaryKeyRelatedField(
-        queryset=Servicio.objects.all(),
-        source='servicioid',
-        write_only=True
-    )
-
+class AppointmentSerializer(serializers.ModelSerializer):
+    service = serializers.PrimaryKeyRelatedField(queryset=Servicio.objects.all(), required=True)
+    start = serializers.DateTimeField(required=True)
+    
     class Meta:
         model = Cita
-        fields = ['id', 'usuarioid', 'servicioid', 'usuario_id', 'servicio_id', 'comentario', 'fecha']
+        fields = '__all__'
+        read_only_fields = ('end', 'created_at')
 
+    def validate_start(self, value):
+        if not value:
+            raise serializers.ValidationError("Start time is required")
+            
+        if value < timezone.now():
+            raise serializers.ValidationError(
+                "No se puede reservar en fechas u horas pasadas."
+            )
+        return value
+
+    def create(self, validated_data):
+        """Intenta guardar; si la franja ya está tomada, muestra mensaje claro."""
+        try:
+            return super().create(validated_data)
+        except Exception as exc:
+            # aquí podrías refinar para distintos RDBMS; ejemplo con IntegrityError
+            if "unique_service_start" in str(exc):
+                raise serializers.ValidationError(
+                    "Ese servicio ya está reservado a esa hora. Elige otra franja."
+                )
+            raise
