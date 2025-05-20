@@ -68,6 +68,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Solo dominio y puerto
     "http://localhost:5173",
+    "https://9pqf8mms-5173.use2",
 ]
 
 REST_FRAMEWORK = {

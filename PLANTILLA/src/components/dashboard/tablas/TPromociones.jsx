@@ -27,6 +27,7 @@ const TPromociones = () => {
             const response = await fetch(API_URL);
             const data = await response.json();
             setPromociones(data);
+            console.log(data)
         } catch (error) {
             console.error("Error al obtener las promociones:", error);
         }

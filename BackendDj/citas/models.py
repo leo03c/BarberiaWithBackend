@@ -37,6 +37,8 @@ class Cita(models.Model):
         help_text="Marca de tiempo cuando se creó la cita",
         null=True,
     )
+    
+
 
     class Meta:
         unique_together = ('service', 'start')

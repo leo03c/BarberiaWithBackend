@@ -30,8 +30,8 @@ export const AuthProvider = ({ children }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data && data.length > 0) {
-          setUser(data[0]); 
-          setIduser(data[0].id); 
+          setUser(data[0]);
+          setIduser(data[0].id);
           localStorage.setItem('id', data[0].id);
           localStorage.setItem('rol', data[0].rol);
         }

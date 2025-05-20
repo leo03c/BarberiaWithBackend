@@ -17,40 +17,54 @@ export default function ReservationForm() {
     service: '',
     date: null,
     hour: '',
-    message: '',
   });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // --- Servicios ---
   const { data: servicesData } = useFetch('/api/servicios/');
   const [services, setServices] = useState([]);
   useEffect(() => {
     if (!servicesData) return;
-    if (Array.isArray(servicesData)) {
-      setServices(servicesData);
-    } else if (Array.isArray(servicesData.results)) {
-      setServices(servicesData.results);
-    }
+    setServices(
+      Array.isArray(servicesData)
+        ? servicesData
+        : Array.isArray(servicesData.results)
+        ? servicesData.results
+        : []
+    );
   }, [servicesData]);
 
   // --- Citas existentes ---
-  const { data: appointmentsData } = useFetch(
-    iduser ? `/api/citas/?usuarioid=${iduser}` : null
-  );
+  const { data: appointmentsData } = useFetch('/api/citas/'); // obtenemos todas
   const [appointments, setAppointments] = useState([]);
   useEffect(() => {
     if (!appointmentsData) return;
-    if (Array.isArray(appointmentsData)) {
-      setAppointments(appointmentsData);
-    } else if (Array.isArray(appointmentsData.results)) {
-      setAppointments(appointmentsData.results);
-    }
+    setAppointments(
+      Array.isArray(appointmentsData)
+        ? appointmentsData
+        : Array.isArray(appointmentsData.results)
+        ? appointmentsData.results
+        : []
+    );
   }, [appointmentsData]);
+
+  // Filtramos sólo las citas del usuario actual
+  const userAppointments = appointments.filter((appt) => {
+    if (appt.customer && typeof appt.customer === 'string') {
+      return appt.customer.id === Number(iduser);
+    }
+
+    return appt.customer === Number(iduser);
+  });
 
   // --- Selección múltiple ---
   const [selectedAppointments, setSelectedAppointments] = useState([]);
   const [allSelected, setAllSelected] = useState(false);
 
-  // --- Disponibilidad: franjas libres según servicio + fecha ---
+  // --- Disponibilidad según servicio + fecha ---
   const isoDate = formData.date
     ? formData.date.toISOString().slice(0, 10)
     : null;
@@ -59,15 +73,14 @@ export default function ReservationForm() {
     isoDate
   );
 
-  // --- Crear cita (mutación) ---
+  // --- Mutación crear cita ---
   const { mutateAsync: createAppointment, isLoading: creating } =
     useCreateAppointment();
 
-  // --- Handlers ---
+  // --- Handlers form ---
   const handleChange = ({ target: { name, value } }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
   const handleDateChange = (date) => {
     setFormData((prev) => ({ ...prev, date, hour: '' }));
   };
@@ -77,40 +90,36 @@ export default function ReservationForm() {
     if (!iduser || !formData.service || !formData.date || !formData.hour) {
       return;
     }
-
-    // Construye objeto Date para la franja seleccionada
     const selected = new Date(`${isoDate}T${formData.hour}:00`);
     if (selected < new Date()) return;
 
-    // Payload alineado con tu serializer: { service, start, comment }
     const payload = {
       service: Number(formData.service),
       start: selected.toISOString(),
-      comment: formData.message.trim(),
       customer: Number(iduser),
     };
 
     try {
       const newAppt = await createAppointment(payload);
       setAppointments((prev) => [...prev, newAppt]);
-      setFormData({ service: '', date: null, hour: '', message: '' });
+      setFormData({ service: '', date: null, hour: '' });
     } catch (err) {
       console.error('Error creando cita:', err);
-      // aquí podrías mostrar un toast o mensaje de error
     }
   };
 
+  // --- Selección / eliminación ---
   const handleSelectAppointment = (id) => {
     setSelectedAppointments((prev) =>
-      prev.includes(id) ? prev.filter((apptId) => apptId !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
-
   const toggleSelectAll = () => {
     setAllSelected((prev) => !prev);
-    setSelectedAppointments(!allSelected ? appointments.map((a) => a.id) : []);
+    setSelectedAppointments(
+      !allSelected ? userAppointments.map((a) => a.id) : []
+    );
   };
-
   const handleDeleteAppointments = () => {
     selectedAppointments.forEach((id) => {
       api
@@ -125,9 +134,9 @@ export default function ReservationForm() {
   };
 
   return (
-    <div className='min-h-screen bg-jetBlack py-16 px-6 flex justify-center'>
+    <div className='min-h-screen bg-jetBlack py-16 px-6 flex items-center justify-center'>
       <div className='max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-8'>
-        {/* Formulario de reserva */}
+        {/* Formulario */}
         <motion.div
           className='bg-white bg-opacity-10 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-8'
           initial={{ opacity: 0, y: 50 }}
@@ -138,7 +147,6 @@ export default function ReservationForm() {
             Reserva tu Cita
           </h2>
           <form onSubmit={handleSubmit} className='grid gap-4'>
-            {/* Servicio */}
             <select
               name='service'
               value={formData.service}
@@ -154,7 +162,6 @@ export default function ReservationForm() {
               ))}
             </select>
 
-            {/* Fecha */}
             <DatePicker
               selected={formData.date}
               onChange={handleDateChange}
@@ -165,7 +172,6 @@ export default function ReservationForm() {
               required
             />
 
-            {/* Hora */}
             <select
               name='hour'
               value={formData.hour}
@@ -182,16 +188,6 @@ export default function ReservationForm() {
               ))}
             </select>
 
-            {/* Comentarios */}
-            <textarea
-              name='message'
-              value={formData.message}
-              onChange={handleChange}
-              placeholder='Comentarios Adicionales'
-              className='w-full p-3 rounded-lg bg-transparent border border-bronze text-lightGray'
-              rows='2'
-            />
-
             <button
               type='submit'
               className='bg-mustard text-black font-bold py-3 rounded-lg shadow-md'
@@ -206,17 +202,18 @@ export default function ReservationForm() {
           </form>
         </motion.div>
 
-        {/* Lista y gestión de citas */}
+        {/* Lista de citas del usuario */}
         <div className='bg-white bg-opacity-10 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-8'>
           <h3 className='text-2xl sm:text-3xl text-mustard font-serif font-bold mb-4'>
             Tus Citas
           </h3>
-          {appointments.length === 0 || services.length === 0 ? (
-            <p className='text-lightGray'>Cargando citas o servicios...</p>
+
+          {userAppointments.length === 0 ? (
+            <p className='text-lightGray'>No tienes citas aún.</p>
           ) : (
             <>
               <ul className='space-y-4 max-h-80 overflow-y-auto'>
-                {appointments.map((appt) => {
+                {userAppointments.map((appt) => {
                   const srv = services.find(
                     (s) => s.id === Number(appt.service || appt.servicio_id)
                   );
@@ -238,6 +235,7 @@ export default function ReservationForm() {
                   );
                 })}
               </ul>
+
               <div className='mt-4 flex flex-col sm:flex-row gap-4'>
                 <button
                   onClick={toggleSelectAll}

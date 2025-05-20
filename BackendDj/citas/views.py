@@ -13,12 +13,11 @@ from .utils import build_availability
 
 
 class CitaViewSet(viewsets.ModelViewSet):
-   
     queryset = Cita.objects.all()
     serializer_class = AppointmentSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ('service', 'start')
+    filterset_fields = ('service', 'start', 'customer')
 
    
 
