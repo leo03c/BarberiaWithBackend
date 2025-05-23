@@ -1,12 +1,11 @@
 // src/api/axios.js
 import axios from 'axios';
 
-const api = axios.create({
+const axiosInstance = axios.create({
   baseURL: 'http://localhost:8000/api',
 });
 
-// Interceptor que añade el token a cada petición
-api.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -17,4 +16,4 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-export default api;
+export default axiosInstance;

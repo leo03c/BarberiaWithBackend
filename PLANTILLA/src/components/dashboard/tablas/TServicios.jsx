@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { servicioSchema } from '../../../schema/models.schema.service';
 import { zodResolver } from '@hookform/resolvers/zod';
+import toast, { Toaster } from 'react-hot-toast';
 import {
   Pencil,
   Trash2,
@@ -10,40 +11,11 @@ import {
   ChevronRight,
 } from 'lucide-react';
 
-const API_URL = 'https://9pqf8mms-8000.use2.devtunnels.ms/api/servicios/';
+import { useService } from '../../../hook/useService ';
+
 const ITEMS_PER_PAGE = 5;
 
-// Schema de validación con Zod
-const servicioSchema = z.object({
-  nombre: z.string().nonempty('El nombre es requerido'),
-  precio: z.preprocess(
-    (val) => {
-      if (typeof val === 'string') return parseFloat(val);
-      return val;
-    },
-    z
-      .number({
-        required_error: 'El precio es requerido',
-        invalid_type_error: 'El precio debe ser un número',
-      })
-      .min(0, 'El precio no puede ser negativo')
-  ),
-  descripcion: z.string().nonempty('La descripción es requerida'),
-  imag: z
-    .any()
-    .refine((files) => {
-      // Si llegó algo, que sea FileList o array
-      return (
-        files == null ||
-        files.length === 0 ||
-        (files.length > 0 && files[0] instanceof File)
-      );
-    }, 'Archivo no válido')
-    .optional(),
-});
-
 const TServicios = () => {
-  const [servicios, setServicios] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [editingId, setEditingId] = useState(null);
 
@@ -58,41 +30,44 @@ const TServicios = () => {
       nombre: '',
       precio: '',
       descripcion: '',
-      imag: null,
+      imagen: null,
+      duracion: '1h',
     },
   });
 
-  useEffect(() => {
-    fetchServicios();
-  }, []);
+  const {
+    useCreateService,
+    useDeleteService,
+    useUpdateService,
+    useGetAllService,
+  } = useService();
 
-  const fetchServicios = async () => {
-    try {
-      const response = await fetch(API_URL);
-      const data = await response.json();
-      setServicios(data);
-    } catch (error) {
-      console.error('Error al obtener los servicios:', error);
-    }
-  };
+  const { data: ServiceAllAdmin = [] } = useGetAllService();
+
+  console.log(ServiceAllAdmin);
+  const { mutate: createService } = useCreateService();
+  const { mutate: updateService } = useUpdateService();
+  const { mutate: deleteService } = useDeleteService();
 
   const onSubmit = async (data) => {
     const formData = new FormData();
-    formData.append('nombre', data.nombre);
-    formData.append('precio', data.precio.toString());
-    formData.append('descripcion', data.descripcion);
-    if (data.imag && data.imag.length > 0) {
-      formData.append('imag', data.imag[0]);
+    const { nombre, precio, descripcion } = data;
+    formData.append('nombre', nombre);
+    formData.append('precio', precio.toString());
+    formData.append('descripcion', descripcion);
+    if (data.imagen && data.imagen.length > 0) {
+      formData.append('imagen', data.imagen[0]);
     }
 
     try {
-      const method = editingId ? 'PUT' : 'POST';
-      const url = editingId ? `${API_URL}${editingId}/` : API_URL;
-      await fetch(url, { method, body: formData });
-
-      setEditingId(null);
+      if (editingId) {
+        updateService({ id: editingId, data: formData });
+        reset();
+        setEditingId(null);
+      } else {
+        createService(formData);
+      }
       reset();
-      fetchServicios();
     } catch (error) {
       console.error('Error al guardar el servicio:', error);
     }
@@ -104,24 +79,15 @@ const TServicios = () => {
       nombre: servicio.nombre,
       precio: servicio.precio,
       descripcion: servicio.descripcion,
-      imag: null,
+      imagen: null,
     });
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await fetch(`${API_URL}${id}/`, { method: 'DELETE' });
-      fetchServicios();
-    } catch (error) {
-      console.error('Error al eliminar servicio:', error);
-    }
   };
 
   // Paginación
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentItems = servicios.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(servicios.length / ITEMS_PER_PAGE);
+  const currentItems = ServiceAllAdmin.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(ServiceAllAdmin.length / ITEMS_PER_PAGE);
 
   const handlePageChange = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
@@ -190,7 +156,7 @@ const TServicios = () => {
             <input
               type='file'
               accept='image/*'
-              {...register('imag')}
+              {...register('imagen')}
               className='p-2 bg-gray-700 text-lightGray rounded-md w-full'
             />
             {errors.imag && (
@@ -202,7 +168,13 @@ const TServicios = () => {
         <button
           type='submit'
           className='mt-4 w-full bg-mustard text-jetBlack py-2 rounded-lg font-semibold flex items-center justify-center gap-2'
+          onClick={() => {
+            editingId
+              ? toast.success('Servicio actualizado')
+              : toast.success('Servicio agregado');
+          }}
         >
+          <Toaster />
           <PlusCircle size={18} />
           {editingId ? 'Actualizar Servicio' : 'Agregar Servicio'}
         </button>
@@ -227,9 +199,9 @@ const TServicios = () => {
                 className='border-t border-gray-700 hover:bg-gray-700 transition'
               >
                 <td className='py-2 px-4'>
-                  {servicio.imag && (
+                  {servicio.imagen && (
                     <img
-                      src={servicio.imag}
+                      src={servicio.imagen}
                       alt={servicio.nombre}
                       className='h-12 w-12 object-cover rounded-md'
                     />
@@ -247,7 +219,10 @@ const TServicios = () => {
                     <Pencil size={18} />
                   </button>
                   <button
-                    onClick={() => handleDelete(servicio.id)}
+                    onClick={() => {
+                      console.log(servicio.id);
+                      deleteService(servicio.id);
+                    }}
                     className='text-red-500 hover:text-red-400 transition'
                   >
                     <Trash2 size={18} />

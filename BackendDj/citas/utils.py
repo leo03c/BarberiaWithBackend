@@ -8,11 +8,13 @@ WORK_END   = time(18, 0)  # 18:00
 STEP       = timedelta(hours=1)
 
 def build_availability(service, day):
-    # crea todas las franjas del día laboral
+
     slots = []
     current = datetime.combine(day, WORK_START, tzinfo=timezone.get_current_timezone())
     end_day = datetime.combine(day, WORK_END, tzinfo=timezone.get_current_timezone())
-
+    
+    
+    
     while current < end_day:
         slots.append(current)
         current += STEP
@@ -22,4 +24,5 @@ def build_availability(service, day):
         Cita.objects.filter(service=service, start__date=day)
         .values_list('start', flat=True)
     )
+    
     return [dt.strftime("%H:%M") for dt in slots if dt not in taken]

@@ -8,6 +8,6 @@ router.register(r'citas', views.CitaViewSet, basename='citas')
 
 urlpatterns = [
     path('', include(router.urls)),
-     path('availability/', availability, name='availability')
+    path('availability/', availability, name='availability')
     
 ]

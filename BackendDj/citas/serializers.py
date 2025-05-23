@@ -24,13 +24,11 @@ class AppointmentSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        """Intenta guardar; si la franja ya está tomada, muestra mensaje claro."""
         try:
             return super().create(validated_data)
         except Exception as exc:
-            # aquí podrías refinar para distintos RDBMS; ejemplo con IntegrityError
             if "unique_service_start" in str(exc):
                 raise serializers.ValidationError(
-                    "Ese servicio ya está reservado a esa hora. Elige otra franja."
+                    "Ese servicio ya está reservado a esa hora. Elige otra fecha."
                 )
             raise

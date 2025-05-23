@@ -6,12 +6,7 @@ from usuarios.models import Usuario
 from servicios.models import Servicio
 
 class Cita(models.Model):
-    """
-    Representa una cita para un servicio.
-
-    Una cita debe ser única por combinación de servicio y hora de inicio.
-    El campo "end" se calcula automáticamente a partir de "start" + duración del servicio.
-    """
+  
     service = models.ForeignKey(
         Servicio,
         on_delete=models.CASCADE,
@@ -54,8 +49,8 @@ class Cita(models.Model):
     def save(self, *args, **kwargs):
         # Ejecuta validaciones
         self.full_clean()
-        # Calcula 'end' automáticamente (Servicio.duration es un timedelta)
-        self.end = self.start + self.service.duration
+       
+        self.end = self.start + self.service.duracion
         super().save(*args, **kwargs)
 
     def __str__(self):

@@ -25,10 +25,10 @@ class AdminDashboardView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        # Verifica que el usuario autenticado tenga rol 'admin'
+        
         if request.user.rol != 'admin':
             return Response({'detail': 'No autorizado'}, status=403)
-        # Aquí colocar la lógica para el dashboard de administración
+      
         return Response({'detail': 'Bienvenido al dashboard de administración'}, status=200)
 
 class RegistroUsuarioView(APIView):
@@ -39,6 +39,9 @@ class RegistroUsuarioView(APIView):
         
         if Usuario.objects.filter(usuario=data.get('usuario')).exists():
             return Response({"error": "El usuario ya está registrado"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if Usuario.objects.filter(correo=data.get('correo')).exists():
+            return Response({"error": "El correo ya está registrado"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             Usuarios = Usuario.objects.create(
@@ -49,7 +52,8 @@ class RegistroUsuarioView(APIView):
                 telefono=data.get('telefono', None),
                 password=make_password(data.get('password')) 
             )
-
+            
+            
             Usuarios.save()
             return Response({"message": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
         except Exception as e:

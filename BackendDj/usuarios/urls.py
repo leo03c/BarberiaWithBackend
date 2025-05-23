@@ -10,5 +10,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('registro/', RegistroUsuarioView.as_view(), name='registro_cliente'),
-     path('api/dashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),
+    path('api/dashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),
 ]

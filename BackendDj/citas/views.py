@@ -34,7 +34,7 @@ def availability(request):
             status=400
         )
 
-    # Verificamos que el servicio exista
+  
     try:
         servicio = Servicio.objects.get(pk=service_id)
     except Servicio.DoesNotExist:
@@ -43,7 +43,7 @@ def availability(request):
             status=404
         )
 
-    # Parseamos la fecha y construimos las franjas disponibles
+
     try:
         day = datetime.fromisoformat(date_str).date()
     except ValueError:

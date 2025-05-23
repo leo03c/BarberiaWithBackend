@@ -10,14 +10,14 @@ class Usuario(models.Model):
     password = models.TextField(null=False)
     rol = models.CharField(
         max_length=100,
-        default='cliente',  # Valor por defecto
+        default='cliente',
         choices=[('cliente', 'Cliente'), ('admin', 'Admin')]  
     )
     
     def save(self, *args, **kwargs):
-        # Verifica si la contraseña NO está encriptada
+        
         if not self.password.startswith('pbkdf2_sha256$'):
-            # Encripta la contraseña
+            
             self.password = make_password(self.password)
         super(Usuario, self).save(*args, **kwargs)
 
