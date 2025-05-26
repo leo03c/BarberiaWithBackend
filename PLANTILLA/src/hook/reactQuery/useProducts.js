@@ -30,7 +30,7 @@ export const useProducts = () => {
         const previousItems = queryClient.getQueryData(['products']);
 
         queryClient.setQueryData(['products'], (old) =>
-          old ? [...old, data] : [data]
+          old ? old.map((item) => (item.id === data.id ? data : item)) : []
         );
 
         return previousItems;
