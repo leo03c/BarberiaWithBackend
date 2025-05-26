@@ -9,9 +9,11 @@ import { useFetch } from '../hook/useFetch';
 import { useAvailability } from '../hook/useAvailability';
 import { useCreateAppointment } from '../hook/crearReserva';
 import api from '../api/axios';
+import ConfirmationModal from '../ui/confirmGeneric';
 
 export default function ReservationForm() {
   const { iduser } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     service: '',
@@ -244,7 +246,7 @@ export default function ReservationForm() {
                   {allSelected ? 'Deseleccionar Todas' : 'Seleccionar Todas'}
                 </button>
                 <button
-                  onClick={handleDeleteAppointments}
+                  onClick={()=>{setIsOpen(true);}}
                   className='border border-mustard bg-white bg-opacity-10 text-lightGray font-bold py-3 px-4 rounded-lg shadow-md'
                   disabled={selectedAppointments.length === 0}
                 >
@@ -255,6 +257,18 @@ export default function ReservationForm() {
           )}
         </div>
       </div>
+      {isOpen && (
+        <ConfirmationModal
+          isOpen={isOpen}
+          title='Confirmar Eliminación'
+          message='¿Estás seguro de que deseas eliminar este servicio?'
+          onConfirm={() => {
+            handleDeleteAppointments();
+            setIsOpen(false);
+          }}
+          onCancel={() => setIsOpen(false)}
+        />
+      )}
     </div>
   );
 }
