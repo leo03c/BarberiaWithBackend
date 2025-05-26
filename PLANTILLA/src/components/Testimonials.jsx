@@ -4,6 +4,7 @@ import { FaStar } from 'react-icons/fa';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { ModalNotification } from './Modal';
+import toast, { Toaster } from 'react-hot-toast';
 
 const testimonialSchema = z.object({
   comentario: z
@@ -108,16 +109,20 @@ const Testimonials = () => {
       // Éxito: resetea form y recarga todas las reseñas
       setFormData({ usuarioid: userid, comentario: '', clasificacion: 5 });
       fetchTestimonials();
+      toast.success('Clasificacion realizada')
     } catch (err) {
       console.error('Error inesperado:', err);
+      toast.error('Operacion fallida');
     }
+    
   };
 
-  return (
+  return (  
     <section
       id='testimonios'
       className='bg-jetBlack text-lightGray py-16 px-6 md:px-16'
     >
+      <Toaster/>
       <ModalNotification
         color='#f44336'
         message='Debes estar autenticado primero'
