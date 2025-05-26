@@ -7,11 +7,11 @@ import { useEffect, useState } from 'react';
 import * as z from 'zod';
 
 const schema = z.object({
-  nombre: z.string().min(2, 'El nombre debe tener al menos 2 caracteres.'),
+  nombre: z.string().min(2, 'El nombre debe tener al menos 2 letras.'),
   apellidos: z
     .string()
-    .min(2, 'Los apellidos deben tener al menos 2 caracteres.'),
-  usuario: z.string().min(3, 'El usuario debe tener al menos 3 caracteres.'),
+    .min(3, 'Los apellidos deben tener al menos 3 letras.'),
+  usuario: z.string().min(2, 'El usuario debe tener al menos un letra y un numero.'),
   correo: z.string().email('Ingrese un correo válido.'),
   telefono: z
     .string()
@@ -185,7 +185,7 @@ const ClienteForm = () => {
         </form>
         <div className='flex justify-center'>
           <Link to={'/LoginForm'} className='text-lightGray  py-6  '>
-            Tienes una cuenta?
+            ¿Tienes una cuenta?
           </Link>
         </div>
       </motion.div>
