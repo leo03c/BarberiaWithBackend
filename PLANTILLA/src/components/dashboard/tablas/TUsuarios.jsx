@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ConfirmationModal from '../../../ui/confirmGeneric';
 import {
   Pencil,
   Trash2,
@@ -13,6 +14,9 @@ const ITEMS_PER_PAGE = 5;
 const TUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isOpen, setIsOpen] = useState(false);
+  const [usuarioToDelete, setUsuarioToDelete] = useState(null);
+
   const [formData, setFormData] = useState({
     nombre: '',
     apellidos: '',
@@ -208,7 +212,7 @@ const TUsuarios = () => {
                     <Pencil size={18} />
                   </button>
                   <button
-                    onClick={() => handleDelete(user.id)}
+                    onClick={() => {setIsOpen(true);setUsuarioToDelete(user.id)}}
                     className='text-red-500 hover:text-red-400 transition'
                   >
                     <Trash2 size={18} />
@@ -250,6 +254,18 @@ const TUsuarios = () => {
           <ChevronRight size={20} />
         </button>
       </div>
+      {isOpen && (
+        <ConfirmationModal
+          isOpen={isOpen}
+          title='Confirmar Eliminación'
+          message='¿Estás seguro de que deseas eliminar este servicio?'
+          onConfirm={() => {
+            handleDelete(usuarioToDelete);
+            setIsOpen(false);
+          }}
+          onCancel={() => setIsOpen(false)}
+        />
+      )}
     </div>
   );
 };
