@@ -1,5 +1,6 @@
 // TProductos.jsx
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   Pencil,
   Trash2,
@@ -7,87 +8,77 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { productoSchema } from '../../../schema/models.schema.producto';
+import { useProducts } from '../../../hook/reactQuery/useProducts';
+import { Toaster } from 'react-hot-toast';
+import ConfirmationModal from '../../../ui/confirmGeneric';
 
-const API_URL = 'http://localhost:8000/api/productos/';
 const ITEMS_PER_PAGE = 5;
 
 const TProductos = () => {
-  const [productos, setProductos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [formData, setFormData] = useState({
-    nombre: '',
-    precio: '',
-    cantidad: '',
-  });
+  const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
-  useEffect(() => {
-    fetchProductos();
-  }, []);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    zodResolver: zodResolver(productoSchema),
+    defaultValues: {
+      nombre: '',
+      precio: '',
+      cantidad: '',
+    },
+    mode: 'onChange',
+  });
 
-  const fetchProductos = async () => {
+  const {
+    useGetAllProducts,
+    useCreateProduct,
+    useDeleteProduct,
+    useUpdateProduct,
+  } = useProducts();
+
+  const { data: productosData = [] } = useGetAllProducts();
+  const { mutate: createProducto } = useCreateProduct();
+  const { mutate: updateProducto } = useUpdateProduct();
+  const { mutate: deleteProducto } = useDeleteProduct();
+
+  const onSubmit = (data) => {
     try {
-      const response = await fetch(API_URL);
-      const data = await response.json();
-      setProductos(data);
+      if (editingId) {
+        updateProducto({ id: editingId, data: data });
+        reset({
+          nombre: '',
+          precio: '',
+          cantidad: '',
+        });
+      } else {
+        createProducto(data);
+        reset();
+      }
     } catch (error) {
-      console.error('Error al obtener los productos:', error);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const payload = {
-      nombre: formData.nombre,
-      precio: parseFloat(formData.precio),
-      cantidad: parseInt(formData.cantidad),
-    };
-
-    try {
-      const method = editingId ? 'PUT' : 'POST';
-      const url = editingId ? `${API_URL}${editingId}/` : API_URL;
-
-      await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      setEditingId(null);
-      setFormData({ nombre: '', precio: '', cantidad: '' });
-      fetchProductos();
-    } catch (error) {
-      console.error('Error al guardar el producto:', error);
+      console.error('Error al enviar el formulario:', error);
     }
   };
 
   const handleEdit = (producto) => {
     setEditingId(producto.id);
-    setFormData({
+    reset({
       nombre: producto.nombre,
       precio: producto.precio,
       cantidad: producto.cantidad,
     });
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await fetch(`${API_URL}${id}/`, { method: 'DELETE' });
-      fetchProductos();
-    } catch (error) {
-      console.error('Error al eliminar producto:', error);
-    }
-  };
-
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentItems = productos.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(productos.length / ITEMS_PER_PAGE);
+  const currentItems = productosData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(productosData.length / ITEMS_PER_PAGE);
 
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -98,38 +89,57 @@ const TProductos = () => {
       </h2>
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className='bg-gray-800 p-4 rounded-lg shadow mb-6'
       >
         <div className='grid grid-cols-3 gap-4'>
-          <input
-            type='text'
-            name='nombre'
-            placeholder='Nombre del producto'
-            value={formData.nombre}
-            onChange={handleInputChange}
-            className='p-2 bg-gray-700 text-lightGray rounded-md'
-            required
-          />
-          <input
-            type='number'
-            step='0.01'
-            name='precio'
-            placeholder='Precio'
-            value={formData.precio}
-            onChange={handleInputChange}
-            className='p-2 bg-gray-700 text-lightGray rounded-md'
-            required
-          />
-          <input
-            type='number'
-            name='cantidad'
-            placeholder='Cantidad'
-            value={formData.cantidad}
-            onChange={handleInputChange}
-            className='p-2 bg-gray-700 text-lightGray rounded-md'
-            required
-          />
+          <Toaster />
+          <div>
+            <input
+              type='text'
+              name='nombre'
+              placeholder='Nombre del producto'
+              {...register('nombre')}
+              className='p-2 bg-gray-700 text-lightGray rounded-md'
+              required
+            />
+            {errors.nombre && (
+              <span className='text-red-500 text-sm'>
+                {errors.nombre.message}
+              </span>
+            )}
+          </div>
+          <div>
+            <input
+              type='number'
+              step='0.01'
+              name='precio'
+              placeholder='Precio'
+              {...register('precio')}
+              className='p-2 bg-gray-700 text-lightGray rounded-md'
+              required
+            />
+            {errors.precio && (
+              <span className='text-red-500 text-sm'>
+                {errors.precio.message}
+              </span>
+            )}
+          </div>
+          <div>
+            <input
+              type='number'
+              name='cantidad'
+              placeholder='Cantidad'
+              {...register('cantidad')}
+              className='p-2 bg-gray-700 text-lightGray rounded-md'
+              required
+            />
+            {errors.cantidad && (
+              <span className='text-red-500 text-sm'>
+                {errors.cantidad.message}
+              </span>
+            )}
+          </div>
         </div>
         <button
           type='submit'
@@ -167,7 +177,11 @@ const TProductos = () => {
                     <Pencil size={18} />
                   </button>
                   <button
-                    onClick={() => handleDelete(producto.id)}
+                    onClick={() => {
+                      setIsOpen(true);
+                      console.log('Producto a eliminar:', producto);
+                      setEditingId(producto.id);
+                    }}
                     className='text-red-500 hover:text-red-400 transition'
                   >
                     <Trash2 size={18} />
@@ -178,6 +192,23 @@ const TProductos = () => {
           </tbody>
         </table>
       </div>
+
+      {isOpen && (
+        <ConfirmationModal
+          isOpen={isOpen}
+          title='Confirmar Eliminación'
+          message='¿Estás seguro de que deseas eliminar este producto?'
+          onConfirm={() => {
+            deleteProducto(editingId);
+            setIsOpen(false);
+            setEditingId(null);
+          }}
+          onCancel={() => {
+            setIsOpen(false);
+            setEditingId(null);
+          }}
+        />
+      )}
 
       <div className='flex justify-center items-center gap-4 mt-4'>
         <button

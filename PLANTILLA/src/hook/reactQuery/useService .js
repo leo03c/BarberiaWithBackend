@@ -5,7 +5,7 @@ import {
   createService,
   updateService,
   deteleService,
-} from '../api/ServiceApi';
+} from '../../api/ServiceApi';
 
 export const useService = () => {
   const useUpdateService = () => {

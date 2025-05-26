@@ -11,13 +11,15 @@ import {
   ChevronRight,
 } from 'lucide-react';
 
-import { useService } from '../../../hook/useService ';
+import { useService } from '../../../hook/reactQuery/useService ';
+import ConfirmationModal from '../../../ui/confirmGeneric';
 
 const ITEMS_PER_PAGE = 5;
 
 const TServicios = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [editingId, setEditingId] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const {
     register,
@@ -220,8 +222,8 @@ const TServicios = () => {
                   </button>
                   <button
                     onClick={() => {
-                      console.log(servicio.id);
-                      deleteService(servicio.id);
+                      setIsOpen(true);
+                      setEditingId(servicio.id);
                     }}
                     className='text-red-500 hover:text-red-400 transition'
                   >
@@ -263,6 +265,18 @@ const TServicios = () => {
           <ChevronRight size={20} />
         </button>
       </div>
+      {isOpen && (
+        <ConfirmationModal
+          isOpen={isOpen}
+          title='Confirmar Eliminación'
+          message='¿Estás seguro de que deseas eliminar este servicio?'
+          onConfirm={() => {
+            deleteService(editingId);
+            setIsOpen(false);
+          }}
+          onCancel={() => setIsOpen(false)}
+        />
+      )}
     </div>
   );
 };

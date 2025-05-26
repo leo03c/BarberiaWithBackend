@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
-import { useService } from '../hook/useService ';
+import { useService } from '../hook/reactQuery/useService ';
 
 const Services = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
