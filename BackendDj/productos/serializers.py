@@ -9,3 +9,13 @@ class ProductoSerializer(serializers.ModelSerializer):
         model = Producto
         fields = '__all__'
 
+
+    def validate_precio(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("El valor debe ser mayor que cero.")
+        return value
+    
+    def validate_cantidad(self, value):
+        if value < 0:
+            raise serializers.ValidationError("La cantidad no puede ser negativa.")
+        return value

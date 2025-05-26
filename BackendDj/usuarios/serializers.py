@@ -1,3 +1,4 @@
+import re
 from rest_framework import serializers
 from .models import  Usuario
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -41,5 +42,38 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = '__all__'
+        
+    def validate_usuario(self, usuario):
+      
+        if not re.search(r'[a-zA-Z]', usuario):  
+            raise serializers.ValidationError("El nombre de usuario debe contener al menos una letra.")
+       
+        if usuario.isdigit():  
+            raise serializers.ValidationError("El nombre de usuario no puede ser solo números.")
+        
+        return usuario
+    
+    def validate_correo(self, correo):
+        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        if not re.match(email_regex, correo):
+            raise serializers.ValidationError("El correo electrónico no es válido.")
+        return correo
+    
+    def validate_telefono(self, telefono):
+        if not str(telefono).isdigit() :  
+            raise serializers.ValidationError("El teléfono debe ser numérico.")
+        if telefono <= 0:  
+            raise serializers.ValidationError("El teléfono debe ser un número positivo.")
+        return telefono
+    
+    def validate_rol(self, rol):
+        mixed_roles = ['cliente', 'admin']
+        if rol not in mixed_roles:
+            raise serializers.ValidationError("El rol debe ser 'cliente' o 'admin'.")
+        return rol
+    
+  
+    
+     
 
 
