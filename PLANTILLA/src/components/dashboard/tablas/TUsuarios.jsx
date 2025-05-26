@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import ConfirmationModal from '../../../ui/confirmGeneric';
+import toast, { Toaster } from 'react-hot-toast';
 import {
   Pencil,
   Trash2,
@@ -69,8 +70,10 @@ const TUsuarios = () => {
         rol: 'cliente',
       });
       fetchUsuarios(); // Refrescar la lista
+      toast.success('Usuario registrado')
     } catch (error) {
       console.error('Error al guardar el usuario:', error);
+      toast.error('Error al registrar')
     }
   };
 
@@ -83,6 +86,7 @@ const TUsuarios = () => {
     try {
       await fetch(`${API_URL}${id}/`, { method: 'DELETE' });
       fetchUsuarios(); // Actualizar lista
+      toast.success('Usuario eliminado')
     } catch (error) {
       console.error('Error al eliminar usuario:', error);
     }
@@ -100,6 +104,7 @@ const TUsuarios = () => {
 
   return (
     <div className='bg-jetBlack text-lightGray p-6 rounded-lg shadow-lg mt-20'>
+      <Toaster/>
       <h2 className='text-3xl font-serif font-bold text-mustard mb-6'>
         Gestión de Usuarios
       </h2>
