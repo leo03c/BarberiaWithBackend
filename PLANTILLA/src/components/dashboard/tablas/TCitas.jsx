@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Pencil, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import ConfirmationModal from '../../../ui/confirmGeneric';
 import api from '../../../api/axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -17,6 +19,8 @@ const TCitas = () => {
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [citaToDelete, setCitaToDelete] = useState(null);
 
   // Carga inicial
   useEffect(() => {
@@ -74,8 +78,9 @@ const TCitas = () => {
       setEditingId(null);
       setFormData({ usuarioid: '', servicioid: '', fecha: '' });
       await fetchCitas();
+      toast.success('Cita registrada')
     } catch (err) {
-      setError(err.response?.data?.detail || 'Error al guardar la cita');
+      toast.error('Error al registrar')
     }
   };
 
@@ -96,8 +101,10 @@ const TCitas = () => {
     try {
       await api.delete(`/citas/${id}/`);
       await fetchCitas();
+      toast.success('Cita eliminada')
     } catch {
-      setError('No se pudo eliminar la cita');
+      toast.error('Error al eliminar la cita')
+
     }
   };
 
@@ -123,6 +130,7 @@ const TCitas = () => {
 
   return (
     <div className='bg-jetBlack text-lightGray p-6 rounded-lg shadow-lg mt-20'>
+      <Toaster/>
       <h2 className='text-3xl font-serif font-bold text-mustard mb-6'>
         Gestión de Citas
       </h2>
@@ -229,7 +237,7 @@ const TCitas = () => {
                         <Pencil size={18} />
                       </button>
                       <button
-                        onClick={() => handleDelete(cita.id)}
+                        onClick={() => {setIsOpen(true);setCitaToDelete(cita.id)}}
                         className='text-red-500 hover:text-red-400 transition'
                         aria-label='Eliminar'
                       >
@@ -283,6 +291,18 @@ const TCitas = () => {
             <ChevronRight size={20} />
           </button>
         </div>
+      )}
+      {isOpen && (
+        <ConfirmationModal
+          isOpen={isOpen}
+          title='Confirmar Eliminación'
+          message='¿Estás seguro de que deseas eliminar este servicio?'
+          onConfirm={() => {
+            handleDelete(citaToDelete);
+            setIsOpen(false);
+          }}
+          onCancel={() => setIsOpen(false)}
+        />
       )}
     </div>
   );
