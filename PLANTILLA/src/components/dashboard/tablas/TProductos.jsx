@@ -27,7 +27,7 @@ const TProductos = () => {
     reset,
     formState: { errors },
   } = useForm({
-    zodResolver: zodResolver(productoSchema),
+    resolver: zodResolver(productoSchema),
     defaultValues: {
       nombre: '',
       precio: '',

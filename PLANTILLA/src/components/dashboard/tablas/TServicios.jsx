@@ -64,7 +64,11 @@ const TServicios = () => {
     try {
       if (editingId) {
         updateService({ id: editingId, data: formData });
-        reset();
+        reset({
+          nombre: '',
+          precio: '',
+          descripcion: '',
+        });
         setEditingId(null);
       } else {
         createService(formData);

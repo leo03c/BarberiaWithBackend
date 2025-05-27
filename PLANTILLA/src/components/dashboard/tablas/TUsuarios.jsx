@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Pencil,
   Trash2,
@@ -6,89 +6,71 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
+import { GetAllUser } from '../../../api/UsuarioApi';
+import { useForm } from 'react-hook-form';
+import { schemausuario } from '../../../schema/models.schema.user';
+import {
+  useCreateUser,
+  useUpdateUser,
+} from '../../../hook/reactQuery/useUsuario';
+import { Toaster } from 'react-hot-toast';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-const API_URL = 'http://localhost:8000/api/usuarios/';
 const ITEMS_PER_PAGE = 5;
 
 const TUsuarios = () => {
-  const [usuarios, setUsuarios] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [formData, setFormData] = useState({
-    nombre: '',
-    apellidos: '',
-    usuario: '',
-    correo: '',
-    telefono: '',
-    rol: 'cliente',
-    password: '123456',
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schemausuario),
   });
+
+  const { data: AllUser = [] } = GetAllUser();
+  const { mutate: createUserMutate } = useCreateUser();
+  const { mutate: updateUserMutate } = useUpdateUser();
+
   const [editingId, setEditingId] = useState(null);
 
-  useEffect(() => {
-    fetchUsuarios();
-  }, []);
-
-  const fetchUsuarios = async () => {
-    try {
-      const response = await fetch(API_URL);
-      const data = await response.json();
-      setUsuarios(data);
-    } catch (error) {
-      console.error('Error al obtener los usuarios:', error);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const method = editingId ? 'PUT' : 'POST';
-      const url = editingId ? `${API_URL}${editingId}/` : API_URL;
-
-      await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      setEditingId(null);
-      setFormData({
+  const onSubmit = (data) => {
+    if (editingId) {
+      updateUserMutate({ id: editingId, data: data });
+      reset({
         nombre: '',
         apellidos: '',
-        usuario: '',
         correo: '',
         telefono: '',
-        rol: 'cliente',
+        rol: '',
+        usuario: '',
       });
-      fetchUsuarios(); // Refrescar la lista
-    } catch (error) {
-      console.error('Error al guardar el usuario:', error);
+      return;
     }
+
+    createUserMutate({ password: 123456, ...data });
+    reset();
   };
 
   const handleEdit = (user) => {
     setEditingId(user.id);
-    setFormData(user);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await fetch(`${API_URL}${id}/`, { method: 'DELETE' });
-      fetchUsuarios(); // Actualizar lista
-    } catch (error) {
-      console.error('Error al eliminar usuario:', error);
-    }
+    reset({
+      nombre: user.nombre,
+      apellidos: user.apellidos,
+      correo: user.correo,
+      telefono: user.telefono,
+      usuario: user.usuario,
+      rol: user.rol,
+    });
   };
 
   // Calcular usuarios para la página actual
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentItems = usuarios.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(usuarios.length / ITEMS_PER_PAGE);
+  const currentItems = AllUser.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(AllUser.length / ITEMS_PER_PAGE);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -102,61 +84,74 @@ const TUsuarios = () => {
 
       {/* Formulario de Usuario */}
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className='bg-gray-800 p-4 rounded-lg shadow mb-6'
       >
+        <Toaster />
         <div className='grid grid-cols-2 gap-4'>
           <input
             type='text'
             name='nombre'
             placeholder='Nombre'
-            value={formData.nombre}
-            onChange={handleInputChange}
+            {...register('nombre')}
             className='p-2 bg-gray-700 text-lightGray rounded-md'
-            required
           />
+
+          {errors.nombre && (
+            <span className='text-red-500'> {errors.message.nombre}</span>
+          )}
+
           <input
+            id='apellidos'
             type='text'
             name='apellidos'
             placeholder='Apellidos'
-            value={formData.apellidos}
-            onChange={handleInputChange}
+            {...register('apellidos')}
             className='p-2 bg-gray-700 text-lightGray rounded-md'
-            required
           />
+          {errors.apellidos && (
+            <span className='text-red-500'> {errors.message.apellidos}</span>
+          )}
           <input
+            id='usuario'
             type='text'
             name='usuario'
             placeholder='Usuario'
-            value={formData.usuario}
-            onChange={handleInputChange}
+            {...register('usuario')}
             className='p-2 bg-gray-700 text-lightGray rounded-md'
             required
           />
+          {errors.usuario && (
+            <span className='text-red-500'> {errors.message.usuario}</span>
+          )}
           <input
             type='email'
             name='correo'
             placeholder='Correo'
-            value={formData.correo}
-            onChange={handleInputChange}
+            {...register('correo')}
             className='p-2 bg-gray-700 text-lightGray rounded-md'
             required
           />
+          {errors.correo && (
+            <span className='text-red-500'> {errors.message.correo}</span>
+          )}
           <input
             type='tel'
             name='telefono'
             placeholder='Teléfono'
-            value={formData.telefono}
-            onChange={handleInputChange}
+            {...register('telefono')}
             className='p-2 bg-gray-700 text-lightGray rounded-md'
             required
           />
 
+          {errors.telefono && (
+            <span className='text-red-500'> {errors.message.telefono}</span>
+          )}
+
           {/* Selector de rol */}
           <select
             name='rol'
-            value={formData.rol}
-            onChange={handleInputChange}
+            {...register('rol')}
             className='p-2 bg-gray-700 text-lightGray rounded-md'
           >
             <option value='cliente'>Cliente</option>

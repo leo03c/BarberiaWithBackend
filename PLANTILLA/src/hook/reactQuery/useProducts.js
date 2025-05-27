@@ -17,7 +17,7 @@ export const useProducts = () => {
     });
   };
 
-  const useCreateProduct = () => {
+   const useCreateProduct = () => {
     return useMutation({
       mutationFn: (data) => {
         toast.success('Producto creado correctamente');
