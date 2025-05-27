@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { servicioSchema } from '../../../schema/models.schema.service';
+import { schemaservicio } from '../../../schema/models.schema.services';
 import { zodResolver } from '@hookform/resolvers/zod';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import {
   Pencil,
   Trash2,
@@ -27,10 +27,10 @@ const TServicios = () => {
     reset,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(servicioSchema),
+    resolver: zodResolver(schemaservicio),
     defaultValues: {
       nombre: '',
-      precio: '',
+      precio: null,
       descripcion: '',
       imagen: null,
       duracion: '1h',
@@ -46,12 +46,12 @@ const TServicios = () => {
 
   const { data: ServiceAllAdmin = [] } = useGetAllService();
 
-  console.log(ServiceAllAdmin);
   const { mutate: createService } = useCreateService();
   const { mutate: updateService } = useUpdateService();
   const { mutate: deleteService } = useDeleteService();
 
   const onSubmit = async (data) => {
+    console.log(data);
     const formData = new FormData();
     const { nombre, precio, descripcion } = data;
     formData.append('nombre', nombre);
@@ -131,9 +131,8 @@ const TServicios = () => {
           <div>
             <input
               type='number'
-              step='0.01'
               placeholder='Precio'
-              {...register('precio')}
+              {...register('precio', { valueAsNumber: true })}
               className='p-2 bg-gray-700 text-lightGray rounded-md w-full'
             />
             {errors.precio && (
@@ -174,11 +173,6 @@ const TServicios = () => {
         <button
           type='submit'
           className='mt-4 w-full bg-mustard text-jetBlack py-2 rounded-lg font-semibold flex items-center justify-center gap-2'
-          onClick={() => {
-            editingId
-              ? toast.success('Servicio actualizado')
-              : toast.success('Servicio agregado');
-          }}
         >
           <Toaster />
           <PlusCircle size={18} />

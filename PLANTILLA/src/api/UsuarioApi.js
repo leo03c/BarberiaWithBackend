@@ -29,7 +29,7 @@ export const updateUser = async (id, data) => {
   }
 };
 
-export const deleteUser = (id) => {
-  axiosInstance.delete(`api/usuarios/${id}`);
-  return id;
+export const deleteUser = async (id) => {
+  const response = await axiosInstance.delete(`/usuarios/${id}/`);
+  return response.data;
 };

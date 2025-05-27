@@ -1,7 +1,7 @@
 // vamos a crear el crear , actualizar y eliminar
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createUser, updateUser } from '../../api/UsuarioApi';
+import { createUser, deleteUser, updateUser } from '../../api/UsuarioApi';
 import toast from 'react-hot-toast';
 
 export const useCreateUser = () => {
@@ -46,6 +46,29 @@ export const useUpdateUser = () => {
       return { previousItems };
     },
     onSuccess: () => toast.success('Usuario Actualizado'),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+};
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => deleteUser(id),
+
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ['users'] });
+
+      const previousItems = queryClient.getQueriesData(['users']);
+
+      queryClient.setQueryData(['users'], (old) =>
+        old ? old.filter((item) => item.id !== id) : []
+      );
+
+      return { previousItems };
+    },
+    onSuccess: () => toast.success('Usuario eliminado'),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },

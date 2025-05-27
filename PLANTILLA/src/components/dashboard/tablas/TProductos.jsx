@@ -49,6 +49,7 @@ const TProductos = () => {
   const { mutate: deleteProducto } = useDeleteProduct();
 
   const onSubmit = (data) => {
+    console.log(data);
     try {
       if (editingId) {
         updateProducto({ id: editingId, data: data });
@@ -58,6 +59,7 @@ const TProductos = () => {
           cantidad: '',
         });
       } else {
+        console.log(data);
         createProducto(data);
         reset();
       }
@@ -112,16 +114,15 @@ const TProductos = () => {
           <div>
             <input
               type='number'
-              step='0.01'
               name='precio'
-              placeholder='Precio'
+              placeholder='precio'
               {...register('precio')}
               className='p-2 bg-gray-700 text-lightGray rounded-md'
               required
             />
-            {errors.precio && (
+            {errors.cantidad && (
               <span className='text-red-500 text-sm'>
-                {errors.precio.message}
+                {errors.cantidad.message}
               </span>
             )}
           </div>

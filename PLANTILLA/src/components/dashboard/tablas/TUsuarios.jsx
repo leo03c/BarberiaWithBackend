@@ -11,10 +11,12 @@ import { useForm } from 'react-hook-form';
 import { schemausuario } from '../../../schema/models.schema.user';
 import {
   useCreateUser,
+  useDeleteUser,
   useUpdateUser,
 } from '../../../hook/reactQuery/useUsuario';
 import { Toaster } from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import ConfirmationModal from '../../../ui/confirmGeneric';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -33,8 +35,10 @@ const TUsuarios = () => {
   const { data: AllUser = [] } = GetAllUser();
   const { mutate: createUserMutate } = useCreateUser();
   const { mutate: updateUserMutate } = useUpdateUser();
+  const { mutate: deleteUserMutate } = useDeleteUser();
 
   const [editingId, setEditingId] = useState(null);
+  const [isOpen, setIsopen] = useState(false);
 
   const onSubmit = (data) => {
     if (editingId) {
@@ -203,7 +207,10 @@ const TUsuarios = () => {
                     <Pencil size={18} />
                   </button>
                   <button
-                    onClick={() => handleDelete(user.id)}
+                    onClick={() => {
+                      setIsopen(true);
+                      setEditingId(user.id);
+                    }}
                     className='text-red-500 hover:text-red-400 transition'
                   >
                     <Trash2 size={18} />
@@ -244,6 +251,18 @@ const TUsuarios = () => {
         >
           <ChevronRight size={20} />
         </button>
+        {isOpen && (
+          <ConfirmationModal
+            isOpen={isOpen}
+            title='Confirmar Eliminación'
+            message='¿Estás seguro de que deseas eliminar este usuario?'
+            onConfirm={() => {
+              deleteUserMutate(editingId);
+              setIsopen(false);
+            }}
+            onCancel={() => setIsopen(false)}
+          />
+        )}
       </div>
     </div>
   );

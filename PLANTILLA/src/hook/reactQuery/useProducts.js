@@ -17,13 +17,10 @@ export const useProducts = () => {
     });
   };
 
-   const useCreateProduct = () => {
+  const useCreateProduct = () => {
     return useMutation({
-      mutationFn: (data) => {
-        toast.success('Producto creado correctamente');
-        createProduct(data);
-        return data;
-      },
+      mutationFn: (data) => createProduct(data),
+
       onMutate: async (data) => {
         await queryClient.cancelQueries({ queryKey: ['products'] });
 
@@ -39,6 +36,7 @@ export const useProducts = () => {
       onError: (error) => {
         toast.error(`Error al crear el producto: ${error.message}`);
       },
+      onSuccess: () => toast.success('Producto creado'),
       onSettled: () => {
         queryClient.invalidateQueries({ queryKey: ['products'] });
       },

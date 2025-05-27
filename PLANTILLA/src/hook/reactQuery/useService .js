@@ -7,8 +7,6 @@ import {
   deteleService,
 } from '../../api/ServiceApi';
 
-
-
 export const useService = () => {
   const useUpdateService = () => {
     const queryClient = useQueryClient();
@@ -29,6 +27,7 @@ export const useService = () => {
       onSettled: () => {
         queryClient.invalidateQueries({ queryKey: ['service'] });
       },
+      onSuccess: () => toast.success('Servicio actualizado correctamente'),
     });
   };
 
@@ -48,15 +47,19 @@ export const useService = () => {
 
         const previousItems = queryClient.getQueryData(['service']);
 
-        queryClient.setQueryData(['service'], (old) =>
-          old ? old.map((item) => (item.id === data.id ? data : item)) : []
-        );
+        queryClient.setQueryData(['service'], (old = []) => [
+          ...old,
+          { ...data },
+        ]);
 
         return previousItems;
       },
       onSettled: () => {
         queryClient.invalidateQueries({ queryKey: ['service'] });
       },
+      onSuccess: () => toast.success('Servicio agregado correctamente'),
+
+      onError: (error) => console.log(error),
     });
   };
 
