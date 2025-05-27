@@ -1,11 +1,11 @@
 from django.db import models
 
 class Foto(models.Model):
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100,blank=False)  # Nombre de la foto
     imag = models.ImageField(upload_to='galeria/', blank=True, null=True)
     
     def __str__(self):
-        return f"{self.nombre} - {self.get_categoria_display()}"
+        return self.nombre
     
     class Meta:
         verbose_name = 'Foto'

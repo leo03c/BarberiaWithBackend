@@ -4,7 +4,6 @@ from servicios.models import Servicio
 from datetime import timedelta
 
 @pytest.mark.django_db 
-
 def test_promocion_creation():
     servicio = Servicio.objects.create(nombre="Barberia",precio=20,descripcion='Aqui hacemos lo mejor ', duracion=timedelta(hours=1) )
     promocion= Promocion.objects.create(

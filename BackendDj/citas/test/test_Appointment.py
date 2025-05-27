@@ -11,7 +11,7 @@ from usuarios.models import Usuario
 
 @pytest.fixture
 def service(db):
-    # Crea un servicio con duración de 1 hora
+    
     return Servicio.objects.create(
         nombre="Corte de cabello",
         duracion=timedelta(hours=1),
