@@ -6,9 +6,7 @@ import { motion } from 'framer-motion';
 import { ModalNotification } from './Modal';
 
 const testimonialSchema = z.object({
-  comentario: z
-    .string()
-    .min(10, 'El comentario debe tener al menos 10 caracteres'),
+  comentario: z.string(),
   clasificacion: z
     .number({ invalid_type_error: 'La clasificación debe ser un número' })
     .min(1, 'La clasificación mínima es 1')

@@ -1,5 +1,5 @@
 import pytest
-from reseñas.models import Reseña
+from resennas.models import Reseña
 from usuarios.models import Usuario
 
 @pytest.fixture

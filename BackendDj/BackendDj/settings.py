@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'servicios',
     'citas',
     'promociones',
-    'reseñas',
+    'resennas',
     'django_filters',
     'rest_framework',
     'corsheaders',

@@ -34,7 +34,7 @@ urlpatterns = [
         path('', include('servicios.urls')),
         path('', include('citas.urls')),
         path('', include('promociones.urls')),
-        path('', include('reseñas.urls')),
+        path('', include('resennas.urls')),
         path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
         path('registro/', RegistroUsuarioView.as_view(), name='registro_cliente'),
         path('api/dashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),
