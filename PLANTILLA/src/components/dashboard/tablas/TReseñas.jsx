@@ -49,7 +49,7 @@ const TResennas = () => {
                   key={reseña.id}
                   className='border-t border-gray-700 hover:bg-gray-700 transition'
                 >
-                  <td className='py-2 px-4'>{reseña.usuarioid}</td>
+                  <td className='py-2 px-4'>{reseña.usuario.nombre}</td>
                   <td className='py-2 px-4'>{reseña.clasificacion}</td>
                   <td className='py-2 px-4'>{reseña.comentario}</td>
                   <td className='py-2 px-4 flex justify-center gap-3'>

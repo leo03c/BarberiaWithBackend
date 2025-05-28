@@ -4,8 +4,13 @@ import { FaStar } from 'react-icons/fa';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { ModalNotification } from './Modal';
+import { GetAllResennas, useCreateResenna } from '../api/ResennaApi';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Toaster } from 'react-hot-toast';
 
 const testimonialSchema = z.object({
+  usuario_id: z.string().optional(),
   comentario: z.string(),
   clasificacion: z
     .number({ invalid_type_error: 'La clasificación debe ser un número' })
@@ -14,108 +19,47 @@ const testimonialSchema = z.object({
 });
 
 const userid = localStorage.getItem('id');
-const username = localStorage.getItem('username');
 
 const Testimonials = () => {
   const [showModal, setShowModal] = useState(false);
-  const [testimonials, setTestimonials] = useState([]);
-  const [formData, setFormData] = useState({
-    usuarioid: userid,
-    comentario: '',
-    clasificacion: 5,
-  });
-  const [formErrors, setFormErrors] = useState({});
+  const { data: AllResennas = [] } = GetAllResennas();
+  const { mutate: createResenna } = useCreateResenna();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  // 1) Función para obtener todas las reseñas
-  const fetchTestimonials = async () => {
-    try {
-      const res = await fetch('http://localhost:8000/api/reseñas/');
-      if (!res.ok) throw new Error('Error al cargar reseñas');
-      const data = await res.json();
-      setTestimonials(data);
-    } catch (err) {
-      console.error(err);
-    }
+  const {
+    handleSubmit,
+    register,
+
+    reset,
+  } = useForm({
+    resolver: zodResolver(testimonialSchema),
+    defaultValues: {
+      usuario_id: userid,
+      comentario: '',
+      clasificacion: 5,
+    },
+  });
+
+  const onSubmit = (data) => {
+    createResenna(data);
+    reset();
+    setCurrentTestimonial(0);
   };
 
-  // 2) Llamamos a fetchTestimonials al montar
   useEffect(() => {
-    fetchTestimonials();
-  }, []);
-
-  // 3) Rotación automática
-  useEffect(() => {
-    if (!testimonials.length) return;
+    if (!AllResennas.length) return;
     const interval = setInterval(() => {
-      setCurrentTestimonial((i) => (i + 1) % testimonials.length);
+      setCurrentTestimonial((i) => (i + 1) % AllResennas.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [testimonials]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((f) => ({
-      ...f,
-      [name]: name === 'clasificacion' ? parseInt(value, 10) : value,
-    }));
-    setFormErrors({});
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const safeUsername = username || 'Usuario';
-    const comentarioConUsuario = `${safeUsername}: ${formData.comentario}`;
-
-    // Validación
-    try {
-      testimonialSchema.parse({
-        comentario: comentarioConUsuario,
-        clasificacion: formData.clasificacion,
-      });
-    } catch (zErr) {
-      const errs = {};
-      zErr.errors.forEach(({ path, message }) => {
-        errs[path[0]] = message;
-      });
-      setFormErrors(errs);
-      return;
-    }
-
-    // Envío
-    try {
-      const res = await fetch('http://localhost:8000/api/reseñas/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          usuarioid: formData.usuarioid,
-          comentario: comentarioConUsuario,
-          clasificacion: formData.clasificacion,
-        }),
-      });
-
-      if (res.status === 401 || res.status === 403) {
-        setShowModal(true);
-        return;
-      }
-      if (!res.ok) {
-        console.error('Error al enviar:', await res.json());
-        return;
-      }
-
-      // Éxito: resetea form y recarga todas las reseñas
-      setFormData({ usuarioid: userid, comentario: '', clasificacion: 5 });
-      fetchTestimonials();
-    } catch (err) {
-      console.error('Error inesperado:', err);
-    }
-  };
+  }, [AllResennas.length]);
 
   return (
     <section
       id='testimonios'
       className='bg-jetBlack text-lightGray py-16 px-6 md:px-16'
     >
+      <Toaster />
       <ModalNotification
         color='#f44336'
         message='Debes estar autenticado primero'
@@ -128,27 +72,29 @@ const Testimonials = () => {
       </h2>
 
       <div className='flex flex-col lg:flex-row justify-center items-center gap-12'>
-        {/* Carrusel de testimonios */}
         <div className='w-full lg:w-1/2'>
-          {testimonials.length ? (
+          {AllResennas.length ? (
             <div className='overflow-hidden rounded-2xl shadow-xl bg-jetBlack p-8 flex items-center justify-center'>
               <motion.div
-                key={testimonials[currentTestimonial].id}
+                key={AllResennas[currentTestimonial].id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 1 }}
                 className='text-center'
               >
+                <p className='text-2xl font-serif font-bold text-mustard mb-4'>
+                  {AllResennas[currentTestimonial].usuario.nombre}
+                </p>
                 <p className='text-lg italic mb-6'>
-                  {testimonials[currentTestimonial].comentario}
+                  {AllResennas[currentTestimonial].comentario}
                 </p>
                 <div className='flex justify-center'>
                   {[...Array(5)].map((_, i) => (
                     <FaStar
                       key={i}
                       className={
-                        i < testimonials[currentTestimonial].clasificacion
+                        i < AllResennas[currentTestimonial].clasificacion
                           ? 'text-mustard'
                           : 'text-gray-400'
                       }
@@ -167,7 +113,10 @@ const Testimonials = () => {
           <h3 className='text-2xl font-serif font-bold text-mustard mb-6 text-center tracking-wide'>
             Deja tu Reseña
           </h3>
-          <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
+          <form
+            className='flex flex-col gap-6'
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div>
               <label htmlFor='comentario' className='block mb-2 font-semibold'>
                 Comentario:
@@ -175,15 +124,12 @@ const Testimonials = () => {
               <textarea
                 id='comentario'
                 name='comentario'
-                value={formData.comentario}
-                onChange={handleChange}
                 rows='5'
+                {...register('comentario')}
+                required
                 className='w-full p-4 rounded-lg bg-gray-800'
                 placeholder='Escribe tu testimonio...'
               />
-              {formErrors.comentario && (
-                <p className='text-red-500 mt-2'>{formErrors.comentario}</p>
-              )}
             </div>
 
             <div>
@@ -196,8 +142,11 @@ const Testimonials = () => {
               <select
                 id='clasificacion'
                 name='clasificacion'
-                value={formData.clasificacion}
-                onChange={handleChange}
+                {...register('clasificacion', {
+                  valueAsNumber: true,
+                })}
+                defaultValue={5}
+                required
                 className='w-full p-4 rounded-lg bg-gray-800'
               >
                 {[1, 2, 3, 4, 5].map((n) => (
@@ -206,9 +155,6 @@ const Testimonials = () => {
                   </option>
                 ))}
               </select>
-              {formErrors.clasificacion && (
-                <p className='text-red-500 mt-2'>{formErrors.clasificacion}</p>
-              )}
             </div>
 
             <button

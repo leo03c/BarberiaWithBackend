@@ -38,3 +38,32 @@ export const GetAllResennas = () => {
     },
   });
 };
+
+export const CreateResenna = (data) => {
+  try {
+    const response = axiosInstance.post('/resennas/', data);
+    return response;
+  } catch (error) {
+    console.error('Error creating resenna:', error);
+    throw error;
+  }
+};
+export const useCreateResenna = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => CreateResenna(data),
+    onMutate: async (newItem) => {
+      queryClient.cancelQueries(['resenna']);
+
+      const previewItem = queryClient.getQueryData(['resenna']);
+
+      queryClient.setQueryData(['resenna'], (old = []) =>
+        old ? [...old, newItem] : [newItem]
+      );
+
+      return previewItem;
+    },
+    onSuccess: () => toast.success('Reseña creada con éxito'),
+    onSettled: () => queryClient.invalidateQueries(['resenna']),
+  });
+};

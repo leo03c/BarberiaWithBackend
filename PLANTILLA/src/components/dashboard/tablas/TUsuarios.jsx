@@ -149,7 +149,10 @@ const TUsuarios = () => {
           />
 
           {errors.telefono && (
-            <span className='text-red-500'> {errors.message.telefono}</span>
+            <span className='text-red-500'>
+              {' '}
+              {errors?.message?.telefono ?? 'Error'}
+            </span>
           )}
 
           {/* Selector de rol */}
