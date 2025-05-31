@@ -1,14 +1,14 @@
 import { z } from 'zod';
 export const productoSchema = z.object({
-  nombre: z.string().min(1, 'Campo Requerido').max(50, 'Dato Incorrecto'),
+  nombre: z.string(),
   precio: z.coerce
     .number({
-      invalid_type_error: 'Campo Incorrecto',
+      invalid_type_error: 'Introduce un precio valido ',
     })
-    .positive('Campo Incorrecto'),
+    .positive('Introduce un precio valido'),
   cantidad: z.coerce
     .number({
-      invalid_type_error: 'Campo Incorrecto',
+      invalid_type_error: 'Introduce una cantidad  valida',
     })
-    .positive('Campo Incorrecto'),
+    .positive('Introduce un cantidad  valida'),
 });

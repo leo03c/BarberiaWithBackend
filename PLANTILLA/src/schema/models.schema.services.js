@@ -1,30 +1,28 @@
 // schema/models.schema.service.ts
-import { z } from 'zod';
+import { z, ZodIssueCode } from 'zod';
 
 export const schemaservicio = z.object({
-  nombre: z
-    .string()
-    .min(1, 'Campo Requerido')
-    .max(50, 'Dato Incorrecto'),
+  nombre: z.enum(['Barberia', 'Manicura', 'Pedicura', 'Peluqueria'], {
+    errorMap: (issue, ctx) => {
+      if (issue.code === ZodIssueCode.invalid_enum_value) {
+        const opciones = (issue.options ?? []).join(', ');
+        return {
+          message: `El servicio debe ser : ${opciones}`,
+        };
+      }
 
+      return { message: ctx.defaultError };
+    },
+  }),
 
   precio: z.coerce
     .number({
-      invalid_type_error: 'Dato Incorrecto',
+      invalid_type_error: 'Introduce un precio válido',
     })
-    .positive('Dato Incorrecto'),
+    .positive('Introduce un precio válido'),
 
-  descripcion: z
-    .string()
-    .max(500, 'Dato Incorrecto'),
+  descripcion: z.string(),
+  imagen: z.instanceof(FileList, { message: 'La imagen es requerida' }),
 
-  // RHF entrega FileList, no File
-  imagen: z
-    .instanceof(FileList)
-    .optional()
-    .refine((files) => !files || files.length <= 1, {
-      message: 'Solo puedes subir una imagen',
-    }),
-
-  duracion: z.enum(['1h', '2h', '3h', '4h']).default('1h'),
+  duracion: z.enum(['1h']).default('1h'),
 });
