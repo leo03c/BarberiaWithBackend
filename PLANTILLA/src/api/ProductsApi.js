@@ -1,4 +1,3 @@
-
 import axiosInstance from './axios';
 
 export const GetAllProducts = async () => {
@@ -11,13 +10,9 @@ export const GetAllProducts = async () => {
 };
 
 export const createProduct = async (data) => {
-  try {
-    const response = await axiosInstance.post('/productos/', data);
+  const response = await axiosInstance.post('/productos/', data);
 
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
+  return response.data;
 };
 
 export const updateProduct = async (id, data) => {
