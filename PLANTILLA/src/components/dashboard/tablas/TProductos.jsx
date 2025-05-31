@@ -13,6 +13,7 @@ import { productoSchema } from '../../../schema/models.schema.producto';
 import { useProducts } from '../../../hook/reactQuery/useProducts';
 import { Toaster } from 'react-hot-toast';
 import ConfirmationModal from '../../../ui/confirmGeneric';
+import toast from 'react-hot-toast';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -25,6 +26,7 @@ const TProductos = () => {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(productoSchema),
@@ -49,22 +51,32 @@ const TProductos = () => {
   const { mutate: deleteProducto } = useDeleteProduct();
 
   const onSubmit = (data) => {
-    console.log(data);
-    try {
-      if (editingId) {
-        updateProducto({ id: editingId, data: data });
-        reset({
-          nombre: '',
-          precio: '',
-          cantidad: '',
-        });
-      } else {
-        console.log(data);
-        createProducto(data);
-        reset();
-      }
-    } catch (error) {
-      console.error('Error al enviar el formulario:', error);
+    if (editingId) {
+      updateProducto(
+        { id: editingId, data: data },
+        {
+          onSuccess: () => {
+            toast.success('Producto actualizado correctamente');
+            setEditingId(null);
+            reset({
+              nombre: '',
+              precio: '',
+              cantidad: '',
+            });
+          },
+        }
+      );
+    } else {
+      createProducto(data, {
+        onError: (errors) => {
+          setError('nombre', {
+            type: 'manual',
+            message: errors.response.data.nombre[0],
+          });
+
+          throw errors;
+        },
+      });
     }
   };
 
@@ -102,7 +114,7 @@ const TProductos = () => {
               name='nombre'
               placeholder='Nombre del producto'
               {...register('nombre')}
-              className='p-2 bg-gray-700 text-lightGray rounded-md'
+              className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
               required
             />
             {errors.nombre && (
@@ -117,12 +129,12 @@ const TProductos = () => {
               name='precio'
               placeholder='precio'
               {...register('precio')}
-              className='p-2 bg-gray-700 text-lightGray rounded-md'
+              className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
               required
             />
-            {errors.cantidad && (
+            {errors.precio && (
               <span className='text-red-500 text-sm'>
-                {errors.cantidad.message}
+                {errors.precio.message}
               </span>
             )}
           </div>
@@ -132,7 +144,7 @@ const TProductos = () => {
               name='cantidad'
               placeholder='Cantidad'
               {...register('cantidad')}
-              className='p-2 bg-gray-700 text-lightGray rounded-md'
+              className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
               required
             />
             {errors.cantidad && (
@@ -144,7 +156,7 @@ const TProductos = () => {
         </div>
         <button
           type='submit'
-          className='mt-4 w-full bg-mustard text-jetBlack py-2 rounded-lg font-semibold flex items-center justify-center gap-2'
+          className='mt-4 w-full bg-mustard text-jetBlack py-2 rounded-lg font-semibold flex items-center justify-center gap-2 '
         >
           <PlusCircle size={18} />
           {editingId ? 'Actualizar Producto' : 'Agregar Producto'}
