@@ -17,6 +17,7 @@ import {
 import { Toaster } from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ConfirmationModal from '../../../ui/confirmGeneric';
+import toast from 'react-hot-toast';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -27,6 +28,7 @@ const TUsuarios = () => {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schemausuario),
@@ -42,20 +44,45 @@ const TUsuarios = () => {
 
   const onSubmit = (data) => {
     if (editingId) {
-      updateUserMutate({ id: editingId, data: data });
-      reset({
-        nombre: '',
-        apellidos: '',
-        correo: '',
-        telefono: '',
-        rol: '',
-        usuario: '',
-      });
-      return;
-    }
+      updateUserMutate(
+        { id: editingId, data: data },
+        {
+          onSuccess: () => {
+            toast.success('Usuario actualizado correctamente');
+            setEditingId(null);
+            reset({
+              nombre: '',
+              apellidos: '',
+              correo: '',
+              usuario: '',
+              telefono: '',
+            });
+          },
+        }
+      );
+    } else {
+      createUserMutate(
+        { password: 123456, ...data },
+        {
+          onSuccess: () => {
+            toast.success('Usuario creado correctamente');
+            reset();
+          },
+          onError: (error) => {
+            setError('usuario', {
+              type: 'manual',
+              message: error.response.data.usuario,
+            });
 
-    createUserMutate({ password: 123456, ...data });
-    reset();
+            setError('correo', {
+              type: 'manual',
+              message: error.response.data.correo,
+            });
+            throw error;
+          },
+        }
+      );
+    }
   };
 
   const handleEdit = (user) => {
@@ -96,70 +123,77 @@ const TUsuarios = () => {
           <input
             type='text'
             name='nombre'
+            required
             placeholder='Nombre'
             {...register('nombre')}
-            className='p-2 bg-gray-700 text-lightGray rounded-md'
+            className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
           />
 
           {errors.nombre && (
-            <span className='text-red-500'> {errors.message.nombre}</span>
+            <span className='text-red-500'> {errors.nombre.message}</span>
           )}
 
-          <input
-            id='apellidos'
-            type='text'
-            name='apellidos'
-            placeholder='Apellidos'
-            {...register('apellidos')}
-            className='p-2 bg-gray-700 text-lightGray rounded-md'
-          />
-          {errors.apellidos && (
-            <span className='text-red-500'> {errors.message.apellidos}</span>
-          )}
-          <input
-            id='usuario'
-            type='text'
-            name='usuario'
-            placeholder='Usuario'
-            {...register('usuario')}
-            className='p-2 bg-gray-700 text-lightGray rounded-md'
-            required
-          />
-          {errors.usuario && (
-            <span className='text-red-500'> {errors.message.usuario}</span>
-          )}
-          <input
-            type='email'
-            name='correo'
-            placeholder='Correo'
-            {...register('correo')}
-            className='p-2 bg-gray-700 text-lightGray rounded-md'
-            required
-          />
-          {errors.correo && (
-            <span className='text-red-500'> {errors.message.correo}</span>
-          )}
-          <input
-            type='tel'
-            name='telefono'
-            placeholder='Teléfono'
-            {...register('telefono')}
-            className='p-2 bg-gray-700 text-lightGray rounded-md'
-            required
-          />
+          <div>
+            <input
+              id='apellidos'
+              required
+              type='text'
+              name='apellidos'
+              placeholder='Apellidos'
+              {...register('apellidos')}
+              className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
+            />
+            {errors.apellidos && (
+              <span className='text-red-500'> {errors.apellidos.message}</span>
+            )}
+          </div>
+          <div>
+            <input
+              id='usuario'
+              type='text'
+              required
+              name='usuario'
+              placeholder='Usuario'
+              {...register('usuario')}
+              className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
+            />
+            {errors.usuario && (
+              <span className='text-red-500'> {errors.usuario.message}</span>
+            )}
+          </div>
+          <div>
+            <input
+              type='text'
+              name='correo'
+              placeholder='Correo'
+              {...register('correo')}
+              className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
+              required
+            />
+            {errors.correo && (
+              <span className='text-red-500'> {errors.correo.message}</span>
+            )}
+          </div>
+          <div>
+            <input
+              type='text'
+              name='telefono'
+              placeholder='Teléfono'
+              {...register('telefono', { valueAsNumber: true })}
+              className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
+              required
+            />
 
-          {errors.telefono && (
-            <span className='text-red-500'>
-              {' '}
-              {errors?.message?.telefono ?? 'Error'}
-            </span>
-          )}
+            {errors.telefono && (
+              <span className='text-red-500'> {errors?.telefono.message}</span>
+            )}
+          </div>
 
           {/* Selector de rol */}
           <select
             name='rol'
             {...register('rol')}
-            className='p-2 bg-gray-700 text-lightGray rounded-md'
+            className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
           >
             <option value='cliente'>Cliente</option>
             <option value='admin'>Admin</option>
