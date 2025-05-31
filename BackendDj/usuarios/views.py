@@ -25,7 +25,6 @@ class AdminDashboardView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        
         if request.user.rol != 'admin':
             return Response({'detail': 'No autorizado'}, status=403)
       
@@ -38,10 +37,10 @@ class RegistroUsuarioView(APIView):
         data = request.data
         
         if Usuario.objects.filter(usuario=data.get('usuario')).exists():
-            return Response({"error": "El usuario ya está registrado"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"usuario": "Este usuario ya existe"}, status=status.HTTP_400_BAD_REQUEST)
         
         if Usuario.objects.filter(correo=data.get('correo')).exists():
-            return Response({"error": "El correo ya está registrado"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"correo": "El correo ya está registrado"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             Usuarios = Usuario.objects.create(
@@ -52,7 +51,6 @@ class RegistroUsuarioView(APIView):
                 telefono=data.get('telefono', None),
                 password=make_password(data.get('password')) 
             )
-            
             
             Usuarios.save()
             return Response({"message": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
@@ -79,7 +77,7 @@ class UsuarioFilter(filters.FilterSet):
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
+    serializer_class = UsuarioSerializer    
     filter_backends = [filters.DjangoFilterBackend]  # Requiere django-filter
     filterset_class = UsuarioFilter
 
