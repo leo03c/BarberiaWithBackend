@@ -1,5 +1,5 @@
 import pytest
-from resennas.models import Reseña
+from resennas.models import Resenna
 from usuarios.models import Usuario
 
 @pytest.fixture
@@ -15,11 +15,11 @@ def user(db):
 
 @pytest.mark.django_db
 def test_validator_create_r(user):
-    resenna = Reseña.objects.create(
-        usuarioid=user,
+    resenna = Resenna.objects.create(
+        usuario=user,
         clasificacion=5,
         comentario='The best in the world'
     )
-    assert resenna.usuarioid == user
+    assert resenna.usuario == user
     assert resenna.clasificacion == 5
     assert resenna.comentario == 'The best in the world'
