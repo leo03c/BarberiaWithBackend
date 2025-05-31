@@ -11,15 +11,6 @@ export const GetAllUser = () => {
   });
 };
 
-export const createUser = (data) => {
-  try {
-    const response = axiosInstance.post('/usuarios/', data);
-    return response;
-  } catch (error) {
-    console.log('Ha ocurrido un error', error);
-  }
-};
-
 export const updateUser = async (id, data) => {
   try {
     const response = await axiosInstance.patch(`/usuarios/${id}/`, data);
