@@ -4,19 +4,18 @@ import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { ModalNotification } from './Modal';
 import { useEffect, useState } from 'react';
-import * as z from 'zod';
+import { z } from 'zod';
+import { registerUser } from '../api/authApi';
+import axios from 'axios';
 
-const schema = z.object({
-  nombre: z.string().min(2, 'El nombre debe tener al menos 2 caracteres.'),
-  apellidos: z
-    .string()
-    .min(2, 'Los apellidos deben tener al menos 2 caracteres.'),
+const schemausuario = z.object({
+  nombre: z.string(),
+  apellidos: z.string(),
   usuario: z.string().min(3, 'El usuario debe tener al menos 3 caracteres.'),
   correo: z.string().email('Ingrese un correo válido.'),
   telefono: z
     .string()
-    .regex(/^\d{8,10}$/, 'El teléfono debe tener entre 8 y 10  dígitos.')
-    .optional(),
+    .regex(/^\d{8,10}$/, 'El teléfono debe tener entre 8 y 10  dígitos.'),
   password: z
     .string()
     .min(6, 'La contraseña debe tener al menos 6 caracteres.'),
@@ -31,35 +30,37 @@ const ClienteForm = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    setError,
   } = useForm({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schemausuario),
   });
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (userData) => {
     try {
-      const dataToSend = {
-        ...formData,
-      };
-
-      const response = await fetch('http://127.0.0.1:8000/api/registro/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dataToSend),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al registrar cliente.');
-      }
+      await registerUser(userData);
       setShowModal(true);
-
-      setTimeout(() => navigate('/LoginForm'), 1500);
-      setTimeout(() => {
-        setShowModal(true);
-      }, 6000);
       reset();
+      navigate('/');
     } catch (error) {
-      console.log(`Hubo un problema: ${error.message}`);
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const backendErrors = error.response.data;
+
+        console.log(backendErrors.usuario);
+
+        if (backendErrors.usuario) {
+          setError('usuario', {
+            type: 'server',
+            message: backendErrors.usuario,
+          });
+        }
+
+        if (backendErrors.correo) {
+          setError('correo', {
+            type: 'server',
+            message: backendErrors.correo,
+          });
+        }
+      }
     }
   };
   useEffect(() => {
@@ -95,7 +96,7 @@ const ClienteForm = () => {
             <input
               {...register('nombre')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
-              placeholder='Ej: Juan'
+              required
             />
             {errors.nombre && (
               <p className='text-red-400 text-sm'>{errors.nombre.message}</p>
@@ -109,7 +110,7 @@ const ClienteForm = () => {
             <input
               {...register('apellidos')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
-              placeholder='Ej: Pérez'
+              required
             />
             {errors.apellidos && (
               <p className='text-red-400 text-sm'>{errors.apellidos.message}</p>
@@ -123,7 +124,7 @@ const ClienteForm = () => {
             <input
               {...register('usuario')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
-              placeholder='Ej: juan123'
+              required
             />
             {errors.usuario && (
               <p className='text-red-400 text-sm'>{errors.usuario.message}</p>
@@ -137,7 +138,7 @@ const ClienteForm = () => {
             <input
               {...register('correo')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
-              placeholder='Ej: correo@ejemplo.com'
+              required
             />
             {errors.correo && (
               <p className='text-red-400 text-sm'>{errors.correo.message}</p>
@@ -151,7 +152,7 @@ const ClienteForm = () => {
             <input
               {...register('telefono')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
-              placeholder='Ej: 56870848'
+              required
             />
             {errors.telefono && (
               <p className='text-red-400 text-sm'>{errors.telefono.message}</p>
@@ -167,6 +168,7 @@ const ClienteForm = () => {
               {...register('password')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
               placeholder='Mínimo 6 caracteres'
+              required
             />
             {errors.password && (
               <p className='text-red-400 text-sm'>{errors.password.message}</p>
