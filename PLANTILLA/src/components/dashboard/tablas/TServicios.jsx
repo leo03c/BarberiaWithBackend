@@ -118,6 +118,7 @@ const TServicios = () => {
               type='text'
               placeholder='Nombre del servicio'
               {...register('nombre')}
+              required
               className='p-2 bg-gray-700 text-lightGray rounded-md w-full'
             />
             {errors.nombre && (
@@ -132,6 +133,7 @@ const TServicios = () => {
             <input
               type='number'
               placeholder='Precio'
+              required
               {...register('precio', { valueAsNumber: true })}
               className='p-2 bg-gray-700 text-lightGray rounded-md w-full'
             />
@@ -147,6 +149,7 @@ const TServicios = () => {
             <textarea
               placeholder='Descripción'
               {...register('descripcion')}
+              required
               className='p-2 bg-gray-700 text-lightGray rounded-md w-full'
             />
             {errors.descripcion && (
@@ -160,6 +163,7 @@ const TServicios = () => {
           <div>
             <input
               type='file'
+              required
               accept='image/*'
               {...register('imagen')}
               className='p-2 bg-gray-700 text-lightGray rounded-md w-full'
@@ -211,10 +215,10 @@ const TServicios = () => {
                 <td className='py-2 px-4'>{servicio.id}</td>
                 <td className='py-2 px-4'>${servicio.precio}</td>
                 <td className='py-2 px-4'>{servicio.descripcion}</td>
-                <td className='py-2 px-4 flex justify-center gap-3'>
+                <td className='py-2 px-4 flex justify-center mt-3 gap-3'>
                   <button
                     onClick={() => handleEdit(servicio)}
-                    className='text-mustard hover:text-yellow-500 transition'
+                    className='text-mustard hover:text-yellow-500  transition'
                   >
                     <Pencil size={18} />
                   </button>
