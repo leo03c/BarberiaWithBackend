@@ -16,4 +16,10 @@ class PromocionViewSet(viewsets.ModelViewSet):
     serializer_class = PromocionSerializer
     filter_backends = [filters.DjangoFilterBackend]  # Requiere django-filter
     filterset_class = PromocionFilter
+    
+    def create(self, request, *args, **kwargs):
+        print('>> RAW DATA:', request.body)
+        print('>> PARSED  :', request.data)
+        return super().create(request, *args, **kwargs)
+
 

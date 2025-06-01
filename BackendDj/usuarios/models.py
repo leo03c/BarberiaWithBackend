@@ -4,8 +4,8 @@ from django.contrib.auth.hashers import make_password
 class Usuario(models.Model):
     nombre = models.CharField(max_length=100,blank=False)                #unico
     apellidos = models.CharField(max_length=150,blank=False)  #opcional
-    usuario = models.CharField(max_length=100)                                  #unico
-    correo = models.EmailField(null=False,blank=False)  #opcional
+    usuario = models.CharField(max_length=100,unique=True)                                  #unico
+    correo = models.EmailField(null=False,blank=False,unique=True)  #opcional
     telefono = models.IntegerField(null=False,blank=False)  #opcional
     password = models.TextField(null=False,blank=False)  #opcional
     rol = models.CharField(
@@ -17,7 +17,6 @@ class Usuario(models.Model):
     def save(self, *args, **kwargs):
         
         if not self.password.startswith('pbkdf2_sha256$'):
-            
             self.password = make_password(self.password)
         super(Usuario, self).save(*args, **kwargs)
 
