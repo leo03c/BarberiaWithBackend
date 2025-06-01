@@ -21,7 +21,7 @@ export const schemaservicio = z.object({
     })
     .positive('Introduce un precio válido'),
 
-  descripcion: z.string(),
+  descripcion: z.string().max(100, 'No puede exceder a 200 caracteres'),
   imagen: z.instanceof(FileList, { message: 'La imagen es requerida' }),
 
   duracion: z.enum(['1h']).default('1h'),

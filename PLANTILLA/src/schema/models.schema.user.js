@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const schemausuario = z.object({
-  nombre: z.string(),
-  apellidos: z.string(),
+  nombre: z.string().min(3, 'EL nombre debe tener al menos 3 caracateres'),
+  apellidos: z.string().min(3, 'EL apellido debe tener al menos 3 caracateres'),
   usuario: z.string(),
   correo: z.string().email('Ingrese un correo válido.'),
   telefono: z.coerce
