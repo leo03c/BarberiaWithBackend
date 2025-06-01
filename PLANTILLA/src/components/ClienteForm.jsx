@@ -9,8 +9,8 @@ import { registerUser } from '../api/authApi';
 import axios from 'axios';
 
 const schemausuario = z.object({
-  nombre: z.string(),
-  apellidos: z.string(),
+  nombre: z.string().min(3, 'EL nombre debe tener al menos 3 caracateres'),
+  apellidos: z.string(3, 'EL apellido debe tener al menos 3 caracateres'),
   usuario: z.string().min(3, 'El usuario debe tener al menos 3 caracteres.'),
   correo: z.string().email('Ingrese un correo válido.'),
   telefono: z
