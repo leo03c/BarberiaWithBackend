@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { GetAllResennas, useDeleteResennas } from '../../../api/ResennaApi';
 import ConfirmationModal from '../../../ui/confirmGeneric';
+import { Toaster } from 'react-hot-toast';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -97,6 +98,7 @@ const TResennas = () => {
               : 'bg-mustard text-jetBlack hover:bg-yellow-500'
           }`}
         >
+          <Toaster />
           <ChevronRight size={20} />
         </button>
 

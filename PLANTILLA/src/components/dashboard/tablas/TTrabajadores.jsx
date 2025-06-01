@@ -43,7 +43,7 @@ const TTrabajadores = () => {
   const onSubmit = (data) => {
     if (editingCi) {
       updateTrabajadorMutate(
-        { id: editingCi, data: data },
+        { ci: editingCi, data: data },
         {
           onSuccess: () => {
             toast.success('Actualizado con existo'),
@@ -54,6 +54,7 @@ const TTrabajadores = () => {
                 puesto: '',
                 ci: '',
               });
+            setEditingCi(null);
           },
         }
       );
@@ -100,6 +101,7 @@ const TTrabajadores = () => {
           <div>
             <input
               type='text'
+              disabled={editingCi ? true : false}
               name='ci'
               placeholder='ci'
               className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
