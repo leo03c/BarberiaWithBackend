@@ -11,7 +11,7 @@ import { Toaster } from 'react-hot-toast';
 
 const testimonialSchema = z.object({
   usuario_id: z.string().optional(),
-  comentario: z.string(),
+  comentario: z.string().max('Debe tener maximo 100 caracateres'),
   clasificacion: z
     .number({ invalid_type_error: 'La clasificación debe ser un número' })
     .min(1, 'La clasificación mínima es 1')
@@ -29,7 +29,7 @@ const Testimonials = () => {
   const {
     handleSubmit,
     register,
-
+    formState: { errors },
     reset,
   } = useForm({
     resolver: zodResolver(testimonialSchema),
@@ -130,6 +130,11 @@ const Testimonials = () => {
                 className='w-full p-4 rounded-lg bg-gray-800'
                 placeholder='Escribe tu testimonio...'
               />
+              {errors.comentario && (
+                <p className='text-red-400 text-sm mt-2'>
+                  {errors.comentario.message}
+                </p>
+              )}
             </div>
 
             <div>
