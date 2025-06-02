@@ -11,24 +11,24 @@ class TrabajadorSerializer(serializers.ModelSerializer):
     def validate_ci(self,ci) -> bool:
        
         if len(ci) != 11:
-            raise serializers.ValidationError('Ingrese un carnet valido')
+            raise serializers.ValidationError('Ingrese un carnet válido')
 
       
         fecha_nacimiento = ci[:6]
 
         
         if not fecha_nacimiento.isdigit():
-            raise serializers.ValidationError('Ingrese un carnet valido')
+            raise serializers.ValidationError('Ingrese un carnet válido')
 
         año = int(fecha_nacimiento[:2])  
         mes = int(fecha_nacimiento[2:4])  
         dia = int(fecha_nacimiento[4:6])  
 
         if not (1 <= mes <= 12):
-            raise serializers.ValidationError('Ingrese un carnet valido')
+            raise serializers.ValidationError('Ingrese un carnet válido')
 
         if not (0 <= dia <= 31):
-            raise serializers.ValidationError('Ingrese un carnet valido')
+            raise serializers.ValidationError('Ingrese un carnet válido')
 
        
         return ci

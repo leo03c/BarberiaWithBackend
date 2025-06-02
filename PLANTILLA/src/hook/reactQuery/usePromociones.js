@@ -10,8 +10,7 @@ export const useCreateTPromociones = () => {
   return useMutation({
     mutationFn: (data) => {
       createPromociones(data);
-      console.log('data utate',data)
-    },
+     },
     onMutate: async (data) => {
       qc.cancelQueries(['promociones']);
 

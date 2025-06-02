@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from './axios';
-
+import { toast } from 'react-hot-toast';
 export const GetAllPhoto = () => {
   return useQuery({
     queryKey: ['fotos'],
@@ -13,6 +13,7 @@ export const GetAllPhoto = () => {
 
 export const createPhoto = async (data) => {
   const response = await axiosInstance.post('/fotos/', data);
+  toast.success('Foto agregada con éxito');
   return response;
 };
 
