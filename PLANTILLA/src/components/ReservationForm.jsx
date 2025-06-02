@@ -9,6 +9,7 @@ import { useFetch } from '../hook/useFetch';
 import { useAvailability } from '../hook/useAvailability';
 import { useCreateAppointment } from '../hook/crearReserva';
 import api from '../api/axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function ReservationForm() {
   const { iduser } = useAuth();
@@ -38,7 +39,7 @@ export default function ReservationForm() {
   }, [servicesData]);
 
   // --- Citas existentes ---
-  const { data: appointmentsData } = useFetch('/api/citas/'); // obtenemos todas
+  const { data: appointmentsData } = useFetch('/api/citas/');
   const [appointments, setAppointments] = useState([]);
   useEffect(() => {
     if (!appointmentsData) return;
@@ -100,7 +101,13 @@ export default function ReservationForm() {
     };
 
     try {
-      const newAppt = await createAppointment(payload);
+      const newAppt = await createAppointment(payload, {
+        onError: (error) => {
+          console.log(error);
+          throw error;
+        },
+        onSuccess: () => toast.success('Cita agregada '),
+      });
       setAppointments((prev) => [...prev, newAppt]);
       setFormData({ service: '', date: null, hour: '' });
     } catch (err) {
@@ -137,6 +144,7 @@ export default function ReservationForm() {
     <div className='min-h-screen bg-jetBlack py-16 px-6 flex items-center justify-center'>
       <div className='max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-8'>
         {/* Formulario */}
+        <Toaster />
         <motion.div
           className='bg-white bg-opacity-10 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-8'
           initial={{ opacity: 0, y: 50 }}
@@ -180,7 +188,7 @@ export default function ReservationForm() {
               className='w-full p-3 rounded-lg bg-transparent border border-bronze text-lightGray'
               required
             >
-              <option value=''>Selecciona una hora</option>
+              <option value=''>Horas disponibles de reservacion</option>
               {hours.map((h) => (
                 <option key={h} value={h}>
                   {h}

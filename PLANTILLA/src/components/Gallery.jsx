@@ -1,13 +1,12 @@
-import { useFetch } from '../hook/useFetch';
+import { useEffect } from 'react';
+import { GetAllPhoto } from '../api/GaleriaApi';
 
 const Gallery = () => {
-  const url = 'http://127.0.0.1:8000/api/fotos/';
+  const { data: AllPhotos = [] } = GetAllPhoto();
 
-  const { data, isLoading, error } = useFetch(url);
-
-  if (isLoading) return <div>Cargando...</div>;
-
-  if (error) return <div>{error}</div>;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   return (
     <div className='bg-jetBlack text-lightGray min-h-screen py-12 pt-24'>
@@ -18,7 +17,7 @@ const Gallery = () => {
 
         {/* Lista de Productos en Grid */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8'>
-          {data.map((data) => (
+          {AllPhotos.map((data) => (
             <div
               key={data.id}
               className='bg-lightGray rounded-lg shadow-lg hover:shadow-xl transition-all'
