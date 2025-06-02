@@ -6,8 +6,8 @@ class Usuario(models.Model):
     apellidos = models.CharField(max_length=150,blank=False)  
     usuario = models.CharField(max_length=100,unique=True)                                
     correo = models.EmailField(null=False,blank=False,unique=True)  
-    telefono = models.IntegerField(null=False,blank=False)  #opcional
-    password = models.TextField(null=False,blank=False)  #opcional
+    telefono = models.IntegerField(null=False,blank=False)  
+    password = models.TextField(null=False,blank=False)  
     rol = models.CharField(
         max_length=100,
         default='cliente',

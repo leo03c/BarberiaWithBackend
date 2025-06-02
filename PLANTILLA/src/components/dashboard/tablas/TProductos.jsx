@@ -76,6 +76,10 @@ const TProductos = () => {
 
           throw errors;
         },
+        onSuccess: () => {
+          toast.success('Producto creado correctamente');
+          reset();
+        },
       });
     }
   };

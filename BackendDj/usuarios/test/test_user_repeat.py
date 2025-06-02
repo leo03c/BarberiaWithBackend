@@ -8,7 +8,7 @@ def test_no_se_puede_crear_usuario_con_mismo_usuario():
     username_comun = "usuario_repetido"
     apellidos='torres'
     telefono=56870848
-    password = "alguna_contraseña_segura"
+    password = "FisyNaruto123"
     
 
     
