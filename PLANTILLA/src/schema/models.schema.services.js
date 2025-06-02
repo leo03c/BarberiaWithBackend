@@ -1,20 +1,8 @@
 // schema/models.schema.service.ts
-import { z, ZodIssueCode } from 'zod';
+import { z } from 'zod';
 
 export const schemaservicio = z.object({
-  nombre: z.enum(['Barberia', 'Manicura', 'Pedicura', 'Peluqueria'], {
-    errorMap: (issue, ctx) => {
-      if (issue.code === ZodIssueCode.invalid_enum_value) {
-        const opciones = (issue.options ?? []).join(', ');
-        return {
-          message: `El servicio debe ser : ${opciones}`,
-        };
-      }
-
-      return { message: ctx.defaultError };
-    },
-  }),
-
+  nombre: z.string().min(3, 'Debe tener al menos 3 caracteres'),
   precio: z.coerce
     .number({
       invalid_type_error: 'Introduce un precio válido',

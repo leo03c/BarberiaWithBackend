@@ -55,7 +55,7 @@ const TFotos = () => {
               nombre: '',
               imag: null,
             });
-            toast.success('Foto actualizada con éxitos ');
+            toast.success('Foto actualizada con éxito ');
           },
         }
       );
@@ -63,7 +63,6 @@ const TFotos = () => {
       createPhotoMutate(formData, {
         onSuccess: () => {
           reset();
-          toast.success('Foto agregada con éxito');
         },
       });
     }
@@ -191,7 +190,7 @@ const TFotos = () => {
             message='¿Estás seguro de que deseas eliminar esta imagen?'
             onConfirm={() => {
               deltePhotoMutate(editingId, {
-                onSuccess: () => toast.success('Foto eliminada con éxitos'),
+                onSuccess: () => toast.success('Foto eliminada con éxito'),
               });
               setIsOpen(false);
               setEditingId(null);
