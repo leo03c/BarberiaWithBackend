@@ -62,7 +62,7 @@ const TUsuarios = () => {
       );
     } else {
       createUserMutate(
-        { password: 123456, ...data },
+        { password: '123456', ...data },
         {
           onSuccess: () => {
             toast.success('Usuario creado correctamente');
