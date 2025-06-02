@@ -1,9 +1,10 @@
 from usuarios.models import Usuario
 from usuarios.serializers import UsuarioSerializer
 import pytest
+from django.db import IntegrityError
+
 
 @pytest.mark.django_db 
-
 def test_usuario_serializer_valid():
     usuario = Usuario.objects.create(
         nombre="testnombre",
@@ -23,7 +24,7 @@ def test_usuario_serializer_valid():
     assert serializer.data["telefono"] == 56870848
     assert serializer.data["rol"] == "cliente"
     
-    
+@pytest.mark.django_db   
 def test_user_invalid():
         invalid_data = {
         "nombre": "",  
@@ -44,7 +45,14 @@ def test_user_invalid():
         assert "telefono" in serializer.errors
         assert "rol" in serializer.errors
     
-    
+
+
+
+
+
+
+
+
     
     
     
