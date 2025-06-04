@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import imgHero from '../assets/hero.jpg';
+import imgHero from '../assets/costa.jpg';
 import { useAuth } from '../context/AuthContext'; 
 
 const Hero = () => {
@@ -28,16 +28,15 @@ const Hero = () => {
       {/* Content */}
       <div className='relative z-10 flex flex-col justify-center items-center h-full text-center px-6'>
         <h1 className='text-5xl md:text-7xl font-serif font-bold text-mustard mb-6 animate-fade-in-down'>
-          Tu Estilo, Nuestra Pasión
+        Paraíso Travel: <br></br>Donde cada detalle celebra su historia de amor.
         </h1>
         <p className='text-xl md:text-2xl text-dfdfdf mb-8 max-w-2xl animate-fade-in-up text-lightGray'>
-          Servicios exclusivos de peluquería, barbería, manicura y pedicura en
-          un ambiente de lujo.
+         
         </p>
         <div className='flex space-x-6'>
           <button
             onClick={handleReservationClick}
-            className='bg-mustard text-jetBlack px-8 py-3 rounded-full font-semibold shadow-md hover:bg-bronze transition-all duration-300'
+            className='bg-mustard text-jetBlack px-8 py-3 rounded-full font-semibold shadow-md hover:border-2 hover:border-mustard hover:bg-inherit hover:text-mustard transition-all duration-300'
           >
             Reserva una Cita
           </button>
@@ -45,7 +44,7 @@ const Hero = () => {
             href='#trabajos'
             className='border-2 border-mustard text-mustard px-8 py-3 rounded-full font-semibold hover:bg-mustard hover:text-jetBlack transition-all duration-300'
           >
-            Nuestros Trabajos
+            Nuestros Destinos
           </a>
         </div>
       </div>

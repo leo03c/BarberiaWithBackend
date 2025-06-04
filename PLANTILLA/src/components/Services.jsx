@@ -25,7 +25,7 @@ const Services = () => {
     <section id="servicios" className="py-16 bg-jetBlack text-lightGray">
       <div className="max-w-screen-xl mx-auto text-center">
         <h2 className="text-4xl md:text-5xl font-serif font-bold text-mustard mb-12 animate-fade-in-up">
-          Nuestros Servicios
+          Nuestros Paquetes
         </h2>
         <div className="relative">
           {/* Carrusel de imágenes con animaciones */}

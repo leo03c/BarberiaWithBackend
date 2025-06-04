@@ -38,7 +38,7 @@ const Header = () => {
     >
       <div className='flex justify-between items-center px-6 md:px-12 py-4'>
         <h1 className='text-2xl md:text-4xl font-serif font-bold text-mustard tracking-wider'>
-          <Link to='/'>RYAL<span className='text-sm ml-1 font-light'>Salon de Belleza</span></Link>
+          <Link to='/'>Paraíso<span className='text-sm ml-1 font-light'>Travel</span></Link>
         </h1>
 
         <button
@@ -50,7 +50,7 @@ const Header = () => {
 
         <nav className='hidden md:block'>
           <ul className='flex space-x-4 md:space-x-8 items-center'>
-            {['Inicio', 'Servicios', 'Contacto'].map((item) => (
+            {['Inicio', 'Paquetes', 'Contacto'].map((item) => (
               <li key={item}>
                 <a
                   href={`/#${item.toLowerCase()}`}
