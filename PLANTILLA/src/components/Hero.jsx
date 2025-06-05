@@ -28,10 +28,13 @@ const Hero = () => {
       {/* Content */}
       <div className='relative z-10 flex flex-col justify-center items-center h-full text-center px-6'>
         <h1 className='text-5xl md:text-7xl font-serif font-bold text-mustard mb-6 animate-fade-in-down'>
-        Paraíso Travel: <br></br>Donde cada detalle celebra su historia de amor.
+        Paraíso Travel
         </h1>
-        <p className='text-xl md:text-2xl text-dfdfdf mb-8 max-w-2xl animate-fade-in-up text-lightGray'>
-         
+        <h2 className='text-2xl md:text-5xl font-serif font-bold text-mustard mb-6 animate-fade-in-down'>
+        Donde cada detalle celebra su historia de amor.
+        </h2>
+        <p className='text-xl md:text-3xl font-bold font-serif mb-8 max-w-2xl animate-fade-in-up text-mustard'>
+         Un viaje de calidad
         </p>
         <div className='flex space-x-6'>
           <button

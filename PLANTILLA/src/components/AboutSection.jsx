@@ -1,57 +1,62 @@
-import { FaHandshake, FaStar, FaUsers } from "react-icons/fa";
-import imgAbout from "../assets/producto1.jpg"; // Aquí puedes agregar tu imagen
+import { motion } from "framer-motion";
 
-const AboutSection = () => {
+const About = () => {
   return (
-    <section id="sobre-nosotros" className="py-16 bg-jetBlack text-lightGray">
-      <div className="max-w-screen-xl mx-auto text-center">
-        <h2 className="text-4xl md:text-5xl font-serif font-bold text-mustard mb-8 animate-fade-in-up">
-          Sobre Nosotros
-        </h2>
-        <div className="flex flex-col lg:flex-row justify-between items-center gap-16">
-          <div className="lg:w-1/2">
-            <img
-              src={imgAbout}
-              alt="Nuestro equipo"
-              className="w-full h-[400px] object-cover rounded-lg shadow-lg"
-            />
-          </div>
-          <div className="lg:w-1/2 text-left">
-            <p className="text-lg mb-6">
-              Somos un equipo de profesionales dedicados a brindar un servicio
-              de alta calidad para que te sientas y luzcas increíble. Nuestro
-              objetivo es ofrecerte una experiencia única y personalizada, ya
-              sea para un cambio de look, un cuidado especial o un momento de
-              relajación.
+    <section id="about" className="py-20 bg-jetBlack text-lightGray">
+      <div className="max-w-screen-xl mx-auto px-6 md:px-12 lg:px-20 text-center">
+        <motion.h2
+          className="text-4xl md:text-5xl font-serif font-bold text-mustard mb-8"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          Vive la Luna de Miel de tus Sueños
+        </motion.h2>
+        <motion.p
+          className="text-lg md:text-xl text-lightGray max-w-3xl mx-auto mb-12 leading-relaxed"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+        >
+          En <span className="text-mustard font-semibold">Paraíso</span>, diseñamos experiencias únicas y románticas 
+          para que cada pareja celebre el inicio de su historia de amor en los destinos más encantadores del mundo.
+          Nos encargamos de cada detalle para que tú solo te preocupes por disfrutar.
+        </motion.p>
+
+        <motion.div
+          className="flex flex-col md:flex-row items-center justify-center gap-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+        >
+          <div className="bg-darkGray p-6 rounded-xl shadow-lg max-w-md text-left">
+            <h3 className="text-2xl font-serif font-semibold text-mustard mb-2">
+              Asesoría Personalizada
+            </h3>
+            <p className="text-lightGray text-sm">
+              Nuestros expertos en viajes te guiarán para elegir el destino perfecto y crear un itinerario a tu medida.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-              <div className="flex items-center justify-center space-x-4">
-                <FaHandshake className="text-mustard text-3xl" />
-                <div>
-                  <h3 className="text-xl font-semibold text-lightGray">Confianza</h3>
-                  <p className="text-md text-lightGray">Valoramos la confianza que depositas en nosotros.</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-center space-x-4">
-                <FaStar className="text-mustard text-3xl" />
-                <div>
-                  <h3 className="text-xl font-semibold text-lightGray">Calidad</h3>
-                  <p className="text-md text-lightGray">Ofrecemos lo mejor en servicios y productos.</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-center space-x-4">
-                <FaUsers className="text-mustard text-3xl" />
-                <div>
-                  <h3 className="text-xl font-semibold text-lightGray">Equipo</h3>
-                  <p className="text-md text-lightGray">Un equipo de expertos comprometidos con tu satisfacción.</p>
-                </div>
-              </div>
-            </div>
           </div>
-        </div>
+          <div className="bg-darkGray p-6 rounded-xl shadow-lg max-w-md text-left">
+            <h3 className="text-2xl font-serif font-semibold text-mustard mb-2">
+              Destinos Exóticos
+            </h3>
+            <p className="text-lightGray text-sm">
+              Desde playas paradisíacas hasta ciudades románticas en Europa, seleccionamos solo lo mejor para ti.
+            </p>
+          </div>
+          <div className="bg-darkGray p-6 rounded-xl shadow-lg max-w-md text-left">
+            <h3 className="text-2xl font-serif font-semibold text-mustard mb-2">
+              Todo Incluido
+            </h3>
+            <p className="text-lightGray text-sm">
+              Paquetes completos que incluyen vuelos, hospedaje, experiencias exclusivas y sorpresas para los enamorados.
+            </p>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
 };
 
-export default AboutSection;
+export default About;

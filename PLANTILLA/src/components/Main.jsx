@@ -1,6 +1,6 @@
 // import React from 'react'
 import Hero from './Hero';
-import Services from './Services';
+import Paquete from './Paquete';
 import AboutSection from './AboutSection';
 import Testimonials from './Testimonials';
 import CTA from './CTA';
@@ -10,7 +10,7 @@ function Main() {
   return (
     <div>
       <Hero></Hero>
-      <Services></Services>
+      <Paquete></Paquete>
       <PromotionsCarousel></PromotionsCarousel>
       <Galeria />
       <AboutSection></AboutSection>
