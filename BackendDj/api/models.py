@@ -91,6 +91,7 @@ class Promocion(models.Model):
     descripcion = models.TextField()
     servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE)
     porcientoDesc = models.IntegerField()
+    imag = models.ImageField(upload_to="[promocion]/", blank=True, null=True)
 
     def __str__(self):
         return self.nombre

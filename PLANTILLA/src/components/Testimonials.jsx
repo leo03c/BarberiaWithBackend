@@ -107,7 +107,7 @@ const Testimonials = () => {
   return (
     <section
       id='testimonios'
-      className='bg-jetBlack text-lightGray py-16 px-6 md:px-16'
+      className='bg-sltate-100 text-lightGray py-16 px-6 md:px-16'
     >
       <ModalNotification
         color='#4CAF50'
@@ -122,7 +122,7 @@ const Testimonials = () => {
         <div className='flex flex-col lg:flex-row justify-center gap-12'>
           <div className='w-full lg:w-1/2'>
             {testimonials.length > 0 ? (
-              <div className='overflow-hidden rounded-2xl shadow-xl bg-jetBlack p-8 transform transition-all ease-in-out duration-500 md:h-full flex items-center justify-center'>
+              <div className='overflow-hidden rounded-2xl shadow-xl bg-white p-8 transform transition-all ease-in-out duration-500 md:h-full flex items-center justify-center'>
                 <motion.div
                   className='flex flex-col items-center text-center'
                   key={testimonials[currentTestimonial].id}
@@ -131,7 +131,7 @@ const Testimonials = () => {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 1 }}
                 >
-                  <p className='text-lg text-lightGray italic mb-6 leading-relaxed'>
+                  <p className='text-lg text-slate-700 italic mb-6 leading-relaxed'>
                     {testimonials[currentTestimonial].comentario}
                   </p>
                   <div className='flex mb-6'>
@@ -153,7 +153,7 @@ const Testimonials = () => {
             )}
           </div>
 
-          <div className='w-full lg:w-1/2 bg-jetBlack p-8 rounded-2xl shadow-xl'>
+          <div className='w-full lg:w-1/2 bg-white p-8 rounded-2xl shadow-xl'>
             <h3 className='text-2xl font-serif font-bold text-mustard mb-6 text-center tracking-wide'>
               Deja tu Reseña
             </h3>
@@ -161,7 +161,7 @@ const Testimonials = () => {
               <div>
                 <label
                   htmlFor='comentario'
-                  className='block mb-2 text-lg font-semibold text-lightGray'
+                  className='block mb-2 text-lg font-semibold text-slate-700'
                 >
                   Comentario:
                 </label>
@@ -170,7 +170,7 @@ const Testimonials = () => {
                   name='comentario'
                   value={formData.comentario}
                   onChange={handleChange}
-                  className='w-full p-4 rounded-lg bg-gray-800 text-lightGray placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-mustard'
+                  className='w-full p-4 rounded-lg bg-gray-500 text-lightGray placeholder-white focus:outline-none focus:ring-2 focus:ring-mustard'
                   rows='5'
                   placeholder='Escribe tu testimonio...'
                 />
@@ -183,7 +183,7 @@ const Testimonials = () => {
               <div>
                 <label
                   htmlFor='clasificacion'
-                  className='block mb-2 text-lg font-semibold text-lightGray'
+                  className='block mb-2 text-lg text-slate-700 font-semibold'
                 >
                   Clasificación:
                 </label>
@@ -192,7 +192,7 @@ const Testimonials = () => {
                   name='clasificacion'
                   value={formData.clasificacion}
                   onChange={handleChange}
-                  className='w-full p-4 rounded-lg bg-gray-800 text-lightGray placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-mustard'
+                  className='w-full p-4 rounded-lg bg-gray-500 text-lightGray placeholder-white focus:outline-none focus:ring-2 focus:ring-mustard'
                 >
                   {[1, 2, 3, 4, 5].map((num) => (
                     <option key={num} value={num}>
@@ -208,7 +208,7 @@ const Testimonials = () => {
               </div>
               <button
                 type='submit'
-                className='bg-mustard text-jetBlack p-4 rounded-xl shadow-xl hover:bg-bronze transition-all duration-300 mt-6'
+                className='bg-mustard text-slate-700 p-4 rounded-xl shadow-xl hover:bg-bronze transition-all duration-300 mt-6'
               >
                 Enviar Reseña
               </button>

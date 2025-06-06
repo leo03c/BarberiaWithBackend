@@ -30,12 +30,7 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolling
-          ? 'bg-charcoal bg-opacity-95 shadow-lg'
-          : 'bg-white bg-opacity-10 backdrop-blur-md'
-      }`}
-    >
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-slate-700 bg-opacity-95 shadow-lg`}>
       <div className='flex justify-between items-center px-6 md:px-12 py-4'>
         <h1 className='text-2xl md:text-4xl font-serif font-bold text-mustard tracking-wider'>
           <Link to='/'>Paraíso<span className='text-sm ml-1 font-light'>Travel</span></Link>

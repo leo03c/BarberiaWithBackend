@@ -33,7 +33,7 @@ const Sidebar = () => {
                     </li>
                     <li>
                         <Link to="/dashboard/tfotos" className="flex items-center gap-2 p-3 rounded-md hover:bg-mustard/20 transition">
-                            <Image size={20} className="text-mustard" /> Fotos
+                            <Image size={20} className="text-mustard" /> Lugares
                         </Link>
                     </li>
                     <li>

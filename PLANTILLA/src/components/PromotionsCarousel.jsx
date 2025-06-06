@@ -48,7 +48,7 @@ const PromotionsBar = () => {
     if (promotions.length === 0 || services.length === 0) return null;
 
     return (
-        <div className="w-full px-8 py-4 bg-jetBlack shadow-md ">
+        <div className="w-full px-8 py-4 bg-slate-700 shadow-md ">
             <AnimatePresence mode="wait">
                 <motion.div
                     key={currentIndex}
@@ -74,7 +74,7 @@ const PromotionsBar = () => {
                             {promotions[currentIndex].porcientoDesc}% OFF
                         </span>
                         <span className="text-sm md:text-base text-lightGray">
-                            <span className="font-semibold text-white">Servicio:</span> {services[currentIndex]?.nombre || 'Cargando...'}
+                            <span className="font-semibold text-white">Paquete:</span> {services[currentIndex]?.nombre || 'Cargando...'}
                         </span>
                     </div>
                 </motion.div>

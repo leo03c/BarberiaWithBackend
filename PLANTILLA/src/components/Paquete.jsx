@@ -32,21 +32,21 @@ const Paquete = () => {
   };
 
   return (
-    <section id="paquetes" className="py-16 bg-jetBlack text-lightGray">
+    <section id="paquetes" className="py-16 bg-slate-100 text-lightGray">
       <div className="max-w-screen-xl mx-auto text-center">
-        <h2 className="text-4xl md:text-5xl font-serif font-bold text-mustard mb-12 animate-fade-in-up">
+        <h2 className="text-4xl md:text-5xl font-serif font-bold text-mustard mb-12 animate-fade-in-up ">
           Nuestros Paquetes
         </h2>
 
         <div className="relative">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 ">
             <AnimatePresence mode="wait">
               {services
                 .slice(startIndex, startIndex + cardsPerPage)
                 .map((service) => (
                   <motion.div
                     key={service.id}
-                    className="bg-darkGray rounded-2xl shadow-xl overflow-hidden cursor-pointer"
+                    className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer"
                     initial="hidden"
                     animate="visible"
                     exit="hidden"
@@ -63,7 +63,7 @@ const Paquete = () => {
                       <h3 className="text-2xl font-serif font-semibold text-mustard mb-2">
                         {service.nombre}
                       </h3>
-                      <p className="text-lightGray text-sm mb-4">
+                      <p className=" text-slate-700 text-sm mb-4">
                         {service.descripcion}
                       </p>
                       <p className="text-xl font-serif font-bold text-mustard">
