@@ -6,6 +6,7 @@ const PromotionsBar = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const { data: AllPromotions = [] } = GetAllPromociones();
+  
 
   // Actualizar la promoción cada 7 segundos
   useEffect(() => {
@@ -22,6 +23,11 @@ const PromotionsBar = () => {
 
   return (
     <div className='w-full px-8 py-4 bg-jetBlack shadow-md '>
+      <div className=' mx-auto text-center'>
+        <h2 className='text-4xl md:text-5xl font-serif font-bold text-mustard mb-12 animate-fade-in-up'>
+          Promociones
+        </h2>
+      </div>
       <AnimatePresence mode='wait'>
         <motion.div
           key={currentIndex}
