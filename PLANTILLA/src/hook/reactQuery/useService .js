@@ -57,9 +57,6 @@ export const useService = () => {
       onSettled: () => {
         queryClient.invalidateQueries({ queryKey: ['service'] });
       },
-      onSuccess: () => toast.success('Servicio agregado correctamente'),
-
-      onError: (error) => console.log(error),
     });
   };
 
