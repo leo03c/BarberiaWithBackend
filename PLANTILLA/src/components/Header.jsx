@@ -78,7 +78,7 @@ const Header = () => {
 
             {user ? (
               <>
-                <li className='text-lightGray text-sm md:text-base font-semibold'>
+                <li className='text-mustard uppercase text-sm md:text-base font-semibold'>
                   {user.usuario}
                 </li>
                 <li>
@@ -150,7 +150,7 @@ const Header = () => {
 
               {user ? (
                 <>
-                  <li className='text-lightGray text-lg font-semibold'>
+                  <li className='text-mustard text-lg font-semibold'>
                     {user.usuario}
                   </li>
                   <li>
