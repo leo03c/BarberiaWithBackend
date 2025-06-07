@@ -4,18 +4,18 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import { Link } from 'react-router-dom';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { useFetch } from '../hook/useFetch';
+import { GetAllPhoto } from '../api/GaleriaApi';
 
 const Galeria = () => {
   const swiperRef = useRef(null);
-  const url = 'http://127.0.0.1:8000/fotos/';
 
-  const { data, isLoading, error } = useFetch(url);
+  const { data: AllPhotos = [] } = GetAllPhoto();
 
-  if (isLoading) return <div>Cargando...</div>;
-  if (error) return <div>{error.message}</div>;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <section id='trabajos' className='py-16 bg-jetBlack text-lightGray'>
@@ -44,7 +44,7 @@ const Galeria = () => {
             }}
             onSwiper={(swiper) => (swiperRef.current = swiper)}
           >
-            {data.map((item) => (
+            {AllPhotos.map((item) => (
               <SwiperSlide key={item.id}>
                 <div className='relative bg-jetBlack rounded-lg overflow-hidden shadow-xl transform transition-all duration-300 hover:scale-105'>
                   <img

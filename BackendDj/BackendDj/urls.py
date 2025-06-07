@@ -19,10 +19,25 @@ from django.urls import path
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from usuarios.views import CustomTokenObtainPairView, RegistroUsuarioView,AdminDashboardView
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('api.urls') ),
-    path('api/', include('api.urls')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('admin/', admin.site.urls),  # Admin sigue en la raíz
+    
+    # Todas las demás URLs bajo el prefijo 'api/'
+    path('api/', include([
+        path('', include('trabajadores.urls')),
+        path('', include('productos.urls')),
+        path('', include('usuarios.urls')),
+        path('', include('galeria.urls')),
+        path('', include('servicios.urls')),
+        path('', include('citas.urls')),
+        path('', include('promociones.urls')),
+        path('', include('resennas.urls')),
+        path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+        path('registro/', RegistroUsuarioView.as_view(), name='registro_cliente'),
+        path('api/dashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),
+    ]))
+    
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-f^nv()!t2-g2n$bs8*610dj6(g-q_=y#)$ktifuo9ohx9p3#l1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -38,11 +38,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api.apps.ApiConfig',
+    'trabajadores',
+    'productos',
+    'usuarios',
+    'galeria',
+    'servicios',
+    'citas',
+    'promociones',
+    'resennas',
     'django_filters',
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
+    
 ]
 
 MIDDLEWARE = [
@@ -60,6 +68,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Solo dominio y puerto
     "http://localhost:5173",
+    "https://9pqf8mms-5173.use2",
 ]
 
 REST_FRAMEWORK = {
@@ -75,7 +84,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
-    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_TYPES': ('JWT',),
 }
 
 # AUTH_USER_MODEL = 'api.CustomUser'

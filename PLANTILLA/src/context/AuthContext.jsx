@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const username = localStorage.getItem('username');
     if (username) {
-      fetch(`http://127.0.0.1:8000/usuarios/?usuario=${username}`)
+      fetch(`http://127.0.0.1:8000/api/usuarios/?usuario=${username}`)
         .then((response) => response.json())
         .then((data) => {
           if (data && data.length > 0) {
@@ -26,12 +26,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = (username) => {
     localStorage.setItem('username', username);
-    fetch(`http://127.0.0.1:8000/usuarios/?usuario=${username}`)
+    fetch(`http://127.0.0.1:8000/api/usuarios/?usuario=${username}`)
       .then((response) => response.json())
       .then((data) => {
         if (data && data.length > 0) {
-          setUser(data[0]); 
-          setIduser(data[0].id); 
+          setUser(data[0]);
+          setIduser(data[0].id);
           localStorage.setItem('id', data[0].id);
           localStorage.setItem('rol', data[0].rol);
         }

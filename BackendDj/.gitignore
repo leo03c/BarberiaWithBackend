@@ -1,0 +1,6 @@
+# ——— Caché de Python ———
+__pycache__/
+*.py[cod]
+*$py.class
+media/
+migrations/

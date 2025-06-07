@@ -1,61 +1,52 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { LoginApi } from '../api/authApi';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 function LoginForm() {
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
+  const schemaLogin = z.object({
+    username: z.string(),
+    password: z.string(),
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm({
+    resolver: zodResolver(schemaLogin),
   });
 
-  const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    if (!formData.username || !formData.password) {
-      setError('Por favor, complete ambos campos.');
-      return;
-    }
-
+  const onSubmit = async (data) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/login/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await LoginApi(data);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.detail || 'Usuario o contraseña incorrectos.');
-        return;
+      localStorage.setItem('accessToken', response.access);
+      localStorage.setItem('refreshToken', response.refresh);
+
+      login(response.username);
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+      if (error.response?.data?.non_field_errors) {
+        setError('username', {
+          type: 'manual',
+          message: error.response.data.non_field_errors[0],
+        });
+        setError('password', {
+          type: 'manual',
+          message: error.response.data.non_field_errors[0],
+        });
+      } else {
+        console.error('Error desconocido:', error);
       }
-
-      const data = await response.json();
-      localStorage.setItem('accessToken', data.access);
-      localStorage.setItem('refreshToken', data.refresh);
-
-      login(formData.username); // Inicia sesión en el contexto
-      // const role = localStorage.getItem('rol');
-      // if (role === 'admin') {
-      //   navigate('/dashboard');
-      // } else {
-        // navigate('/'); // Ruta del home para clientes
-      // }
-          navigate('/')
-    } catch (err) {
-      setError('Hubo un problema. Inténtelo de nuevo.');
     }
   };
 
@@ -75,11 +66,9 @@ function LoginForm() {
           Iniciar Sesión
         </h2>
 
-        {error && (
-          <p className='text-center text-red-400 font-semibold mb-4'>{error}</p>
-        )}
+        {errors && errors.m}
 
-        <form onSubmit={handleSubmit} className='space-y-6'>
+        <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
           <div>
             <label
               className='block text-lightGray font-medium mb-2'
@@ -91,11 +80,13 @@ function LoginForm() {
               type='text'
               name='username'
               id='username'
-              value={formData.username}
-              onChange={handleChange}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
               required
+              {...register('username')}
             />
+            {errors.username && (
+              <p className='text-red-400 text-sm'>{errors.username.message}</p>
+            )}
           </div>
 
           <div>
@@ -109,11 +100,13 @@ function LoginForm() {
               type='password'
               name='password'
               id='password'
-              value={formData.password}
-              onChange={handleChange}
+              {...register('password')}
               className='w-full p-4 rounded-lg bg-transparent border border-bronze text-lightGray placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-mustard transition-all'
               required
             />
+            {errors.password && (
+              <p className='text-red-400 text-sm'>{errors.password.message}</p>
+            )}
           </div>
           <div className='flex justify-center'>
             <button className='bg-mustard  text-jetBlack font-bold py-4 px-8 rounded-lg'>

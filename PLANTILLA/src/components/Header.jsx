@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import logo from '../assets/Logo1.svg'
 
 const Header = () => {
   const [scrolling, setScrolling] = useState(false);
@@ -36,9 +37,11 @@ const Header = () => {
           : 'bg-white bg-opacity-10 backdrop-blur-md'
       }`}
     >
-      <div className='flex justify-between items-center px-6 md:px-12 py-4'>
+      <div className='flex justify-between items-center px-6 md:px-12 py-2'>
         <h1 className='text-2xl md:text-4xl font-serif font-bold text-mustard tracking-wider'>
-          <Link to='/'>RYAL<span className='text-sm ml-1 font-light'>Salon de Belleza</span></Link>
+          <Link to='/'> 
+            <img src={logo} alt="Nuestro equipo" className="w-[200px] h-[80px] object-cover"/>
+          </Link>
         </h1>
 
         <button

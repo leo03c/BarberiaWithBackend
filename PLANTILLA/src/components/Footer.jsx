@@ -1,5 +1,6 @@
 import { FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa';
-import Logo from '../assets/icons.png';
+// import Logo from '../assets/icons.png';
+import logo from '../assets/Logo1.svg'
 
 const Footer = () => {
   return (
@@ -8,8 +9,7 @@ const Footer = () => {
         {/* Logo y Descripción */}
         <div className='col-span-1 flex flex-col items-center sm:items-start'>
           <div className='flex items-center mb-4 justify-center sm:justify-start'>
-            <img src={Logo} alt='Beauty Luxe Logo' className='w-12 h-12 mr-3' />
-            <h2 className='text-3xl font-serif font-bold text-mustard'>RYAL</h2>
+            <img src={logo} alt="Nuestro equipo" className="w-[200px] h-[80px] object-cover"/>
           </div>
           <p className='text-center sm:text-start text-lightGray text-lg font-medium'>
             Un oasis de belleza y bienestar. Déjanos resaltar tu belleza con
