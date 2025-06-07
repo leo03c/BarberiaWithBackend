@@ -185,7 +185,7 @@ export default function ReservationForm() {
               <option value=''>Selecciona un servicio</option>
               {services.map((srv) => (
                 <option key={srv.id} value={srv.id} className='text-black'>
-                  {srv.nombre} – ${srv.precio}
+                  {srv.nombre} 
                 </option>
               ))}
             </select>
