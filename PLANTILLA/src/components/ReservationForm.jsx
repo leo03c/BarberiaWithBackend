@@ -10,6 +10,8 @@ import { useAvailability } from '../hook/useAvailability';
 import { useCreateAppointment } from '../hook/crearReserva';
 import api from '../api/axios';
 import toast, { Toaster } from 'react-hot-toast';
+import ConfirmationModal from '../ui/confirmGeneric';
+
 
 export default function ReservationForm() {
   const { iduser } = useAuth();
@@ -23,6 +25,8 @@ export default function ReservationForm() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const [isOpen, setOpen] = useState(false);
 
   // --- Servicios ---
   const { data: servicesData } = useFetch('/api/servicios/');
@@ -138,12 +142,28 @@ export default function ReservationForm() {
     });
     setSelectedAppointments([]);
     setAllSelected(false);
+    setOpen(false);
+    toast.success('Cita eliminada correctamente');
   };
 
   return (
     <div className='min-h-screen bg-jetBlack py-16 px-6 flex items-center justify-center'>
       <div className='max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-8'>
         {/* Formulario */}
+
+        {isOpen && (
+          <ConfirmationModal
+            isOpen={isOpen}
+            message={
+              allSelected
+                ? 'Deseas eliminar todas sus citas ?'
+                : 'Esta seguro que desea eliminar su cita '
+            }
+            title={'Confirmar eliminación'}
+            onConfirm={handleDeleteAppointments}
+            onCancel={() => setOpen(false)}
+          />
+        )}
         <Toaster />
         <motion.div
           className='bg-white bg-opacity-10 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-8'
@@ -252,7 +272,7 @@ export default function ReservationForm() {
                   {allSelected ? 'Deseleccionar Todas' : 'Seleccionar Todas'}
                 </button>
                 <button
-                  onClick={handleDeleteAppointments}
+                  onClick={() => setOpen(true)}
                   className='border border-mustard bg-white bg-opacity-10 text-lightGray font-bold py-3 px-4 rounded-lg shadow-md'
                   disabled={selectedAppointments.length === 0}
                 >
