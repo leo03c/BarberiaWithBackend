@@ -1,11 +1,20 @@
 from rest_framework import serializers
 from .models import Servicio
 from datetime import timedelta
-
+from rest_framework.validators import UniqueValidator
 class ServicioSerializer(serializers.ModelSerializer):
+    
+    nombre = serializers.CharField(
+        validators=[
+            UniqueValidator(
+                queryset=Servicio.objects.all(),
+                message="Este servicio ya existe"
+            )
+        ]
+    )
     class Meta:
         model = Servicio
-        fields = '__all__'
+        fields = ['id', 'nombre', 'precio', 'descripcion','imagen', 'duracion']
 
     def validate_precio(self, precio):
         if precio <= 0:
