@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 from rest_framework import viewsets
-from .models import Producto
+
 from .models import Cita
 from .models import Usuario
 from .models import Foto
@@ -8,7 +8,7 @@ from .models import Reseña
 from .models import Promocion
 from .models import Servicio
 from .models import Trabajador
-from .serializers import ProductoSerializer
+
 from .serializers import CitaSerializer
 from .serializers import UsuarioSerializer
 from .serializers import FotoSerializer
@@ -82,10 +82,7 @@ class CustomTokenObtainPairView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Create your views here.
-class ProductoFilter(filters.FilterSet):
-    class Meta:
-        model = Producto  
-        fields = ['nombre', 'precio', 'calidad']
+
 
 class TrabajadorFilter(filters.FilterSet):
     class Meta:
@@ -124,11 +121,6 @@ class ReseñaFilter(filters.FilterSet):
 
 
 
-class ProductoViewSet(viewsets.ModelViewSet):
-    queryset = Producto.objects.all()
-    serializer_class = ProductoSerializer
-    filter_backends = [filters.DjangoFilterBackend]  # Requiere django-filter
-    filterset_class = ProductoFilter
 
 class TrabajadorViewSet(viewsets.ModelViewSet):
     queryset = Trabajador.objects.all()

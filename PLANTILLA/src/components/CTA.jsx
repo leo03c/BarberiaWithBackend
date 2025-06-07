@@ -19,7 +19,7 @@ const CTA = () => {
     <section className='py-20 bg-jetBlack text-center text-lightGray'>
       <div className='max-w-screen-xl mx-auto px-6'>
         <h2 className='text-4xl font-serif font-bold text-mustard mb-6 animate-fade-in-up'>
-          ¡Transforma tu estilo hoy mismo!
+          ¡Haz tus sueños realidad!
         </h2>
         <p className='text-lg md:text-xl mb-8'>
           Descubre la experiencia exclusiva de nuestros servicios y lleva tu

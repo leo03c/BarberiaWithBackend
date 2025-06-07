@@ -13,7 +13,8 @@ const TPromociones = () => {
         nombre: "",
         descripcion: "",
         servicio: "",
-        porcientoDesc: ""
+        porcientoDesc: "",
+        imag: null
     });
     const [editingId, setEditingId] = useState(null);
 
@@ -43,25 +44,44 @@ const TPromociones = () => {
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const { name, value, files } = e.target;
+        if (name === "imag") {
+            setFormData({ ...formData, imag: files[0] });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const promocionData = { ...formData };
+        const formToSend = new FormData();
+        formToSend.append("nombre", formData.nombre);
+        formToSend.append("descripcion", formData.descripcion);
+        formToSend.append("servicio", formData.servicio);
+        formToSend.append("porcientoDesc", formData.porcientoDesc);
+        if (formData.imag) {
+            formToSend.append("imag", formData.imag);
+        }
+
         try {
             const method = editingId ? "PUT" : "POST";
             const url = editingId ? `${API_URL}${editingId}/` : API_URL;
 
-            await fetch(url, {
+            const response = await fetch(url, {
                 method,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(promocionData)
+                body: formToSend
             });
 
+            if (!response.ok) throw new Error("Error al guardar la promoción");
+
             setEditingId(null);
-            setFormData({ nombre: "", descripcion: "", servicio: "", porcientoDesc: "" });
+            setFormData({
+                nombre: "",
+                descripcion: "",
+                servicio: "",
+                porcientoDesc: "",
+                imag: null
+            });
             fetchPromociones();
         } catch (error) {
             console.error("Error al guardar la promoción:", error);
@@ -70,7 +90,13 @@ const TPromociones = () => {
 
     const handleEdit = (promocion) => {
         setEditingId(promocion.id);
-        setFormData({ ...promocion });
+        setFormData({
+            nombre: promocion.nombre,
+            descripcion: promocion.descripcion,
+            servicio: promocion.servicio,
+            porcientoDesc: promocion.porcientoDesc,
+            imag: null // No se puede prellenar imágenes en input file
+        });
     };
 
     const handleDelete = async (id) => {
@@ -82,7 +108,6 @@ const TPromociones = () => {
         }
     };
 
-    // Calcular promociones para la página actual
     const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
     const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
     const currentItems = promociones.slice(indexOfFirstItem, indexOfLastItem);
@@ -96,10 +121,11 @@ const TPromociones = () => {
         <div className="bg-jetBlack text-lightGray p-6 rounded-lg shadow-lg mt-20">
             <h2 className="text-3xl font-serif font-bold text-mustard mb-6">Gestión de Promociones</h2>
 
-            {/* Formulario de promoción */}
-            <form onSubmit={handleSubmit} className="bg-gray-800 p-4 rounded-lg shadow mb-6">
+            {/* Formulario */}
+            <form onSubmit={handleSubmit} className="bg-gray-800 p-4 rounded-lg shadow mb-6" encType="multipart/form-data">
                 <div className="grid grid-cols-2 gap-4">
                     <input type="text" name="nombre" placeholder="Nombre de la promoción" value={formData.nombre} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
+                    
                     <select 
                         name="servicio" 
                         value={formData.servicio} 
@@ -114,19 +140,25 @@ const TPromociones = () => {
                             </option>
                         ))}
                     </select>
+
                     <textarea name="descripcion" placeholder="Descripción" value={formData.descripcion} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
+                    
                     <input type="number" name="porcientoDesc" placeholder="Porcentaje de descuento" value={formData.porcientoDesc} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
+                    
+                    <input type="file" name="imag" onChange={handleInputChange} className="col-span-2 p-2 bg-gray-700 text-lightGray rounded-md" accept="image/*" />
                 </div>
+
                 <button type="submit" className="mt-4 w-full bg-mustard text-jetBlack py-2 rounded-lg font-semibold">
                     {editingId ? "Actualizar Promoción" : "Agregar Promoción"}
                 </button>
             </form>
 
-            {/* Tabla de promociones */}
+            {/* Tabla */}
             <div className="overflow-x-auto">
                 <table className="w-full bg-gray-800 rounded-lg">
                     <thead>
                         <tr className="text-mustard">
+                            <th className="py-2 px-4 text-left">Imagen</th>
                             <th className="py-2 px-4 text-left">Nombre</th>
                             <th className="py-2 px-4 text-left">Servicio</th>
                             <th className="py-2 px-4 text-left">Descripción</th>
@@ -139,6 +171,10 @@ const TPromociones = () => {
                             const servicio = servicios.find(s => s.id === promocion.servicio);
                             return (
                                 <tr key={promocion.id} className="border-t border-gray-700 hover:bg-gray-700 transition">
+                                    
+                                    <td className="py-2 px-4">
+                                    {promocion.imag && <img src={promocion.imag} alt={promocion.nombre} className="h-12 w-12 object-cover rounded-md" />}
+                                </td>
                                     <td className="py-2 px-4">{promocion.nombre}</td>
                                     <td className="py-2 px-4">
                                         {servicio ? servicio.nombre : promocion.servicio}
@@ -160,7 +196,7 @@ const TPromociones = () => {
                 </table>
             </div>
 
-            {/* Controles de Paginación */}
+            {/* Paginación */}
             <div className="flex justify-center items-center gap-4 mt-4">
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}

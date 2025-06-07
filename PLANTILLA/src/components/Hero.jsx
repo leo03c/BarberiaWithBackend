@@ -39,13 +39,13 @@ const Hero = () => {
         <div className='flex space-x-6'>
           <button
             onClick={handleReservationClick}
-            className='bg-mustard text-slate-700 px-8 py-3 rounded-full font-semibold shadow-md hover:border-2 hover:border-mustard hover:bg-inherit hover:text-mustard transition-all duration-300'
+            className='bg-mustard text-slate-800 px-8 py-3 rounded-full font-semibold shadow-md hover:border-2 hover:border-mustard hover:bg-inherit hover:text-mustard transition-all duration-300'
           >
             Reserva una Cita
           </button>
           <a
             href='#trabajos'
-            className='border-2 border-mustard text-mustard px-8 py-3 rounded-full font-semibold hover:bg-mustard hover:text-slate-700 transition-all duration-300'
+            className='border-2 border-mustard text-slate-800 px-8 py-3 rounded-full font-semibold hover:bg-mustard hover:text-slate-700 transition-all duration-300'
           >
             Nuestros Destinos
           </a>

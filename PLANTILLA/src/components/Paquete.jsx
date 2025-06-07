@@ -34,7 +34,7 @@ const Paquete = () => {
   return (
     <section id="paquetes" className="py-16 bg-slate-100 text-lightGray">
       <div className="max-w-screen-xl mx-auto text-center">
-        <h2 className="text-4xl md:text-5xl font-serif font-bold text-mustard mb-12 animate-fade-in-up ">
+        <h2 className="text-4xl md:text-5xl font-serif font-bold text-mustard mb-12 animate-fade-in-up">
           Nuestros Paquetes
         </h2>
 

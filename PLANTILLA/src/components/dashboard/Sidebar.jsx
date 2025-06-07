@@ -3,7 +3,7 @@ import { Users, ShoppingBag, Calendar, Percent, Image, Star } from "lucide-react
 
 const Sidebar = () => {
     return (
-        <div className="w-64 bg-jetBlack h-full flex flex-col p-6 shadow-lg mt-20">
+        <div className="w-64 bg-slate-700 h-full flex flex-col p-6 shadow-lg mt-20">
             <nav className="flex-1">
                 <ul className="space-y-3">
                     <li>
@@ -16,14 +16,11 @@ const Sidebar = () => {
                             <Users size={20} className="text-mustard" /> Trabajadores
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/dashboard/tproductos" className="flex items-center gap-2 p-3 rounded-md hover:bg-mustard/20 transition">
-                            <ShoppingBag size={20} className="text-mustard" /> Productos
-                        </Link>
-                    </li>
+                    
+                    
                     <li>
                         <Link to="/dashboard/tservicios" className="flex items-center gap-2 p-3 rounded-md hover:bg-mustard/20 transition">
-                            <ShoppingBag size={20} className="text-mustard" /> Servicios
+                            <ShoppingBag size={20} className="text-mustard" /> Paquetes
                         </Link>
                     </li>
                     <li>

@@ -30,8 +30,8 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-slate-700 bg-opacity-95 shadow-lg`}>
-      <div className='flex justify-between items-center px-6 md:px-12 py-4'>
+      className={`fixed top-0 left-0 w-full z-50  transition-all duration-300 bg-white bg-opacity-95 shadow-lg`}>
+      <div className='flex justify-between items-center px-6 md:px-12 py-2'>
         <h1 className='text-2xl md:text-4xl font-serif font-bold text-mustard tracking-wider'>
           <Link to='/'>Paraíso<span className='text-sm ml-1 font-light'>Travel</span></Link>
         </h1>
@@ -49,7 +49,7 @@ const Header = () => {
               <li key={item}>
                 <a
                   href={`/#${item.toLowerCase()}`}
-                  className='text-lightGray uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300'
+                  className='text-slate-800 uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300'
                 >
                   {item}
                 </a>
@@ -61,7 +61,7 @@ const Header = () => {
               <li>
                 <Link
                   to='/dashboard/tusuario'
-                  className='text-lightGray uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300'
+                  className='text-slate-800 uppercase text-sm md:text-base tracking-wider hover:text-mustard transition-colors duration-300'
                 >
                   Admin
                 </Link>
@@ -70,13 +70,13 @@ const Header = () => {
 
             {user ? (
               <>
-                <li className='text-lightGray text-sm md:text-base font-semibold'>
+                <li className='text-slate-700  text-sm md:text-base font-semibold'>
                   {user.usuario}
                 </li>
                 <li>
                   <button
                     onClick={handleLogout}
-                    className='text-lightGray border border-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-mustard hover:text-jetBlack transition-all duration-300'
+                    className='text-slate-700 border border-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-mustard hover:text-jetBlack transition-all duration-300'
                   >
                     Cerrar sesión
                   </button>

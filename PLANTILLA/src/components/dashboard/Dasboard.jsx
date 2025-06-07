@@ -9,7 +9,7 @@ const Dasboard = () => {
     }, []);
   
     return (
-    <div className="flex h-screen bg-jetBlack text-lightGray">
+    <div className="flex h-screen bg-white text-lightGray">
       {/* Sidebar */}
         <Sidebar />
       {/* Contenido principal */}

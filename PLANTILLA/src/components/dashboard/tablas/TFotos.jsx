@@ -9,7 +9,8 @@ const TFotos = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [formData, setFormData] = useState({
         nombre: "",
-        imag: null
+        imag: null,
+        descripcion:""
     });
     const [editingId, setEditingId] = useState(null);
 
@@ -40,6 +41,7 @@ const TFotos = () => {
         e.preventDefault();
         const formDataObj = new FormData();
         formDataObj.append("nombre", formData.nombre);
+        formDataObj.append("descripcion	",formData.descripcion)
         if (formData.imag) formDataObj.append("imag", formData.imag);
 
         try {
@@ -95,6 +97,15 @@ const TFotos = () => {
                         name="nombre" 
                         placeholder="Nombre de la foto" 
                         value={formData.nombre} 
+                        onChange={handleInputChange} 
+                        className="p-2 bg-gray-700 text-lightGray rounded-md" 
+                        required 
+                    />
+                     <input 
+                        type="text" 
+                        name="descripcion" 
+                        placeholder="Descripcion de la foto" 
+                        value={formData.descripcion} 
                         onChange={handleInputChange} 
                         className="p-2 bg-gray-700 text-lightGray rounded-md" 
                         required 
