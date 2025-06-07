@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from usuarios.models import Usuario
 
 @pytest.mark.django_db
-def test_no_se_puede_crear_usuario_con_mismo_usuario():
+def test_no_se_puede_crear_usuario_con_mismo_correo():
 
     username = "Andy"
     apellidos='torres'
