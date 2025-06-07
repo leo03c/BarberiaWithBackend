@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 import { useService } from '../../../hook/reactQuery/useService ';
 import ConfirmationModal from '../../../ui/confirmGeneric';
@@ -25,6 +26,7 @@ const TServicios = () => {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schemaservicio),
@@ -51,7 +53,6 @@ const TServicios = () => {
   const { mutate: deleteService } = useDeleteService();
 
   const onSubmit = async (data) => {
-    console.log(data);
     const formData = new FormData();
     const { nombre, precio, descripcion } = data;
     formData.append('nombre', nombre);
@@ -61,21 +62,29 @@ const TServicios = () => {
       formData.append('imagen', data.imagen[0]);
     }
 
-    try {
-      if (editingId) {
-        updateService({ id: editingId, data: formData });
-        reset({
-          nombre: '',
-          precio: '',
-          descripcion: '',
-        });
-        setEditingId(null);
-      } else {
-        createService(formData);
-      }
-      reset();
-    } catch (error) {
-      console.error('Error al guardar el servicio:', error);
+    if (editingId) {
+      updateService({ id: editingId, data: formData });
+      reset({
+        nombre: '',
+        precio: '',
+        descripcion: '',
+      });
+      setEditingId(null);
+    } else {
+      createService(formData, {
+        onError: (errors) => {
+          setError('nombre', {
+            type: 'manual',
+            message:
+              errors.response.data.nombre ,
+          });
+          throw errors;
+        },
+        onSuccess: () => {
+          toast.success('Servicio agregado correctamente');
+          reset();
+        },
+      });
     }
   };
 
