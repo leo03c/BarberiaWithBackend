@@ -13,8 +13,12 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
+import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()              # crea el helper
+environ.Env.read_env(BASE_DIR / ".env")  # lee .env
 
 
 # Quick-start development settings - unsuitable for production
@@ -53,6 +57,11 @@ INSTALLED_APPS = [
     
 ]
 
+DATABASES = {
+    "default": env.db(),         # ← toma DATABASE_URL y lo descompone
+}
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -80,7 +89,7 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=20),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -111,25 +120,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'BackendDj.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'SalonDeBelleza',
-#         'USER': 'postgres',
-#         'PASSWORD': '1210',
-#         'HOST': 'localhost',  # o la IP de tu servidor
-#         'PORT': '5432',  # Puerto por defecto de PostgreSQL
-#     }
-# }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
