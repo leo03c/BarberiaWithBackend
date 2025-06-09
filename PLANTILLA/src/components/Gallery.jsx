@@ -12,7 +12,7 @@ const Gallery = () => {
     <div className='bg-jetBlack text-lightGray min-h-screen py-12 pt-24'>
       <div className='max-w-7xl mx-auto px-6'>
         <h2 className='text-5xl md:text-5xl font-serif font-bold text-center bg-gradient-to-r from-mustard mt-5 via-yellow-400 to-mustard bg-clip-text text-transparent mb-6'>
-          Galeria
+          Galería
         </h2>
         <div className='w-16 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto opacity-80'></div>
 
