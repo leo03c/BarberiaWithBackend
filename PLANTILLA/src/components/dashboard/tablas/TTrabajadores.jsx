@@ -232,7 +232,7 @@ const TTrabajadores = () => {
             onConfirm={() => {
               deleteTrabajadorMutate(editingCi, {
                 onSuccess: () =>
-                  toast.success('Trabajador eliminado con exitos'),
+                  toast.success('Trabajador eliminado con éxito'),
               });
               setOpen(false);
             }}
