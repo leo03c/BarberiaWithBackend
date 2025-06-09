@@ -25,3 +25,5 @@ class PromocionSerializer(serializers.ModelSerializer):
             'descripcion',
             'porcientoDesc'
         ]
+        
+        

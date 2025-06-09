@@ -30,6 +30,8 @@ const TFotos = () => {
   const { mutate: updatePhotoMutate } = useUpdateGAllery();
   const { mutate: deltePhotoMutate } = useDeleteGallery();
 
+  
+
   const {
     handleSubmit,
     register,
@@ -62,7 +64,10 @@ const TFotos = () => {
     } else {
       createPhotoMutate(formData, {
         onSuccess: () => {
-          reset();
+          reset({
+            nombre: '',
+            imag: null,
+          });
         },
       });
     }

@@ -58,7 +58,7 @@ export const useCreateResenna = () => {
       const previewItem = queryClient.getQueryData(['resenna']);
 
       queryClient.setQueryData(['resenna'], (old = []) =>
-        old ? [...old, newItem] : [newItem]
+        old ? [...old, { ...newItem }] : [newItem]
       );
 
       return previewItem;

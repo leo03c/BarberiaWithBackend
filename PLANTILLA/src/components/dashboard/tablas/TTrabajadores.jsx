@@ -18,6 +18,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { schematrabajador } from '../../../schema/models.schema.trabajador';
 import ConfirmationModal from '../../../ui/confirmGeneric';
 
+
+// cuantos elementos se vana  mostrar por pagina
 const ITEMS_PER_PAGE = 5;
 
 const TTrabajadores = () => {
@@ -25,7 +27,7 @@ const TTrabajadores = () => {
   const [editingCi, setEditingCi] = useState(null);
   const [isOpen, setOpen] = useState(false);
 
-  const {
+  const { 
     handleSubmit,
     reset,
     register,
@@ -226,7 +228,7 @@ const TTrabajadores = () => {
           <ConfirmationModal
             isOpen={isOpen}
             title='Confirmar Eliminación'
-            message='¿Estás seguro de que deseas eliminar este servicio?'
+            message='¿Estás seguro de que deseas eliminar este trabajador?'
             onConfirm={() => {
               deleteTrabajadorMutate(editingCi, {
                 onSuccess: () =>

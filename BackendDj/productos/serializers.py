@@ -2,10 +2,6 @@ from rest_framework import serializers
 from .models import Producto
 from rest_framework.validators import UniqueValidator
 
-
-
-
-
 class ProductoSerializer(serializers.ModelSerializer):
  
     class Meta:

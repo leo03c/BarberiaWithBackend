@@ -40,6 +40,8 @@ const Testimonials = () => {
     },
   });
 
+ 
+
   const onSubmit = (data) => {
     createResenna(data);
     reset();
@@ -67,9 +69,10 @@ const Testimonials = () => {
         onClose={() => setShowModal(false)}
       />
 
-      <h2 className='text-4xl md:text-5xl font-serif font-bold text-mustard mb-12 text-center tracking-wide'>
-        Reseña de Nuestros Clientes
+      <h2 className='text-5xl md:text-5xl font-serif font-bold bg-gradient-to-r text-center from-mustard via-yellow-400 to-mustard bg-clip-text text-transparent mb-6'>
+        Reseñas
       </h2>
+       <div className='w-24 h-1 bg-gradient-to-r from-transparent via-mustard to-transparent mx-auto'></div>
 
       <div className='flex flex-col lg:flex-row justify-center items-center gap-12'>
         <div className='w-full lg:w-1/2'>
@@ -84,10 +87,10 @@ const Testimonials = () => {
                 className='text-center'
               >
                 <p className='text-2xl font-serif font-bold text-mustard mb-4'>
-                  {AllResennas[currentTestimonial].usuario.nombre}
+                  {AllResennas[currentTestimonial].usuario?.nombre}
                 </p>
                 <p className='text-lg italic mb-6'>
-                  {AllResennas[currentTestimonial].comentario}
+                  {AllResennas[currentTestimonial]?.comentario}
                 </p>
                 <div className='flex justify-center'>
                   {[...Array(5)].map((_, i) => (

@@ -8,11 +8,9 @@ export const useCreateTPromociones = () => {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: (data) => {
-      createPromociones(data);
-     },
+    mutationFn: (data) => createPromociones(data),
     onMutate: async (data) => {
-      qc.cancelQueries(['promociones']);
+      await qc.cancelQueries(['promociones']);
 
       const preview = qc.getQueryData(['promociones']);
 

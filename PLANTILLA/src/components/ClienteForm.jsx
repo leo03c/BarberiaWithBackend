@@ -45,8 +45,6 @@ const ClienteForm = () => {
       if (axios.isAxiosError(error) && error.response?.data) {
         const backendErrors = error.response.data;
 
-        console.log(backendErrors.usuario);
-
         if (backendErrors.usuario) {
           setError('usuario', {
             type: 'server',

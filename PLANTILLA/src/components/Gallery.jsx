@@ -11,12 +11,13 @@ const Gallery = () => {
   return (
     <div className='bg-jetBlack text-lightGray min-h-screen py-12 pt-24'>
       <div className='max-w-7xl mx-auto px-6'>
-        <h1 className='text-5xl font-bold text-center text-mustard mb-12 font-serif'>
+        <h2 className='text-5xl md:text-5xl font-serif font-bold text-center bg-gradient-to-r from-mustard mt-5 via-yellow-400 to-mustard bg-clip-text text-transparent mb-6'>
           Galeria
-        </h1>
+        </h2>
+        <div className='w-16 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto opacity-80'></div>
 
         {/* Lista de Productos en Grid */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10'>
           {AllPhotos.map((data) => (
             <div
               key={data.id}

@@ -51,6 +51,8 @@ const Header = () => {
           {isOpen ? <X size={30} /> : <Menu size={30} />}
         </button>
 
+        c
+
         <nav className='hidden md:block'>
           <ul className='flex space-x-4 md:space-x-8 items-center'>
             {['Inicio', 'Servicios', 'Contacto'].map((item) => (

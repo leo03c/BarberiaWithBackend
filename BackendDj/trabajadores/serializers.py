@@ -27,7 +27,7 @@ class TrabajadorSerializer(serializers.ModelSerializer):
         if not (1 <= mes <= 12):
             raise serializers.ValidationError('Ingrese un carnet válido')
 
-        if not (0 <= dia <= 31):
+        if not (1 <= dia <= 31):
             raise serializers.ValidationError('Ingrese un carnet válido')
 
        

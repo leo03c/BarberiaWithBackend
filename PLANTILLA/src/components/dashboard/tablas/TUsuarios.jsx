@@ -42,8 +42,10 @@ const TUsuarios = () => {
   const [editingId, setEditingId] = useState(null);
   const [isOpen, setIsopen] = useState(false);
 
+  //aqui se jecuta la logica de enviar y editar el usuario
   const onSubmit = (data) => {
     if (editingId) {
+      // aqui ejecuta la laogica de actualizar (ver api)
       updateUserMutate(
         { id: editingId, data: data },
         {
@@ -61,6 +63,7 @@ const TUsuarios = () => {
         }
       );
     } else {
+      //aqui ejecuta la logicad e crear (ver api )
       createUserMutate(
         { password: '123456', ...data },
         {

@@ -102,15 +102,18 @@ const TResennas = () => {
           <ChevronRight size={20} />
         </button>
 
-        <ConfirmationModal
-          isOpen={open}
-          title={'Confirmar Eliminación'}
-          message='¿Estás seguro de que deseas eliminar esta reseña?'
-          onConfirm={() => {
-            deleteResennas(id);
-            SetOpen(false);
-          }}
-        />
+        {open && (
+          <ConfirmationModal
+            isOpen={open}
+            title={'Confirmar Eliminación'}
+            message='¿Estás seguro de que deseas eliminar esta reseña?'
+            onConfirm={() => {
+              deleteResennas(id);
+              SetOpen(false);
+            }}
+            onCancel={SetOpen(false)}
+          />
+        )}
       </div>
     </div>
   );
