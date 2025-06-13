@@ -86,7 +86,7 @@ const TFotos = () => {
     };
 
     return (
-        <div className="bg-jetBlack text-lightGray p-6 rounded-lg shadow-lg mt-20">
+        <div className="bg-slate-700 text-lightGray p-6 rounded-lg shadow-lg mt-20">
             <h2 className="text-3xl font-serif font-bold text-mustard mb-6">Gestión de Fotos</h2>
 
             {/* Formulario */}

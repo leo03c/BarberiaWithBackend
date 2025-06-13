@@ -88,15 +88,15 @@ const TServicios = () => {
     };
 
     return (
-        <div className="bg-slate-100 text-lightGray p-6 rounded-lg shadow-lg mt-20">
+        <div className="bg-slate-700 text-lightGray p-6 rounded-lg shadow-lg mt-20">
             <h2 className="text-3xl font-serif font-bold text-mustard mb-6">Gestión de Paquetes</h2>
 
             {/* Formulario */}
             <form onSubmit={handleSubmit} className="bg-gray-800 p-4 rounded-lg shadow mb-6">
                 <div className="grid grid-cols-2 gap-4">
-                    <input type="text" name="nombre" placeholder="Nombre del servicio" value={formData.nombre} onChange={handleInputChange} className="p-2 bg-gray-100 text-lightGray rounded-md" required />
-                    <input type="number" step="0.01" name="precio" placeholder="Precio" value={formData.precio} onChange={handleInputChange} className="p-2 bg-gray-100 text-lightGray rounded-md" required />
-                    <textarea name="descripcion" placeholder="Descripción" value={formData.descripcion} onChange={handleInputChange} className="p-2 bg-gray-100 text-lightGray rounded-md col-span-2" required />
+                    <input type="text" name="nombre" placeholder="Nombre del servicio" value={formData.nombre} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
+                    <input type="number" step="0.01" name="precio" placeholder="Precio" value={formData.precio} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
+                    <textarea name="descripcion" placeholder="Descripción" value={formData.descripcion} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md col-span-2" required />
                     <input type="file" name="imag" accept="image/*" onChange={handleFileChange} className="p-2 bg-gray-700 text-lightGray rounded-md" />
                 </div>
                 <button type="submit" className="mt-4 w-full bg-mustard text-jetBlack py-2 rounded-lg font-semibold flex items-center justify-center gap-2">
@@ -111,7 +111,7 @@ const TServicios = () => {
                     <thead>
                         <tr className="text-mustard">
                             <th className="py-2 px-4 text-left">Imagen</th>
-                            <th className="py-2 px-4 text-left">Servicio</th>
+                            <th className="py-2 px-4 text-left">Paquete</th>
                             <th className="py-2 px-4 text-left">ID</th>
                             <th className="py-2 px-4 text-left">Precio</th>
                             <th className="py-2 px-4 text-left">Descripción</th>
