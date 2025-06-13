@@ -16,7 +16,7 @@ const CTA = () => {
   };
 
   return (
-    <section className='py-20 bg-jetBlack text-center text-lightGray'>
+    <section className='py-20 bg-white text-center text-slate-700'>
       <div className='max-w-screen-xl mx-auto px-6'>
         <h2 className='text-4xl font-serif font-bold text-mustard mb-6 animate-fade-in-up'>
           ¡Haz tus sueños realidad!

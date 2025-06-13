@@ -36,7 +36,7 @@ const PromotionsBar = () => {
     if (promotions.length === 0 || services.length === 0) return null;
 
     return (
-        <div className="w-full px-8 py-6 bg-slate-800">
+        <div className="w-full px-8 py-6 bg-gray-100">
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-mustard mb-12 animate-fade-in-up text-center">Promociones destacadas</h2>
             <div className="flex overflow-x-auto space-x-6 scrollbar-thin scrollbar-thumb-mustard scrollbar-track-gray-700">
                 {promotions.map((promotion, index) => (

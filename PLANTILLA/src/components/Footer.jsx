@@ -3,15 +3,14 @@ import Logo from '../assets/icons.png';
 
 const Footer = () => {
   return (
-    <footer className='bg-jetBlack text-lightGray py-12 px-6'>
+    <footer className='bg-gray-100 text-slate-700 py-12 px-6'>
       <div className='container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8'>
         {/* Logo y Descripción */}
         <div className='col-span-1 flex flex-col items-center sm:items-start'>
           <div className='flex items-center mb-4 justify-center sm:justify-start'>
-            <img src={Logo} alt='Beauty Luxe Logo' className='w-12 h-12 mr-3' />
             <h2 className='text-3xl font-serif font-bold text-mustard'>Paraíso</h2>
           </div>
-          <p className='text-center sm:text-start text-lightGray text-lg font-medium'>
+          <p className='text-center sm:text-start text-slate-700 text-lg font-medium'>
             Un oasis de belleza y bienestar. Déjanos resaltar tu belleza con
             nuestros servicios exclusivos.
           </p>
@@ -26,7 +25,7 @@ const Footer = () => {
             <li>
               <a
                 href='#paquetes'
-                className='hover:text-mustard block text-lightGray'
+                className='hover:text-mustard block text-slate-700'
               >
                 Paquetes
               </a>
@@ -34,7 +33,7 @@ const Footer = () => {
             <li>
               <a
                 href='#about'
-                className='hover:text-mustard block text-lightGray'
+                className='hover:text-mustard block text-slate-700'
               >
                 Sobre Nosotros
               </a>
@@ -42,7 +41,7 @@ const Footer = () => {
             <li>
               <a
                 href='#faq'
-                className='hover:text-mustard block text-lightGray'
+                className='hover:text-mustard block text-slate-700'
               >
                 FAQ
               </a>
@@ -56,19 +55,19 @@ const Footer = () => {
           <div className='flex space-x-6 justify-center sm:justify-start'>
             <a
               href='https://facebook.com'
-              className='text-lightGray hover:text-mustard'
+              className='text-slate-700 hover:text-mustard'
             >
               <FaFacebookF className='w-6 h-6' />
             </a>
             <a
               href='https://twitter.com'
-              className='text-lightGray hover:text-mustard'
+              className='text-slate-700 hover:text-mustard'
             >
               <FaTwitter className='w-6 h-6' />
             </a>
             <a
               href='https://instagram.com'
-              className='text-lightGray hover:text-mustard'
+              className='text-slate-700 hover:text-mustard'
             >
               <FaInstagram className='w-6 h-6' />
             </a>
@@ -84,14 +83,14 @@ const Footer = () => {
             Contáctanos
           </h3>
           <ul>
-            <li className='mb-2 text-lightGray'>
+            <li className='mb-2 text-slate-700'>
               <span className='font-bold'>Dirección:</span> Calle Falsa 123,
               Ciudad de Belleza
             </li>
-            <li className='mb-2 text-lightGray'>
+            <li className='mb-2 text-slate-700'>
               <span className='font-bold'>Teléfono:</span> +53 5555555
             </li>
-            <li className='text-lightGray'>
+            <li className='text-slate-700'>
               <span className='font-bold'>Email:</span> contacto@ryal.com
             </li>
           </ul>
@@ -100,14 +99,14 @@ const Footer = () => {
 
       <div className='border-t border-gray-700 mt-8 pt-4'>
         <div className='container mx-auto flex flex-col md:flex-row justify-between items-center text-center sm:text-start'>
-          <p className='text-lightGray'>
-            © 2025 RYAL. Todos los derechos reservados.
+          <p className='text-slate-700'>
+            © 2025 PARAISO. Todos los derechos reservados.
           </p>
           <div className='flex space-x-6 mt-4 md:mt-0'>
-            <a href='#privacy' className='hover:text-mustard text-lightGray'>
+            <a href='#privacy' className='hover:text-mustard text-slate-700'>
               Política de Privacidad
             </a>
-            <a href='#terms' className='hover:text-mustard text-lightGray'>
+            <a href='#terms' className='hover:text-mustard text-slate-700'>
               Términos y Condiciones
             </a>
           </div>

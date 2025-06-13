@@ -18,7 +18,7 @@ const Galeria = () => {
   if (error) return <div>{error.message}</div>;
   
   return (
-    <section id='trabajos' className='py-16 bg-slate-100 text-lightGray'>
+    <section id='trabajos' className='py-16 bg-white text-lightGray'>
       <div className='max-w-screen-xl mx-auto text-center'>
         <h2 className='text-4xl md:text-5xl font-serif font-bold text-mustard mb-12 animate-fade-in-up'>
           Lugares Destacados

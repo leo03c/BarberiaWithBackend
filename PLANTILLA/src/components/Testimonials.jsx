@@ -107,7 +107,7 @@ const Testimonials = () => {
   return (
     <section
       id='testimonios'
-      className='bg-sltate-100 text-lightGray py-16 px-6 md:px-16'
+      className='bg-gray-100 text-lightGray py-16 px-6 md:px-16'
     >
       <ModalNotification
         color='#4CAF50'
@@ -154,7 +154,7 @@ const Testimonials = () => {
           </div>
 
           <div className='w-full lg:w-1/2 bg-white p-8 rounded-2xl shadow-xl'>
-            <h3 className='text-2xl font-serif font-bold text-mustard mb-6 text-center tracking-wide'>
+            <h3 className='text-3xl font-serif font-bold text-mustard mb-6 text-center tracking-wide'>
               Deja tu Reseña
             </h3>
             <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
@@ -208,7 +208,7 @@ const Testimonials = () => {
               </div>
               <button
                 type='submit'
-                className='bg-mustard text-slate-700 p-4 rounded-xl shadow-xl hover:bg-bronze transition-all duration-300 mt-6'
+                className='bg-mustard text-white p-4 rounded-xl shadow-xl hover:bg-bronze transition-all duration-300 mt-6'
               >
                 Enviar Reseña
               </button>

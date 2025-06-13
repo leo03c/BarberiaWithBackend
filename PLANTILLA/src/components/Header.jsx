@@ -87,7 +87,7 @@ const Header = () => {
                 <li>
                   <Link
                     to='/LoginForm'
-                    className='text-lightGray border border-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-mustard hover:text-jetBlack transition-all duration-300'
+                    className='text-mustard border border-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-mustard hover:text-jetBlack transition-all duration-300'
                   >
                     Iniciar sesión
                   </Link>
@@ -95,7 +95,7 @@ const Header = () => {
                 <li>
                   <Link
                     to='/clienteform'
-                    className='text-lightGray bg-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-bronze transition-all duration-300'
+                    className='text-jetblack bg-mustard px-3 md:px-4 py-1 md:py-2 rounded-lg text-sm md:text-base hover:bg-bronze transition-all duration-300'
                   >
                     Registrarse
                   </Link>
