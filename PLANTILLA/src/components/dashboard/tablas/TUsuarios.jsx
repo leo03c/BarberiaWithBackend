@@ -153,6 +153,7 @@ const TUsuarios = () => {
           <div>
             <input
               id='usuario'
+              disabled={editingId ? true : false}
               type='text'
               required
               name='usuario'
@@ -172,6 +173,7 @@ const TUsuarios = () => {
               {...register('correo')}
               className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
               required
+              disabled={editingId ? true : false}
             />
             {errors.correo && (
               <span className='text-red-500'> {errors.correo.message}</span>

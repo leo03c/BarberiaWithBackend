@@ -33,6 +33,7 @@ const TCitas = () => {
     loadData();
   }, []);
 
+  //peticiones con axios
   const fetchUsuarios = async () => {
     const res = await api.get('/usuarios/');
     setUsuarios(res.data);
@@ -48,11 +49,13 @@ const TCitas = () => {
     setCitas(res.data);
   };
 
+  //actualiza la data
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((fd) => ({ ...fd, [name]: value }));
   };
 
+  //si editing esta activo actualiza
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { usuarioid, servicioid, fecha } = formData;
@@ -78,7 +81,8 @@ const TCitas = () => {
       setError(err.response?.data?.detail || 'Error al guardar la cita');
     }
   };
-
+  
+  //edita la cita
   const handleEdit = (cita) => {
     setEditingId(cita.id);
     const usuario = usuarios.find((u) => u.id === cita.customer);

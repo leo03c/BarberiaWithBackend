@@ -11,7 +11,7 @@ import { Toaster } from 'react-hot-toast';
 
 const testimonialSchema = z.object({
   usuario_id: z.string().optional(),
-  comentario: z.string().max('Debe tener maximo 100 caracateres'),
+  comentario: z.string().max('Debe tener máximo 100 caracteres'),
   clasificacion: z
     .number({ invalid_type_error: 'La clasificación debe ser un número' })
     .min(1, 'La clasificación mínima es 1')
@@ -39,8 +39,6 @@ const Testimonials = () => {
       clasificacion: 5,
     },
   });
-
- 
 
   const onSubmit = (data) => {
     createResenna(data);
@@ -72,7 +70,7 @@ const Testimonials = () => {
       <h2 className='text-5xl md:text-5xl font-serif font-bold bg-gradient-to-r text-center from-mustard via-yellow-400 to-mustard bg-clip-text text-transparent mb-6'>
         Reseñas
       </h2>
-       <div className='w-24 h-1 bg-gradient-to-r from-transparent via-mustard to-transparent mx-auto'></div>
+      <div className='w-24 h-1 bg-gradient-to-r from-transparent via-mustard to-transparent mx-auto'></div>
 
       <div className='flex flex-col lg:flex-row justify-center items-center gap-12'>
         <div className='w-full lg:w-1/2'>

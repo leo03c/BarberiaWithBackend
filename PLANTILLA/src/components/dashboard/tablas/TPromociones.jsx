@@ -53,7 +53,7 @@ const TPromociones = () => {
               servicio: '',
               porcientoDesc: '',
             });
-            toast.success('Promocion actualizada con exito');
+            toast.success('Promocion actualizada con éxito');
           },
         }
       );

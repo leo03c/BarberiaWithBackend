@@ -41,11 +41,7 @@ export const useProducts = () => {
 
   const useUpdateProduct = () => {
     return useMutation({
-      mutationFn: ({ id, data }) => {
-        updateProduct(id, data);
-
-        return data;
-      },
+      mutationFn: ({ id, data }) => updateProduct(id, data),
 
       onMutate: async ({ data }) => {
         await queryClient.cancelQueries({ queryKey: ['products'] });

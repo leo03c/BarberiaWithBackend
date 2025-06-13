@@ -116,6 +116,7 @@ const TProductos = () => {
             <input
               type='text'
               name='nombre'
+              disabled={editingId ? true : false}
               placeholder='Nombre del producto'
               {...register('nombre')}
               className='p-2 bg-gray-700 text-lightGray rounded-md block w-full'
