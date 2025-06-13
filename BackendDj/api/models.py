@@ -18,9 +18,6 @@ class Trabajador(models.Model):
         return self.nombre
 
 
-
-
-
 class Usuario(models.Model):
     nombre = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=150)
@@ -55,12 +52,12 @@ class Foto(models.Model):
         return self.nombre
 
 
-class Servicio(models.Model):
+class Paquete(models.Model):
 
     nombre = models.CharField(max_length=100)  # unico
     precio = models.DecimalField(decimal_places=2, max_digits=7)
     descripcion = models.TextField()
-    imag = models.ImageField(upload_to="servicio/", blank=True, null=True)
+    imag = models.ImageField(upload_to="paquete/", blank=True, null=True)
 
     def __str__(self):
         return self.nombre
@@ -68,19 +65,19 @@ class Servicio(models.Model):
 
 class Cita(models.Model):
     usuarioid = models.ForeignKey(Usuario, on_delete=models.CASCADE, default=1)
-    servicioid = models.ForeignKey(Servicio, on_delete=models.CASCADE)
+    paqueteid = models.ForeignKey(Paquete, on_delete=models.CASCADE)
     comentario = models.TextField(default="")
     fecha = models.DateTimeField()
 
     def __str__(self):
-        return self.fecha.strftime("%Y-%m-%d %H:%M")
+        return self.fecha.strftime("%Y-%m-%d")
 
 
 class Promocion(models.Model):
 
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
-    servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE)
+    paquete = models.ForeignKey(Paquete, on_delete=models.CASCADE)
     porcientoDesc = models.IntegerField()
     imag = models.ImageField(upload_to="[promocion]/", blank=True, null=True)
 

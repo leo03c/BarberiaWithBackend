@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const PromotionsBar = () => {
     const [promotions, setPromotions] = useState([]);
-    const [services, setServices] = useState([]);
+    const [packages, setPackages] = useState([]);
 
     // Obtener promociones
     useEffect(() => {
@@ -13,27 +13,27 @@ const PromotionsBar = () => {
             .catch((error) => console.error("Error fetching promotions:", error));
     }, []);
 
-    // Obtener los servicios correspondientes
+    // Obtener los paquetes correspondientes
     useEffect(() => {
         if (promotions.length === 0) return;
 
-        const fetchServices = async () => {
+        const fetchPackages = async () => {
             try {
-                const servicePromises = promotions.map((promotion) =>
-                    fetch(`http://localhost:8000/api/servicios/${promotion.servicio}`)
+                const packagePromises = promotions.map((promotion) =>
+                    fetch(`http://localhost:8000/api/paquetes/${promotion.paquete}`)
                         .then((response) => response.json())
                 );
-                const servicesData = await Promise.all(servicePromises);
-                setServices(servicesData);
+                const packagesData = await Promise.all(packagePromises);
+                setPackages(packagesData);
             } catch (error) {
-                console.error("Error fetching services:", error);
+                console.error("Error fetching packages:", error);
             }
         };
 
-        fetchServices();
+        fetchPackages();
     }, [promotions]);
 
-    if (promotions.length === 0 || services.length === 0) return null;
+    if (promotions.length === 0 || packages.length === 0) return null;
 
     return (
         <div className="w-full px-8 py-6 bg-gray-100">
@@ -60,7 +60,7 @@ const PromotionsBar = () => {
                             {promotion.porcientoDesc}% OFF
                         </p>
                         <p className="text-gray-700 text-sm">
-                            <span className="font-bold">Paquete:</span> {services[index]?.nombre || "Cargando..."}
+                            <span className="font-bold">Paquete:</span> {packages[index]?.nombre || "Cargando..."}
                         </p>
                     </motion.div>
                 ))}

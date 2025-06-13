@@ -3,17 +3,17 @@ import { Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 
 const API_URL = "http://localhost:8000/api/citas/";
 const USERS_API_URL = "http://localhost:8000/api/usuarios/";
-const SERVICES_API_URL = "http://localhost:8000/api/servicios/";
+const SERVICES_API_URL = "http://localhost:8000/api/paquetes/";
 const ITEMS_PER_PAGE = 5;
 
 const TCitas = () => {
     const [citas, setCitas] = useState([]);
     const [usuarios, setUsuarios] = useState([]);
-    const [servicios, setServicios] = useState([]);
+    const [paquetes, setPaquetes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [formData, setFormData] = useState({
         usuarioid: "",
-        servicioid: "",
+        paqueteid: "",
         comentario: "",
         fecha: ""
     });
@@ -22,7 +22,7 @@ const TCitas = () => {
     useEffect(() => {
         fetchCitas();
         fetchUsuarios();
-        fetchServicios();
+        fetchPaquetes();
     }, []);
 
     const fetchCitas = async () => {
@@ -45,13 +45,13 @@ const TCitas = () => {
         }
     };
 
-    const fetchServicios = async () => {
+    const fetchPaquetes = async () => {
         try {
             const response = await fetch(SERVICES_API_URL);
             const data = await response.json();
-            setServicios(data);
+            setPaquetes(data);
         } catch (error) {
-            console.error("Error al obtener los servicios:", error);
+            console.error("Error al obtener los paquetes:", error);
         }
     };
 
@@ -74,7 +74,7 @@ const TCitas = () => {
             });
 
             setEditingId(null);
-            setFormData({ usuarioid: "", servicioid: "", comentario: "", fecha: "" });
+            setFormData({ usuarioid: "", paqueteid: "", comentario: "", fecha: "" });
             fetchCitas();
         } catch (error) {
             console.error("Error al guardar la cita:", error);
@@ -128,16 +128,16 @@ const TCitas = () => {
                     </select>
 
                     <select 
-                        name="servicioid" 
-                        value={formData.servicioid} 
+                        name="paqueteid" 
+                        value={formData.paqueteid} 
                         onChange={handleInputChange} 
                         className="p-2 bg-gray-700 text-lightGray rounded-md" 
                         required
                     >
-                        <option value="">Seleccione un servicio</option>
-                        {servicios.map(servicio => (
-                            <option key={servicio.id} value={servicio.id}>
-                                {servicio.nombre} - ${servicio.precio}
+                        <option value="">Seleccione un paquete</option>
+                        {paquetes.map(paquete => (
+                            <option key={paquete.id} value={paquete.id}>
+                                {paquete.nombre} - ${paquete.precio}
                             </option>
                         ))}
                     </select>
@@ -172,7 +172,7 @@ const TCitas = () => {
                     <thead>
                         <tr className="text-mustard">
                             <th className="py-2 px-4 text-left">Usuario</th>
-                            <th className="py-2 px-4 text-left">Servicio</th>
+                            <th className="py-2 px-4 text-left">Paquete</th>
                             <th className="py-2 px-4 text-left">Comentario</th>
                             <th className="py-2 px-4 text-left">Fecha</th>
                             <th className="py-2 px-4 text-center">Acciones</th>
@@ -181,14 +181,14 @@ const TCitas = () => {
                     <tbody>
                         {currentItems.map((cita) => {
                             const usuario = usuarios.find(u => u.id === cita.usuarioid);
-                            const servicio = servicios.find(s => s.id === cita.servicioid);
+                            const paquete = paquetes.find(s => s.id === cita.paqueteid);
                             return (
                                 <tr key={cita.id} className="border-t border-gray-700 hover:bg-gray-700 transition">
                                     <td className="py-2 px-4">
                                         {usuario ? `${usuario.nombre} ${usuario.apellidos}` : cita.usuarioid}
                                     </td>
                                     <td className="py-2 px-4">
-                                        {servicio ? servicio.nombre : cita.servicioid}
+                                        {paquete ? paquete.nombre : cita.paqueteid}
                                     </td>
                                     <td className="py-2 px-4">{cita.comentario}</td>
                                     <td className="py-2 px-4">{new Date(cita.fecha).toLocaleString()}</td>

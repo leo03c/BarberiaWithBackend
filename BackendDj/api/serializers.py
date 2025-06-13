@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cita, Usuario, Foto, Promocion, Reseña, Servicio, Trabajador
+from .models import Cita, Usuario, Foto, Promocion, Reseña, Paquete, Trabajador
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
 from rest_framework.permissions import IsAuthenticated
@@ -62,9 +62,9 @@ class FotoSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ServicioSerializer(serializers.ModelSerializer):
+class PaqueteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Servicio
+        model = Paquete
         fields = "__all__"
 
 

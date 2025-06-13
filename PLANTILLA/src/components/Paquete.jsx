@@ -3,26 +3,26 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Paquete = () => {
-  const [services, setServices] = useState([]);
+  const [paquetes, setpaquetes] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const cardsPerPage = 3;
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/servicios/")
+    fetch("http://127.0.0.1:8000/paquetes/")
       .then((response) => response.json())
-      .then((data) => setServices(data))
-      .catch((error) => console.error("Error al cargar servicios:", error));
+      .then((data) => setpaquetes(data))
+      .catch((error) => console.error("Error al cargar paquetes:", error));
   }, []);
 
   const prevSlide = () => {
     setStartIndex((prev) =>
-      prev - cardsPerPage < 0 ? Math.max(services.length - cardsPerPage, 0) : prev - cardsPerPage
+      prev - cardsPerPage < 0 ? Math.max(paquetes.length - cardsPerPage, 0) : prev - cardsPerPage
     );
   };
 
   const nextSlide = () => {
     setStartIndex((prev) =>
-      prev + cardsPerPage >= services.length ? 0 : prev + cardsPerPage
+      prev + cardsPerPage >= paquetes.length ? 0 : prev + cardsPerPage
     );
   };
 
@@ -41,11 +41,11 @@ const Paquete = () => {
         <div className="relative">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 ">
             <AnimatePresence mode="wait">
-              {services
+              {paquetes
                 .slice(startIndex, startIndex + cardsPerPage)
-                .map((service) => (
+                .map((paquete) => (
                   <motion.div
-                    key={service.id}
+                    key={paquete.id}
                     className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer"
                     initial="hidden"
                     animate="visible"
@@ -55,19 +55,19 @@ const Paquete = () => {
                     whileHover={{ scale: 1.03, y: -5 }}
                   >
                     <img
-                      src={service.imag}
-                      alt={service.nombre}
+                      src={paquete.imag}
+                      alt={paquete.nombre}
                       className="w-full h-64 object-cover"
                     />
                     <div className="p-6 text-left">
                       <h3 className="text-2xl font-serif font-semibold text-mustard mb-2">
-                        {service.nombre}
+                        {paquete.nombre}
                       </h3>
                       <p className=" text-slate-700 text-sm mb-4">
-                        {service.descripcion}
+                        {paquete.descripcion}
                       </p>
                       <p className="text-xl font-serif font-bold text-mustard">
-                        {service.precio}
+                        {paquete.precio}
                       </p>
                     </div>
                   </motion.div>

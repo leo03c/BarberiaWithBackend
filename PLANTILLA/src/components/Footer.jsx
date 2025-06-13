@@ -12,7 +12,7 @@ const Footer = () => {
           </div>
           <p className='text-center sm:text-start text-slate-700 text-lg font-medium'>
             Un oasis de belleza y bienestar. Déjanos resaltar tu belleza con
-            nuestros servicios exclusivos.
+            nuestros paquetes exclusivos.
           </p>
         </div>
 

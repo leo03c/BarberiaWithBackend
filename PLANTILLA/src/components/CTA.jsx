@@ -22,7 +22,7 @@ const CTA = () => {
           ¡Haz tus sueños realidad!
         </h2>
         <p className='text-lg md:text-xl mb-8'>
-          Descubre la experiencia exclusiva de nuestros servicios y lleva tu
+          Descubre la experiencia exclusiva de nuestros paquetes y lleva tu
           look al siguiente nivel. ¡Reserva ahora y disfruta de un trato VIP!
         </p>
         <button

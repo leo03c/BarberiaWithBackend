@@ -16,7 +16,7 @@ const TProductos = () => {
     });
     const [editingId, setEditingId] = useState(null);
     const [usuarios, setUsuarios] = useState([]);
-    const [serviciosList, setServiciosList] = useState([]);
+    const [paquetesList, setPaquetesList] = useState([]);
 
     useEffect(() => {
         fetchProductos();

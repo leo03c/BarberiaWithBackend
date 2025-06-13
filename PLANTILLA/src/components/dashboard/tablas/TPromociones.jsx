@@ -2,17 +2,17 @@ import { useState, useEffect } from "react";
 import { Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 
 const API_URL = "http://localhost:8000/api/promociones/";
-const SERVICES_API_URL = "http://localhost:8000/api/servicios/";
+const SERVICES_API_URL = "http://localhost:8000/api/paquetes/";
 const ITEMS_PER_PAGE = 5;
 
 const TPromociones = () => {
     const [promociones, setPromociones] = useState([]);
-    const [servicios, setServicios] = useState([]);
+    const [paquetes, setPaquetes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [formData, setFormData] = useState({
         nombre: "",
         descripcion: "",
-        servicio: "",
+        paquete: "",
         porcientoDesc: "",
         imag: null
     });
@@ -20,7 +20,7 @@ const TPromociones = () => {
 
     useEffect(() => {
         fetchPromociones();
-        fetchServicios();
+        fetchPaquetes();
     }, []);
 
     const fetchPromociones = async () => {
@@ -33,13 +33,13 @@ const TPromociones = () => {
         }
     };
 
-    const fetchServicios = async () => {
+    const fetchPaquetes = async () => {
         try {
             const response = await fetch(SERVICES_API_URL);
             const data = await response.json();
-            setServicios(data);
+            setPaquetes(data);
         } catch (error) {
-            console.error("Error al obtener los servicios:", error);
+            console.error("Error al obtener los paquetes:", error);
         }
     };
 
@@ -57,7 +57,7 @@ const TPromociones = () => {
         const formToSend = new FormData();
         formToSend.append("nombre", formData.nombre);
         formToSend.append("descripcion", formData.descripcion);
-        formToSend.append("servicio", formData.servicio);
+        formToSend.append("paquete", formData.paquete);
         formToSend.append("porcientoDesc", formData.porcientoDesc);
         if (formData.imag) {
             formToSend.append("imag", formData.imag);
@@ -78,7 +78,7 @@ const TPromociones = () => {
             setFormData({
                 nombre: "",
                 descripcion: "",
-                servicio: "",
+                paquete: "",
                 porcientoDesc: "",
                 imag: null
             });
@@ -93,7 +93,7 @@ const TPromociones = () => {
         setFormData({
             nombre: promocion.nombre,
             descripcion: promocion.descripcion,
-            servicio: promocion.servicio,
+            paquete: promocion.paquete,
             porcientoDesc: promocion.porcientoDesc,
             imag: null // No se puede prellenar imágenes en input file
         });
@@ -127,16 +127,16 @@ const TPromociones = () => {
                     <input type="text" name="nombre" placeholder="Nombre de la promoción" value={formData.nombre} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
                     
                     <select 
-                        name="servicio" 
-                        value={formData.servicio} 
+                        name="paquete" 
+                        value={formData.paquete} 
                         onChange={handleInputChange} 
                         className="p-2 bg-gray-700 text-lightGray rounded-md" 
                         required
                     >
-                        <option value="">Seleccione un servicio</option>
-                        {servicios.map(servicio => (
-                            <option key={servicio.id} value={servicio.id}>
-                                {servicio.nombre} - ${servicio.precio}
+                        <option value="">Seleccione un paquete</option>
+                        {paquetes.map(paquete => (
+                            <option key={paquete.id} value={paquete.id}>
+                                {paquete.nombre} - ${paquete.precio}
                             </option>
                         ))}
                     </select>
@@ -160,7 +160,7 @@ const TPromociones = () => {
                         <tr className="text-mustard">
                             <th className="py-2 px-4 text-left">Imagen</th>
                             <th className="py-2 px-4 text-left">Nombre</th>
-                            <th className="py-2 px-4 text-left">Servicio</th>
+                            <th className="py-2 px-4 text-left">Paquete</th>
                             <th className="py-2 px-4 text-left">Descripción</th>
                             <th className="py-2 px-4 text-left">Descuento (%)</th>
                             <th className="py-2 px-4 text-center">Acciones</th>
@@ -168,7 +168,7 @@ const TPromociones = () => {
                     </thead>
                     <tbody>
                         {currentItems.map((promocion) => {
-                            const servicio = servicios.find(s => s.id === promocion.servicio);
+                            const paquete = paquetes.find(s => s.id === promocion.paquete);
                             return (
                                 <tr key={promocion.id} className="border-t border-gray-700 hover:bg-gray-700 transition">
                                     
@@ -177,7 +177,7 @@ const TPromociones = () => {
                                 </td>
                                     <td className="py-2 px-4">{promocion.nombre}</td>
                                     <td className="py-2 px-4">
-                                        {servicio ? servicio.nombre : promocion.servicio}
+                                        {paquete ? paquete.nombre : promocion.paquete}
                                     </td>
                                     <td className="py-2 px-4">{promocion.descripcion}</td>
                                     <td className="py-2 px-4">{promocion.porcientoDesc}%</td>

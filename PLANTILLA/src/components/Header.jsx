@@ -116,7 +116,7 @@ const Header = () => {
             transition={{ duration: 0.3 }}
           >
             <ul className='flex flex-col space-y-6 items-center py-8'>
-              {['Inicio', 'Servicios', 'Contacto'].map((item) => (
+              {['Inicio', 'Paquetes', 'Contacto'].map((item) => (
                 <li key={item}>
                   <a
                     href={`/#${item.toLowerCase()}`}

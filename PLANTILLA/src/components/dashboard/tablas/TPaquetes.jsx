@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Pencil, Trash2, PlusCircle, ChevronLeft, ChevronRight } from "lucide-react";
 
-const API_URL = "http://localhost:8000/api/servicios/";
+const API_URL = "http://localhost:8000/api/paquetes/";
 const ITEMS_PER_PAGE = 5;
 
-const TServicios = () => {
-    const [servicios, setServicios] = useState([]);
+const TPaquetes = () => {
+    const [paquetes, setPaquetes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [formData, setFormData] = useState({
         nombre: "",
@@ -16,16 +16,16 @@ const TServicios = () => {
     const [editingId, setEditingId] = useState(null);
 
     useEffect(() => {
-        fetchServicios();
+        fetchPaquetes();
     }, []);
 
-    const fetchServicios = async () => {
+    const fetchPaquetes = async () => {
         try {
             const response = await fetch(API_URL);
             const data = await response.json();
-            setServicios(data);
+            setPaquetes(data);
         } catch (error) {
-            console.error("Error al obtener los servicios:", error);
+            console.error("Error al obtener los paquetes:", error);
         }
     };
 
@@ -57,31 +57,31 @@ const TServicios = () => {
 
             setEditingId(null);
             setFormData({ nombre: "", precio: "", descripcion: "", imag: null });
-            fetchServicios();
+            fetchPaquetes();
         } catch (error) {
-            console.error("Error al guardar el servicio:", error);
+            console.error("Error al guardar el paquete:", error);
         }
     };
 
-    const handleEdit = (servicio) => {
-        setEditingId(servicio.id);
-        setFormData({ ...servicio, imag: null });
+    const handleEdit = (paquete) => {
+        setEditingId(paquete.id);
+        setFormData({ ...paquete, imag: null });
     };
 
     const handleDelete = async (id) => {
         try {
             await fetch(`${API_URL}${id}/`, { method: "DELETE" });
-            fetchServicios();
+            fetchPaquetes();
         } catch (error) {
-            console.error("Error al eliminar servicio:", error);
+            console.error("Error al eliminar paquete:", error);
         }
     };
 
-    // Calcular servicios para la página actual
+    // Calcular paquetes para la página actual
     const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
     const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-    const currentItems = servicios.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(servicios.length / ITEMS_PER_PAGE);
+    const currentItems = paquetes.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(paquetes.length / ITEMS_PER_PAGE);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -94,7 +94,7 @@ const TServicios = () => {
             {/* Formulario */}
             <form onSubmit={handleSubmit} className="bg-gray-800 p-4 rounded-lg shadow mb-6">
                 <div className="grid grid-cols-2 gap-4">
-                    <input type="text" name="nombre" placeholder="Nombre del servicio" value={formData.nombre} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
+                    <input type="text" name="nombre" placeholder="Nombre del paquete" value={formData.nombre} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
                     <input type="number" step="0.01" name="precio" placeholder="Precio" value={formData.precio} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md" required />
                     <textarea name="descripcion" placeholder="Descripción" value={formData.descripcion} onChange={handleInputChange} className="p-2 bg-gray-700 text-lightGray rounded-md col-span-2" required />
                     <input type="file" name="imag" accept="image/*" onChange={handleFileChange} className="p-2 bg-gray-700 text-lightGray rounded-md" />
@@ -105,7 +105,7 @@ const TServicios = () => {
                 </button>
             </form>
 
-            {/* Tabla de Servicios */}
+            {/* Tabla de Paquetes */}
             <div className="overflow-x-auto">
                 <table className="w-full bg-gray-800 rounded-lg">
                     <thead>
@@ -119,20 +119,20 @@ const TServicios = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems.map((servicio) => (
-                            <tr key={servicio.id} className="border-t border-gray-700 hover:bg-gray-700 transition">
+                        {currentItems.map((paquete) => (
+                            <tr key={paquete.id} className="border-t border-gray-700 hover:bg-gray-700 transition">
                                 <td className="py-2 px-4">
-                                    {servicio.imag && <img src={servicio.imag} alt={servicio.nombre} className="h-12 w-12 object-cover rounded-md" />}
+                                    {paquete.imag && <img src={paquete.imag} alt={paquete.nombre} className="h-12 w-12 object-cover rounded-md" />}
                                 </td>
-                                <td className="py-2 px-4">{servicio.nombre}</td>
-                                <td className="py-2 px-4">{servicio.id}</td>
-                                <td className="py-2 px-4">${servicio.precio}</td>
-                                <td className="py-2 px-4">{servicio.descripcion}</td>
+                                <td className="py-2 px-4">{paquete.nombre}</td>
+                                <td className="py-2 px-4">{paquete.id}</td>
+                                <td className="py-2 px-4">${paquete.precio}</td>
+                                <td className="py-2 px-4">{paquete.descripcion}</td>
                                 <td className="py-2 px-4 flex justify-center gap-3">
-                                    <button onClick={() => handleEdit(servicio)} className="text-mustard hover:text-yellow-500 transition">
+                                    <button onClick={() => handleEdit(paquete)} className="text-mustard hover:text-yellow-500 transition">
                                         <Pencil size={18} />
                                     </button>
-                                    <button onClick={() => handleDelete(servicio.id)} className="text-red-500 hover:text-red-400 transition">
+                                    <button onClick={() => handleDelete(paquete.id)} className="text-red-500 hover:text-red-400 transition">
                                         <Trash2 size={18} />
                                     </button>
                                 </td>
@@ -176,4 +176,4 @@ const TServicios = () => {
     );
 };
 
-export default TServicios;
+export default TPaquetes;

@@ -11,12 +11,12 @@ Siguiendo el **orden lógico** para la creación de los componentes de una pági
 
 ### **Componentes Siguientes a Crear**
 
-#### 1. **Sección de Servicios**  
-   - Debes mostrar de forma clara y atractiva los **servicios que ofreces**:  
+#### 1. **Sección de Paquetes**  
+   - Debes mostrar de forma clara y atractiva los **paquetes que ofreces**:  
      - **Peluquería**  
      - **Barbería**  
      - **Manicura y Pedicura**  
-   - Diseñar tarjetas (cards) elegantes con **íconos, imágenes** y breves descripciones de cada servicio.  
+   - Diseñar tarjetas (cards) elegantes con **íconos, imágenes** y breves descripciones de cada paquete.  
    - Asegúrate de usar animaciones suaves al hacer **hover** sobre las tarjetas.
 
 ---
@@ -62,7 +62,7 @@ Siguiendo el **orden lógico** para la creación de los componentes de una pági
    - Contendrá:  
      - Información de contacto (teléfono, dirección, redes sociales)  
      - Horarios de atención  
-     - Enlaces rápidos (servicios, productos, contacto).  
+     - Enlaces rápidos (paquetes, productos, contacto).  
    - Opcional: un mapa interactivo con la ubicación del local.
 
 ---
@@ -71,7 +71,7 @@ Siguiendo el **orden lógico** para la creación de los componentes de una pági
 
 1. **Header**: Navegación principal.  
 2. **Hero**: Impacto visual inicial.  
-3. **Servicios**: Lo que ofreces.  
+3. **Paquetes**: Lo que ofreces.  
 4. **Productos**: Artículos a la venta.  
 5. **Sobre Nosotros**: Humaniza el negocio.  
 6. **Testimonios**: Confianza y credibilidad.  
@@ -81,6 +81,6 @@ Siguiendo el **orden lógico** para la creación de los componentes de una pági
 ---
 
 ### **Siguiente Paso**  
-Te recomendaría comenzar por la **sección de servicios**, ya que es clave para mostrar **qué ofreces**. Puedo ayudarte a diseñar una sección con **tarjetas elegantes, modernas y funcionales**. 
+Te recomendaría comenzar por la **sección de paquetes**, ya que es clave para mostrar **qué ofreces**. Puedo ayudarte a diseñar una sección con **tarjetas elegantes, modernas y funcionales**. 
 
 ¿Empezamos con eso? 🚀✨

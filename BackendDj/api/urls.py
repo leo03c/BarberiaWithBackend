@@ -9,7 +9,7 @@ router.register(r"usuarios", views.UsuarioViewSet, basename="usuarios")
 router.register(r"promociones", views.PromocionViewSet, basename="promociones")
 router.register(r"reseñas", views.ReseñaViewSet, basename="reseñas")
 router.register(r"fotos", views.FotoViewSet, basename="fotos")
-router.register(r"servicios", views.ServicioViewSet, basename="servicios")
+router.register(r"paquetes", views.PaqueteViewSet, basename="paquetes")
 router.register(r"trabajadores", views.TrabajadorViewSet, basename="trabajadores")
 router.register(r"citas", views.CitaViewSet, basename="citas")
 

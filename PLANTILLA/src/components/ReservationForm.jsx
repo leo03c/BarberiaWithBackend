@@ -9,14 +9,14 @@ function ReservationForm() {
 
   // Estado para el formulario de reserva
   const [formData, setFormData] = useState({
-    service: '',
+    paquete: '',
     date: '',
     message: '',
   });
 
-  // Usamos useFetch para obtener la lista de servicios
-  const { data: servicesData } = useFetch('http://127.0.0.1:8000/servicios/');
-  const [services, setServices] = useState([]);
+  // Usamos useFetch para obtener la lista de paquetes
+  const { data: paquetesData } = useFetch('http://127.0.0.1:8000/paquetes/');
+  const [paquetes, setpaquetes] = useState([]);
 
   // Usamos useFetch para obtener las citas (appointments) del cliente,
   const { data: appointmentsData } = useFetch(
@@ -28,12 +28,12 @@ function ReservationForm() {
   const [selectedAppointments, setSelectedAppointments] = useState([]);
   const [allSelected, setAllSelected] = useState(false);
 
-  // Sincroniza la lista de servicios con los datos obtenidos
+  // Sincroniza la lista de paquetes con los datos obtenidos
   useEffect(() => {
-    if (servicesData) {
-      setServices(Array.isArray(servicesData) ? servicesData : []);
+    if (paquetesData) {
+      setpaquetes(Array.isArray(paquetesData) ? paquetesData : []);
     }
-  }, [servicesData]);
+  }, [paquetesData]);
 
   // Sincroniza la lista de citas con los datos obtenidos
   useEffect(() => {
@@ -60,7 +60,7 @@ function ReservationForm() {
 
     const newAppointment = {
       usuarioid: iduser,
-      servicioid: formData.service,
+      paqueteid: formData.paquete,
       fecha: formData.date,
       comentario: formData.message || '',
     };
@@ -80,7 +80,7 @@ function ReservationForm() {
         // Agrega la nueva cita al estado
         setAppointments((prev) => [...prev, data]);
         // Reinicia el formulario
-        setFormData({ service: '', date: '', message: '' });
+        setFormData({ paquete: '', date: '', message: '' });
       })
       .catch((err) => console.error('Error creating appointment:', err));
   };
@@ -131,25 +131,25 @@ function ReservationForm() {
           </h2>
           <form onSubmit={handleSubmit} className='grid gap-4'>
             <select
-              name='service'
-              value={formData.service}
+              name='paquete'
+              value={formData.paquete}
               onChange={handleChange}
               className='w-full p-3 rounded-lg bg-transparent border border-bronze text-lightGray'
               required
             >
-              <option value=''>Selecciona un servicio</option>
-              {services.map((service) => (
+              <option value=''>Selecciona un paquete</option>
+              {paquetes.map((paquete) => (
                 <option
-                  key={service.id}
-                  value={service.id}
+                  key={paquete.id}
+                  value={paquete.id}
                   className='text-black'
                 >
-                  {service.nombre} - ${service.precio}
+                  {paquete.nombre} - ${paquete.precio}
                 </option>
               ))}
             </select>
             <input
-              type='datetime-local'
+              type='date'
               name='date'
               value={formData.date}
               onChange={handleChange}
@@ -185,9 +185,9 @@ function ReservationForm() {
             <>
               <ul className='space-y-4 max-h-80 overflow-y-auto'>
                 {appointments.map((appt, index) => {
-                  // Buscamos el servicio correspondiente a la cita
-                  const service = services.find(
-                    (s) => s.id === appt.servicioid
+                  // Buscamos el paquete correspondiente a la cita
+                  const paquete = paquetes.find(
+                    (s) => s.id === appt.paqueteid
                   );
                   return (
                     <li
@@ -200,9 +200,9 @@ function ReservationForm() {
                       onClick={() => handleSelectAppointment(appt.id)}
                     >
                       <strong>
-                        {service ? service.nombre : 'Servicio desconocido'}
+                        {paquete ? paquete.nombre : 'Paquete desconocido'}
                       </strong>{' '}
-                      - {new Date(appt.fecha).toLocaleString()}
+                      - {new Date(appt.fecha).toLocaleString().slice(0,9)}
                     </li>
                   );
                 })}
