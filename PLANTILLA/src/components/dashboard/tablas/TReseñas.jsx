@@ -1,36 +1,82 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { GetAllResennas, useDeleteResennas } from '../../../api/ResennaApi';
 import ConfirmationModal from '../../../ui/confirmGeneric';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 const ITEMS_PER_PAGE = 5;
 
 const TResennas = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  // Mejor nombrar selectedId y tipar como null o número
+  const [selectedId, setSelectedId] = useState(null);
+  const [isOpen, setOpen] = useState(false);
 
+  // Obtener todas las reseñas
   const { data: AllResennas = [] } = GetAllResennas();
-  const { mutate: deleteResennas } = useDeleteResennas();
-  const [id, setId] = useState();
-  const [open, SetOpen] = useState();
+  const { mutate: deleteResenna } = useDeleteResennas();
 
-  // Calcular reseñas para la página actual
+  // Cálculo de paginación
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
   const currentItems = AllResennas.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(AllResennas.length / ITEMS_PER_PAGE);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(AllResennas.length / ITEMS_PER_PAGE)
+  );
+
+  // Si cambian los datos (AllResennas) y la página actual excede el totalPages,
+  // reajustamos la página a totalPages para no quedar en página vacía.
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [AllResennas.length, totalPages, currentPage]);
 
   const handlePageChange = (pageNumber) => {
+    // Validar límites
+    if (pageNumber < 1 || pageNumber > totalPages) return;
     setCurrentPage(pageNumber);
+  };
+
+  const openConfirmModal = (id) => {
+    setSelectedId(id);
+    setOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedId == null) {
+      toast.error('Error interno: id de reseña no válido.');
+      setOpen(false);
+      return;
+    }
+    deleteResenna(selectedId, {
+      onSuccess: () => {
+        toast.success('Reseña eliminada');
+      },
+      onError: (error) => {
+        console.error('Error borrando reseña:', error);
+        toast.error('No se pudo eliminar la reseña');
+      },
+    });
+    setOpen(false);
+  };
+
+  const handleCancelDelete = () => {
+    setOpen(false);
+    setSelectedId(null);
   };
 
   return (
     <div className='bg-jetBlack text-lightGray p-6 rounded-lg shadow-lg mt-20'>
+      {/* Toaster para notificaciones */}
+      <Toaster />
+
       <h2 className='text-3xl font-serif font-bold text-mustard mb-6'>
         Gestión de Reseñas
       </h2>
 
-      {/* Formulario de reseña */}
+      {/* Aquí podrías tener formulario de creación/edición de reseña si aplica */}
 
       {/* Tabla de reseñas */}
       <div className='overflow-x-auto'>
@@ -44,8 +90,14 @@ const TResennas = () => {
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((reseña) => {
-              return (
+            {currentItems.length === 0 ? (
+              <tr>
+                <td colSpan={4} className='py-4 text-center text-gray-400'>
+                  No hay reseñas en esta página.
+                </td>
+              </tr>
+            ) : (
+              currentItems.map((reseña) => (
                 <tr
                   key={reseña.id}
                   className='border-t border-gray-700 hover:bg-gray-700 transition'
@@ -55,18 +107,16 @@ const TResennas = () => {
                   <td className='py-2 px-4'>{reseña.comentario}</td>
                   <td className='py-2 px-4 flex justify-center gap-3'>
                     <button
-                      onClick={() => {
-                        setId(reseña.id);
-                        SetOpen(true);
-                      }}
+                      onClick={() => openConfirmModal(reseña.id)}
                       className='text-red-500 hover:text-red-400 transition'
+                      aria-label={`Eliminar reseña ${reseña.id}`}
                     >
                       <Trash2 size={18} />
                     </button>
                   </td>
                 </tr>
-              );
-            })}
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -81,6 +131,7 @@ const TResennas = () => {
               ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
               : 'bg-mustard text-jetBlack hover:bg-yellow-500'
           }`}
+          aria-label='Página anterior'
         >
           <ChevronLeft size={20} />
         </button>
@@ -97,24 +148,22 @@ const TResennas = () => {
               ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
               : 'bg-mustard text-jetBlack hover:bg-yellow-500'
           }`}
+          aria-label='Página siguiente'
         >
-          <Toaster />
           <ChevronRight size={20} />
         </button>
-
-        {open && (
-          <ConfirmationModal
-            isOpen={open}
-            title={'Confirmar Eliminación'}
-            message='¿Estás seguro de que deseas eliminar esta reseña?'
-            onConfirm={() => {
-              deleteResennas(id);
-              SetOpen(false);
-            }}
-            onCancel={SetOpen(false)}
-          />
-        )}
       </div>
+
+      {/* Modal de confirmación */}
+      {isOpen && (
+        <ConfirmationModal
+          isOpen={isOpen}
+          title='Confirmar Eliminación'
+          message='¿Estás seguro de que deseas eliminar esta reseña?'
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
     </div>
   );
 };

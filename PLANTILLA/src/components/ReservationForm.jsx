@@ -156,8 +156,8 @@ export default function ReservationForm() {
             isOpen={isOpen}
             message={
               allSelected
-                ? 'Deseas eliminar todas sus citas ?'
-                : 'Esta seguro que desea eliminar su cita '
+                ? '¿Está seguro que desea eliminar su cita?'
+                : '¿Está seguro que desea eliminar su cita? '
             }
             title={'Confirmar eliminación'}
             onConfirm={handleDeleteAppointments}

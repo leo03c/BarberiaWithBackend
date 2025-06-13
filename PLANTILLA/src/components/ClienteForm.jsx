@@ -186,7 +186,7 @@ const ClienteForm = () => {
         </form>
         <div className='flex justify-center'>
           <Link to={'/LoginForm'} className='text-lightGray  py-6  '>
-            Tienes una cuenta?
+            ¿Tienes una cuenta?
           </Link>
         </div>
       </motion.div>
