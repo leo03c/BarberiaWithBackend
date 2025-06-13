@@ -34,3 +34,5 @@ class ServicioSerializer(serializers.ModelSerializer):
         if value== None:
             raise serializers.ValidationError("La imagen es obligatoria.")
         return value
+    
+   
